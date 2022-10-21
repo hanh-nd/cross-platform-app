@@ -1,14 +1,12 @@
-import React, { useEffect, useState } from 'react';
-import {
-    Image,
-    Keyboard,
-    KeyboardAvoidingView,
-    Platform,
-    View,
-} from 'react-native';
-import { TextInput } from 'react-native-gesture-handler';
-import UIButton from '../../components/UIButton';
+import { Button, Dialog, Input } from '@rneui/themed';
+import React, { useEffect, useRef, useState } from 'react';
+import { Image, Keyboard, View } from 'react-native';
+import DropdownAlert from 'react-native-dropdownalert';
+import { DismissKeyboardView } from '../../components';
+import { PageName } from '../../navigation/constants';
+import { login } from '../../repositories/login';
 import { isValidPassword } from '../../utilities/Validations';
+
 function Login(props) {
     const [keyboardIsShown, setKeyboardIsShown] = useState(false);
     //states for validating
@@ -21,6 +19,8 @@ function Login(props) {
         phoneNumber.length > 0 &&
         password.length > 0 &&
         isValidPassword(password) === true;
+    const [loading, setLoading] = useState(false);
+    let dropdown = useRef();
 
     useEffect(() => {
         //componentDidMount
@@ -36,36 +36,51 @@ function Login(props) {
     //functions of navigate to/back
     const { navigate, goBack } = navigation;
 
+    const onLogin = async () => {
+        setLoading(true);
+        const result = await login({
+            phonenumber: phoneNumber,
+            password,
+        });
+        if (result?.success) {
+            navigate({
+                name: PageName.HOME,
+            });
+        } else {
+            dropdown.alertWithType('error', 'Error', result?.message);
+        }
+        setLoading(false);
+    };
+
     return (
-        <KeyboardAvoidingView
-            behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
-            style={{
-                flex: 100,
-                backgroundColor: 'white',
-            }}
-        >
+        <DismissKeyboardView>
             <View>
                 <Image source={require('../../assets/favicon.png')} />
-                <TextInput
+                <Input
                     placeholder="So dien thoai"
                     onChangeText={(phoneNumber) => setPhoneNumber(phoneNumber)}
                 />
-                <TextInput
+                <Input
                     placeholder="Mat khau"
                     secureTextEntry={true}
                     onChangeText={(password) => setPassword(password)}
                 />
-                <UIButton
-                    title="Login"
-                    onPress={() => {
-                        // TODO: Call login API
-                        console.log(
-                            `Phone = ${phoneNumber}, Password = ${password}`
-                        );
-                    }}
-                />
+                <Button title="Login" type="solid" onPress={onLogin}></Button>
             </View>
-        </KeyboardAvoidingView>
+            <Dialog
+                isVisible={loading}
+                onBackdropPress={() => setLoading(false)}
+            >
+                <Dialog.Loading />
+            </Dialog>
+            <DropdownAlert
+                ref={(ref) => {
+                    if (ref) {
+                        dropdown = ref;
+                    }
+                }}
+            />
+        </DismissKeyboardView>
     );
 }
 export default Login;

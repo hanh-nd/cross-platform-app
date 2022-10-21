@@ -1,8 +1,12 @@
-import { Login, Register } from '../screens';
-import UITab from './UITab';
+import { Home, Login, Register } from '../screens';
 import { PageName } from './constants';
+import UITab from './UITab';
 
 export const routers = [
+    {
+        name: PageName.UI_TAB,
+        component: UITab,
+    },
     {
         name: PageName.LOGIN,
         component: Login,
@@ -12,7 +16,7 @@ export const routers = [
         component: Register,
     },
     {
-        name: PageName.UI_TAB,
-        component: UITab,
+        name: PageName.HOME,
+        component: Home,
     },
 ];
