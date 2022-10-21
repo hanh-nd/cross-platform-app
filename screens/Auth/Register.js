@@ -2,7 +2,6 @@ import React, { useEffect, useState } from 'react';
 import {
     Image,
     Keyboard,
-    KeyboardAvoidingView,
     Text,
     TextInput,
     TouchableOpacity,
@@ -10,9 +9,9 @@ import {
 } from 'react-native';
 
 import Icon from 'react-native-vector-icons/FontAwesome5';
-import { colors, fontSizes, images } from '../constants';
-import { isValidEmail, isValidPassword } from '../utilies/Validations';
-function Login(props) {
+import { isValidEmail, isValidPassword } from '../../utilities/Validations';
+import { colors, fontSizes, images } from '../../constants';
+function Register(props) {
     const [keyboardIsShown, setKeyboardIsShown] = useState(false);
     //states for validating
     const [errorEmail, setErrorEmail] = useState('');
@@ -20,11 +19,13 @@ function Login(props) {
     //states to store email/password
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
+    const [retypePassword, setRetypePassword] = useState('');
     const isValidationOK = () =>
         email.length > 0 &&
         password.length > 0 &&
         isValidEmail(email) == true &&
-        isValidPassword(password) == true;
+        isValidPassword(password) == true &&
+        password == retypePassword;
 
     useEffect(() => {
         //componentDidMount
@@ -39,18 +40,16 @@ function Login(props) {
     const { navigation, route } = props;
     //functions of navigate to/back
     const { navigate, goBack } = navigation;
-
     return (
-        <KeyboardAvoidingView
-            behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+        <View
             style={{
                 flex: 100,
-                backgroundColor: 'white',
+                backgroundColor: colors.primary,
             }}
         >
             <View
                 style={{
-                    flex: 30,
+                    flex: 25,
                     flexDirection: 'row',
                     justifyContent: 'space-around',
                     alignItems: 'center',
@@ -58,7 +57,7 @@ function Login(props) {
             >
                 <Text
                     style={{
-                        color: 'black',
+                        color: 'white',
                         fontSize: fontSizes.h2,
                         fontWeight: 'bold',
                         width: '50%',
@@ -67,7 +66,7 @@ function Login(props) {
                     Already have an Account?
                 </Text>
                 <Image
-                    tintColor={colors.primary}
+                    tintColor={'white'}
                     source={images.computer}
                     style={{
                         width: 120,
@@ -78,7 +77,11 @@ function Login(props) {
             </View>
             <View
                 style={{
-                    flex: 30,
+                    flex: 45,
+                    backgroundColor: 'white',
+                    padding: 10,
+                    margin: 10,
+                    borderRadius: 20,
                 }}
             >
                 <View
@@ -113,7 +116,6 @@ function Login(props) {
                         style={{
                             color: 'black',
                         }}
-                        keyboardType="email"
                         placeholder="example@gmail.com"
                         value={email}
                         placeholderTextColor={colors.placeholder}
@@ -132,7 +134,7 @@ function Login(props) {
                         style={{
                             color: 'red',
                             fontSize: fontSizes.h6,
-                            marginBottom: 15,
+                            marginBottom: 10,
                         }}
                     >
                         {errorEmail}
@@ -164,8 +166,8 @@ function Login(props) {
                             color: 'black',
                         }}
                         secureTextEntry={true}
-                        placeholder="Enter your password"
                         value={password}
+                        placeholder="Enter your password"
                         placeholderTextColor={colors.placeholder}
                     />
                     <View
@@ -173,7 +175,7 @@ function Login(props) {
                             height: 1,
                             backgroundColor: colors.primary,
                             width: '100%',
-                            marginBottom: 15,
+                            marginBottom: 10,
                             marginHorizontal: 15,
                             alignSelf: 'center',
                         }}
@@ -188,81 +190,102 @@ function Login(props) {
                         {errorPassword}
                     </Text>
                 </View>
-            </View>
-            {keyboardIsShown == false ? (
                 <View
                     style={{
-                        flex: 15,
+                        marginHorizontal: 15,
                     }}
                 >
-                    <TouchableOpacity
-                        disabled={isValidationOK() == false}
-                        onPress={() => {
-                            alert(`Email = ${email}, password = ${password}`);
-                            // signInWithEmailAndPassword(auth, email, password)
-                            //     .then((userCredential) => {
-                            //         const user = userCredential.user;
-                            //         debugger;
-                            //         navigate('UITab');
-                            //     })
-                            //     .catch((error) => {
-                            //         debugger;
-                            //         alert(
-                            //             `Cannot signin, error: ${error.message}`
-                            //         );
-                            //     });
+                    <Text
+                        style={{
+                            fontSize: fontSizes.h6,
+                            color: colors.primary,
+                        }}
+                    >
+                        Retype password:
+                    </Text>
+                    <TextInput
+                        onChangeText={(text) => {
+                            setErrorPassword(
+                                isValidPassword(text) == true
+                                    ? ''
+                                    : 'Password must be at least 3 characters'
+                            );
+                            setRetypePassword(text);
                         }}
                         style={{
-                            backgroundColor:
-                                isValidationOK() == true
-                                    ? colors.primary
-                                    : colors.inactive,
-                            justifyContent: 'center',
-                            alignItems: 'center',
-                            width: '50%',
+                            color: 'black',
+                        }}
+                        value={retypePassword}
+                        secureTextEntry={true}
+                        placeholder="Re-Enter your password"
+                        placeholderTextColor={colors.placeholder}
+                    />
+                    <View
+                        style={{
+                            height: 1,
+                            backgroundColor: colors.primary,
+                            width: '100%',
+                            marginBottom: 10,
+                            marginHorizontal: 15,
                             alignSelf: 'center',
-                            borderRadius: 18,
+                        }}
+                    />
+                    <Text
+                        style={{
+                            color: 'red',
+                            fontSize: fontSizes.h6,
+                            marginBottom: 5,
                         }}
                     >
-                        <Text
-                            style={{
-                                padding: 8,
-                                fontSize: fontSizes.h5,
-                                color: 'white',
-                            }}
-                        >
-                            Login
-                        </Text>
-                    </TouchableOpacity>
-                    <TouchableOpacity
-                        onPress={() => {
-                            alert('press register');
-                        }}
-                        style={{ padding: 5 }}
-                    >
-                        <Text
-                            style={{
-                                padding: 8,
-                                fontSize: fontSizes.h6,
-                                color: colors.primary,
-                                alignSelf: 'center',
-                            }}
-                        >
-                            New user? Register now
-                        </Text>
-                    </TouchableOpacity>
+                        {errorPassword}
+                    </Text>
                 </View>
-            ) : (
-                <View
-                    style={{
-                        flex: 15,
+                <TouchableOpacity
+                    disabled={isValidationOK() == false}
+                    onPress={() => {
+                        alert(`Email = ${email}, password = ${password}`);
+                        // createUserWithEmailAndPassword(auth, email, password)
+                        // .then((userCredential) => {
+                        //     const user = userCredential.user
+                        //     debugger
+                        //     sendEmailVerification(user).then(()=>{
+                        //         console.log('Email verification sent')
+                        //     })
+                        //     navigate('UITab')
+
+                        // }).catch((error) => {
+                        //     debugger
+                        //     alert(`Cannot signin, error: ${error.message}`)
+                        // })
                     }}
-                ></View>
-            )}
+                    style={{
+                        backgroundColor:
+                            isValidationOK() == true
+                                ? colors.primary
+                                : colors.inactive,
+                        justifyContent: 'center',
+                        alignItems: 'center',
+                        width: '50%',
+                        alignSelf: 'center',
+                        borderRadius: 18,
+                    }}
+                >
+                    <Text
+                        style={{
+                            padding: 8,
+                            fontSize: fontSizes.h5,
+                            color: 'white',
+                        }}
+                    >
+                        Register
+                    </Text>
+                </TouchableOpacity>
+            </View>
+
             {keyboardIsShown == false ? (
                 <View
                     style={{
-                        flex: 25,
+                        flex: 20,
                     }}
                 >
                     <View
@@ -276,7 +299,7 @@ function Login(props) {
                         <View
                             style={{
                                 height: 1,
-                                backgroundColor: 'black',
+                                backgroundColor: 'white',
                                 flex: 1,
                             }}
                         />
@@ -284,7 +307,7 @@ function Login(props) {
                             style={{
                                 padding: 8,
                                 fontSize: fontSizes.h6,
-                                color: 'black',
+                                color: 'white',
                                 alignSelf: 'center',
                                 marginHorizontal: 5,
                             }}
@@ -294,7 +317,7 @@ function Login(props) {
                         <View
                             style={{
                                 height: 1,
-                                backgroundColor: 'black',
+                                backgroundColor: 'white',
                                 flex: 1,
                             }}
                         />
@@ -321,7 +344,7 @@ function Login(props) {
                     }}
                 ></View>
             )}
-        </KeyboardAvoidingView>
+        </View>
     );
 }
-export default Login;
+export default Register;

@@ -13,8 +13,7 @@ import * as React from 'react';
 import { View } from 'react-native';
 import 'react-native-gesture-handler';
 import Icon from 'react-native-vector-icons/FontAwesome5';
-import { colors, fontSizes } from '../constants';
-import { Chat, FoodList, ProductGridView, Profile, Settings } from '../screens';
+import { colors } from '../constants';
 const Tab = createBottomTabNavigator();
 
 const screenOptions = ({ route }) => ({
