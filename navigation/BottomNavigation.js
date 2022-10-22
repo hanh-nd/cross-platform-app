@@ -3,8 +3,8 @@ import * as React from 'react';
 import { View } from 'react-native';
 import 'react-native-gesture-handler';
 import { colors, fontSizes } from '../constants';
+import { PageName } from './constants';
 import { bottomNavigationRoutes } from './routers';
-
 const Tab = createBottomTabNavigator();
 
 const screenOptions = ({ route }) => ({
@@ -20,7 +20,11 @@ const screenOptions = ({ route }) => ({
 
 function BottomNavigation(props) {
     return (
-        <Tab.Navigator screenOptions={screenOptions} backBehavior="firstRoute">
+        <Tab.Navigator
+            screenOptions={screenOptions}
+            initialRouteName={PageName.HOME}
+            backBehavior="initialRoute"
+        >
             {bottomNavigationRoutes.map((route) => {
                 return (
                     <Tab.Screen

@@ -4,4 +4,5 @@ export const PageName = {
     LOGIN: 'Login',
     REGISTER: 'Register',
     HOME: 'Home',
+    CHAT: 'Chat',
 };

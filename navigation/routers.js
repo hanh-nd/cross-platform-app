@@ -1,5 +1,5 @@
 import { Icon } from '@rneui/themed';
-import { Home, Loading, Login, Register } from '../screens';
+import { Chat, Home, Loading, Login, Register } from '../screens';
 import BottomNavigation from './BottomNavigation';
 import { PageName } from './constants';
 
@@ -24,6 +24,10 @@ export const routes = [
         name: PageName.HOME,
         component: Home,
     },
+    {
+        name: PageName.CHAT,
+        component: Chat,
+    },
 ];
 
 export const bottomNavigationRoutes = [
@@ -32,6 +36,13 @@ export const bottomNavigationRoutes = [
         component: Home,
         icon: ({ color, size }) => (
             <Icon name="home" color={color} size={size} />
+        ),
+    },
+    {
+        name: PageName.CHAT,
+        component: Chat,
+        icon: ({ color, size }) => (
+            <Icon name="chat" color={color} size={size} />
         ),
     },
 ];

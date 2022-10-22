@@ -89,3 +89,11 @@ client.interceptors.response.use(
         };
     }
 );
+
+export const getAccessToken = async () => {
+    return await AsyncStorage.getItem('accessToken');
+};
+
+export const setAccessToken = async (token) => {
+    await AsyncStorage.setItem('accessToken', token);
+};

@@ -1,15 +1,15 @@
-import AsyncStorage from '@react-native-async-storage/async-storage';
+import * as Font from 'expo-font';
 import { isEmpty } from 'lodash';
 import { useEffect } from 'react';
 import { PageName } from '../../navigation/constants';
-import * as Font from 'expo-font';
+import { getAccessToken } from '../../repositories/axios';
 
 function Loading(props) {
     const { navigation } = props;
     useEffect(() => {
         async function load() {
             await loadFonts();
-            await checkLoginUser();
+            await checkLoggedIn();
         }
         load();
     });
@@ -20,9 +20,9 @@ function Loading(props) {
             FontAwesome: require('react-native-vector-icons/Fonts/FontAwesome.ttf'),
         });
     };
-    const checkLoginUser = async () => {
-        const loginUserId = await AsyncStorage.getItem('loginUserId');
-        if (isEmpty(loginUserId)) {
+    const checkLoggedIn = async () => {
+        const accessToken = await getAccessToken();
+        if (isEmpty(accessToken)) {
             navigation.navigate({ name: PageName.LOGIN });
         } else {
             navigation.navigate({ name: PageName.BOTTOM_NAVIGATION });
