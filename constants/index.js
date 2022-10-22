@@ -1,10 +1,5 @@
-import images from "./images"
-import icons from "./icons"
-import colors from "./colors"
-import fontSizes from "./fontSizes"
-export {
-    images,
-    icons,
-    colors,
-    fontSizes
-}
+import colors from './colors';
+import fontSizes from './fontSizes';
+import icons from './icons';
+import images from './images';
+export { images, icons, colors, fontSizes };

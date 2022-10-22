@@ -1,6 +1,7 @@
 import { BASE_URL } from '@env';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import axios from 'axios';
+import { isEmpty } from 'lodash';
 import { isParsable } from '../utilities/Parser';
 
 export const client = axios.create({
@@ -20,7 +21,7 @@ client.interceptors.request.use(
     async function (config) {
         // Do something before request is sent
         const accessToken = await AsyncStorage.getItem('accessToken');
-        if (accessToken && accessToken != null) {
+        if (!isEmpty(accessToken)) {
             config.headers.Authorization = `Bearer ${accessToken}`;
         } else {
         }

@@ -1,350 +1,148 @@
-import React, { useEffect, useState } from 'react';
+import { Button, Image, Input, Text } from '@rneui/themed';
+import React, { useState } from 'react';
+import { View } from 'react-native';
+import { DismissKeyboardView } from '../../components';
+import { colors } from '../../constants';
+import { PageName } from '../../navigation/constants';
+import { register } from '../../repositories/auth.api';
 import {
-    Image,
-    Keyboard,
-    Text,
-    TextInput,
-    TouchableOpacity,
-    View,
-} from 'react-native';
+    showErrorMessage,
+    showSuccessMessage,
+} from '../../utilities/Notification';
 
-import Icon from 'react-native-vector-icons/FontAwesome5';
-import { isValidEmail, isValidPassword } from '../../utilities/Validations';
-import { colors, fontSizes, images } from '../../constants';
 function Register(props) {
-    const [keyboardIsShown, setKeyboardIsShown] = useState(false);
     //states for validating
     const [errorEmail, setErrorEmail] = useState('');
     const [errorPassword, setErrorPassword] = useState('');
     //states to store email/password
-    const [email, setEmail] = useState('');
+    const [phoneNumber, setPhoneNumber] = useState('');
+    const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
-    const [retypePassword, setRetypePassword] = useState('');
-    const isValidationOK = () =>
-        email.length > 0 &&
-        password.length > 0 &&
-        isValidEmail(email) == true &&
-        isValidPassword(password) == true &&
-        password == retypePassword;
+    const [loading, setLoading] = useState(false);
 
-    useEffect(() => {
-        //componentDidMount
-        Keyboard.addListener('keyboardDidShow', () => {
-            setKeyboardIsShown(true);
-        });
-        Keyboard.addListener('keyboardDidHide', () => {
-            setKeyboardIsShown(false);
-        });
-    });
+    const onRegister = async () => {
+        setLoading(true);
+
+        try {
+            await register({
+                phonenumber: phoneNumber,
+                username,
+                password,
+            });
+            showSuccessMessage('Dang ky thanh cong');
+            navigate({
+                name: PageName.HOME,
+            });
+        } catch (error) {
+            showErrorMessage(error?.message);
+        }
+
+        setLoading(false);
+    };
     //navigation
     const { navigation, route } = props;
     //functions of navigate to/back
     const { navigate, goBack } = navigation;
+
     return (
-        <View
-            style={{
-                flex: 100,
-                backgroundColor: colors.primary,
-            }}
-        >
-            <View
-                style={{
-                    flex: 25,
-                    flexDirection: 'row',
-                    justifyContent: 'space-around',
-                    alignItems: 'center',
-                }}
-            >
-                <Text
-                    style={{
-                        color: 'white',
-                        fontSize: fontSizes.h2,
-                        fontWeight: 'bold',
-                        width: '50%',
-                    }}
-                >
-                    Already have an Account?
-                </Text>
-                <Image
-                    tintColor={'white'}
-                    source={images.computer}
-                    style={{
-                        width: 120,
-                        height: 120,
-                        alignSelf: 'center',
-                    }}
-                />
-            </View>
-            <View
-                style={{
-                    flex: 45,
-                    backgroundColor: 'white',
-                    padding: 10,
-                    margin: 10,
-                    borderRadius: 20,
-                }}
-            >
-                <View
-                    style={{
-                        marginHorizontal: 15,
-                    }}
-                >
-                    <Text
-                        style={{
-                            fontSize: fontSizes.h6,
-                            color: colors.primary,
-                        }}
-                    >
-                        Email:
-                    </Text>
-                    <TextInput
-                        onChangeText={(text) => {
-                            /*
-                       if(isValidEmail(text) == false) {
-                           setErrorEmail('Email not in correct format')
-                       } else {
-                           setErrorEmail('')
-                       }
-                       */
-                            setErrorEmail(
-                                isValidEmail(text) == true
-                                    ? ''
-                                    : 'Email not in correct format'
-                            );
-                            setEmail(text);
-                        }}
-                        style={{
-                            color: 'black',
-                        }}
-                        placeholder="example@gmail.com"
-                        value={email}
-                        placeholderTextColor={colors.placeholder}
+        <>
+            <DismissKeyboardView style={styles.layout}>
+                <View style={styles.registerForm}>
+                    <Image
+                        source={require('../../assets/logo.png')}
+                        style={styles.logo}
+                        containerStyle={styles.logoContainer}
                     />
-                    <View
-                        style={{
-                            height: 1,
-                            backgroundColor: colors.primary,
-                            width: '100%',
-                            marginHorizontal: 15,
-                            marginBottom: 5,
-                            alignSelf: 'center',
-                        }}
-                    />
-                    <Text
-                        style={{
-                            color: 'red',
-                            fontSize: fontSizes.h6,
-                            marginBottom: 10,
-                        }}
-                    >
-                        {errorEmail}
-                    </Text>
-                </View>
-                <View
-                    style={{
-                        marginHorizontal: 15,
-                    }}
-                >
-                    <Text
-                        style={{
-                            fontSize: fontSizes.h6,
-                            color: colors.primary,
-                        }}
-                    >
-                        Password:
-                    </Text>
-                    <TextInput
-                        onChangeText={(text) => {
-                            setErrorPassword(
-                                isValidPassword(text) == true
-                                    ? ''
-                                    : 'Password must be at least 3 characters'
-                            );
-                            setPassword(text);
-                        }}
-                        style={{
-                            color: 'black',
-                        }}
+                    <Input
+                        label="So dien thoai"
+                        placeholder="Nhap so dien thoai"
+                        keyboardType="numeric"
+                        onChangeText={(phoneNumber) =>
+                            setPhoneNumber(phoneNumber)
+                        }
+                        placeholderTextColor={colors.gray}
+                        labelStyle={styles.label}
+                        input={styles.input}
+                    ></Input>
+                    <Input
+                        label="Ten tai khoan"
+                        placeholder="Nhap ten tai khoan"
+                        onChangeText={(username) => setUsername(username)}
+                        placeholderTextColor={colors.gray}
+                        labelStyle={styles.label}
+                        input={styles.input}
+                    ></Input>
+                    <Input
+                        label="Mat khau"
+                        placeholder="Nhap mat khau"
+                        onChangeText={(password) => setPassword(password)}
                         secureTextEntry={true}
-                        value={password}
-                        placeholder="Enter your password"
-                        placeholderTextColor={colors.placeholder}
-                    />
-                    <View
-                        style={{
-                            height: 1,
-                            backgroundColor: colors.primary,
-                            width: '100%',
-                            marginBottom: 10,
-                            marginHorizontal: 15,
-                            alignSelf: 'center',
-                        }}
-                    />
+                        placeholderTextColor={colors.gray}
+                        labelStyle={styles.label}
+                        input={styles.input}
+                    ></Input>
+                    <Button
+                        title="Dang ky"
+                        type="solid"
+                        loading={loading}
+                        onPress={onRegister}
+                        buttonStyle={styles.button}
+                    ></Button>
+                </View>
+                <View>
                     <Text
-                        style={{
-                            color: 'red',
-                            fontSize: fontSizes.h6,
-                            marginBottom: 15,
-                        }}
+                        style={styles.text}
+                        onPress={() => navigate({ name: PageName.LOGIN })}
                     >
-                        {errorPassword}
+                        Da co tai khoan? Dang nhap
                     </Text>
                 </View>
-                <View
-                    style={{
-                        marginHorizontal: 15,
-                    }}
-                >
-                    <Text
-                        style={{
-                            fontSize: fontSizes.h6,
-                            color: colors.primary,
-                        }}
-                    >
-                        Retype password:
-                    </Text>
-                    <TextInput
-                        onChangeText={(text) => {
-                            setErrorPassword(
-                                isValidPassword(text) == true
-                                    ? ''
-                                    : 'Password must be at least 3 characters'
-                            );
-                            setRetypePassword(text);
-                        }}
-                        style={{
-                            color: 'black',
-                        }}
-                        value={retypePassword}
-                        secureTextEntry={true}
-                        placeholder="Re-Enter your password"
-                        placeholderTextColor={colors.placeholder}
-                    />
-                    <View
-                        style={{
-                            height: 1,
-                            backgroundColor: colors.primary,
-                            width: '100%',
-                            marginBottom: 10,
-                            marginHorizontal: 15,
-                            alignSelf: 'center',
-                        }}
-                    />
-                    <Text
-                        style={{
-                            color: 'red',
-                            fontSize: fontSizes.h6,
-                            marginBottom: 5,
-                        }}
-                    >
-                        {errorPassword}
-                    </Text>
-                </View>
-                <TouchableOpacity
-                    disabled={isValidationOK() == false}
-                    onPress={() => {
-                        alert(`Email = ${email}, password = ${password}`);
-                        // createUserWithEmailAndPassword(auth, email, password)
-                        // .then((userCredential) => {
-                        //     const user = userCredential.user
-                        //     debugger
-                        //     sendEmailVerification(user).then(()=>{
-                        //         console.log('Email verification sent')
-                        //     })
-                        //     navigate('UITab')
-
-                        // }).catch((error) => {
-                        //     debugger
-                        //     alert(`Cannot signin, error: ${error.message}`)
-                        // })
-                    }}
-                    style={{
-                        backgroundColor:
-                            isValidationOK() == true
-                                ? colors.primary
-                                : colors.inactive,
-                        justifyContent: 'center',
-                        alignItems: 'center',
-                        width: '50%',
-                        alignSelf: 'center',
-                        borderRadius: 18,
-                    }}
-                >
-                    <Text
-                        style={{
-                            padding: 8,
-                            fontSize: fontSizes.h5,
-                            color: 'white',
-                        }}
-                    >
-                        Register
-                    </Text>
-                </TouchableOpacity>
-            </View>
-
-            {keyboardIsShown == false ? (
-                <View
-                    style={{
-                        flex: 20,
-                    }}
-                >
-                    <View
-                        style={{
-                            height: 40,
-                            flexDirection: 'row',
-                            alignItems: 'center',
-                            marginHorizontal: 20,
-                        }}
-                    >
-                        <View
-                            style={{
-                                height: 1,
-                                backgroundColor: 'white',
-                                flex: 1,
-                            }}
-                        />
-                        <Text
-                            style={{
-                                padding: 8,
-                                fontSize: fontSizes.h6,
-                                color: 'white',
-                                alignSelf: 'center',
-                                marginHorizontal: 5,
-                            }}
-                        >
-                            Use other methods ?
-                        </Text>
-                        <View
-                            style={{
-                                height: 1,
-                                backgroundColor: 'white',
-                                flex: 1,
-                            }}
-                        />
-                    </View>
-                    <View
-                        style={{
-                            flexDirection: 'row',
-                            justifyContent: 'center',
-                        }}
-                    >
-                        <Icon
-                            name="facebook"
-                            size={35}
-                            color={colors.facebook}
-                        />
-                        <View style={{ width: 15 }} />
-                        <Icon name="google" size={35} color={colors.google} />
-                    </View>
-                </View>
-            ) : (
-                <View
-                    style={{
-                        flex: 25,
-                    }}
-                ></View>
-            )}
-        </View>
+            </DismissKeyboardView>
+        </>
     );
 }
+
+const styles = {
+    layout: {
+        display: 'flex',
+        flexDirection: 'column',
+        alignItems: 'center',
+        justifyContent: 'space-between',
+        padding: 16,
+        width: '100%',
+        height: '100%',
+        backgroundColor: colors.facebook,
+    },
+    registerForm: {
+        display: 'flex',
+        justifyContent: 'center',
+        width: '100%',
+        color: colors.white,
+    },
+    logoContainer: {
+        margin: 50,
+        alignSelf: 'center',
+    },
+    logo: {
+        width: 100,
+        height: 100,
+        alignSelf: 'center',
+    },
+    button: {
+        backgroundColor: colors.grayBlue,
+    },
+    text: {
+        color: colors.white,
+        fontSize: 14,
+        fontWeight: 'bold',
+    },
+    input: {
+        color: colors.white,
+    },
+    label: {
+        fontSize: 18,
+        color: colors.white,
+    },
+};
+
 export default Register;

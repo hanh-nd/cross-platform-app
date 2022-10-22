@@ -1,11 +1,16 @@
-import { Home, Login, Register } from '../screens';
+import { Icon } from '@rneui/themed';
+import { Home, Loading, Login, Register } from '../screens';
+import BottomNavigation from './BottomNavigation';
 import { PageName } from './constants';
-import UITab from './UITab';
 
-export const routers = [
+export const routes = [
     {
-        name: PageName.UI_TAB,
-        component: UITab,
+        name: PageName.LOADING,
+        component: Loading,
+    },
+    {
+        name: PageName.BOTTOM_NAVIGATION,
+        component: BottomNavigation,
     },
     {
         name: PageName.LOGIN,
@@ -18,5 +23,15 @@ export const routers = [
     {
         name: PageName.HOME,
         component: Home,
+    },
+];
+
+export const bottomNavigationRoutes = [
+    {
+        name: PageName.HOME,
+        component: Home,
+        icon: ({ color, size }) => (
+            <Icon name="home" color={color} size={size} />
+        ),
     },
 ];

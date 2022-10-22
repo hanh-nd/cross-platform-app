@@ -1,14 +1,24 @@
-import { Button, Dialog, Input } from '@rneui/themed';
-import React, { useEffect, useRef, useState } from 'react';
-import { Image, Keyboard, View } from 'react-native';
-import DropdownAlert from 'react-native-dropdownalert';
+import { Button, Image, Input, Text } from '@rneui/themed';
+import React, { useState } from 'react';
+import { View } from 'react-native';
+import { useDispatch } from 'react-redux';
 import { DismissKeyboardView } from '../../components';
+import { colors } from '../../constants';
 import { PageName } from '../../navigation/constants';
-import { login } from '../../repositories/login';
+import { setIsLoggedIn } from '../../redux/features/app/appSlice';
+import { login } from '../../repositories/auth.api';
+import {
+    showErrorMessage,
+    showSuccessMessage,
+} from '../../utilities/Notification';
 import { isValidPassword } from '../../utilities/Validations';
 
 function Login(props) {
-    const [keyboardIsShown, setKeyboardIsShown] = useState(false);
+    // redux
+    const dispatch = useDispatch();
+    const setLoginState = (state) => {
+        dispatch(setIsLoggedIn(state));
+    };
     //states for validating
     const [errorEmail, setErrorEmail] = useState('');
     const [errorPassword, setErrorPassword] = useState('');
@@ -20,17 +30,7 @@ function Login(props) {
         password.length > 0 &&
         isValidPassword(password) === true;
     const [loading, setLoading] = useState(false);
-    let dropdown = useRef();
 
-    useEffect(() => {
-        //componentDidMount
-        Keyboard.addListener('keyboardDidShow', () => {
-            setKeyboardIsShown(true);
-        });
-        Keyboard.addListener('keyboardDidHide', () => {
-            setKeyboardIsShown(false);
-        });
-    });
     //navigation
     const { navigation, route } = props;
     //functions of navigate to/back
@@ -38,49 +38,115 @@ function Login(props) {
 
     const onLogin = async () => {
         setLoading(true);
-        const result = await login({
-            phonenumber: phoneNumber,
-            password,
-        });
-        if (result?.success) {
-            navigate({
-                name: PageName.HOME,
+
+        try {
+            await login({
+                phonenumber: phoneNumber,
+                password,
             });
-        } else {
-            dropdown.alertWithType('error', 'Error', result?.message);
+            showSuccessMessage('Dang nhap thanh cong');
+            navigate({
+                name: PageName.BOTTOM_NAVIGATION,
+            });
+            setLoginState(true);
+        } catch (error) {
+            showErrorMessage(error?.message);
         }
+
         setLoading(false);
     };
 
     return (
-        <DismissKeyboardView>
-            <View>
-                <Image source={require('../../assets/favicon.png')} />
-                <Input
-                    placeholder="So dien thoai"
-                    onChangeText={(phoneNumber) => setPhoneNumber(phoneNumber)}
-                />
-                <Input
-                    placeholder="Mat khau"
-                    secureTextEntry={true}
-                    onChangeText={(password) => setPassword(password)}
-                />
-                <Button title="Login" type="solid" onPress={onLogin}></Button>
-            </View>
-            <Dialog
-                isVisible={loading}
-                onBackdropPress={() => setLoading(false)}
-            >
-                <Dialog.Loading />
-            </Dialog>
-            <DropdownAlert
-                ref={(ref) => {
-                    if (ref) {
-                        dropdown = ref;
-                    }
-                }}
-            />
-        </DismissKeyboardView>
+        <>
+            <DismissKeyboardView style={styles.layout}>
+                <View style={styles.loginForm}>
+                    <Image
+                        source={require('../../assets/logo.png')}
+                        style={styles.logo}
+                        containerStyle={styles.logoContainer}
+                    />
+                    <Input
+                        label="So dien thoai"
+                        placeholder="Nhap so dien thoai"
+                        keyboardType="numeric"
+                        onChangeText={(phoneNumber) =>
+                            setPhoneNumber(phoneNumber)
+                        }
+                        placeholderTextColor={colors.gray}
+                        labelStyle={styles.label}
+                        inputStyle={styles.input}
+                    />
+                    <Input
+                        label="Mat khau"
+                        placeholder="Nhap mat khau"
+                        secureTextEntry={true}
+                        onChangeText={(password) => setPassword(password)}
+                        placeholderTextColor={colors.gray}
+                        labelStyle={styles.label}
+                        inputStyle={styles.input}
+                    />
+                    <Button
+                        title="Dang nhap"
+                        type="solid"
+                        onPress={onLogin}
+                        loading={loading}
+                        buttonStyle={styles.button}
+                    ></Button>
+                </View>
+                <View>
+                    <Text
+                        style={styles.text}
+                        onPress={() => navigate({ name: PageName.REGISTER })}
+                    >
+                        Chua co tai khoan? Dang ky
+                    </Text>
+                </View>
+            </DismissKeyboardView>
+        </>
     );
 }
+
+const styles = {
+    layout: {
+        display: 'flex',
+        flexDirection: 'column',
+        alignItems: 'center',
+        justifyContent: 'space-between',
+        padding: 16,
+        width: '100%',
+        height: '100%',
+        backgroundColor: colors.facebook,
+    },
+    loginForm: {
+        display: 'flex',
+        justifyContent: 'center',
+        width: '100%',
+        color: colors.white,
+    },
+    logoContainer: {
+        margin: 50,
+        alignSelf: 'center',
+    },
+    logo: {
+        width: 100,
+        height: 100,
+        alignSelf: 'center',
+    },
+    button: {
+        backgroundColor: colors.grayBlue,
+    },
+    text: {
+        color: colors.white,
+        fontSize: 14,
+        fontWeight: 'bold',
+    },
+    input: {
+        color: colors.white,
+    },
+    label: {
+        fontSize: 18,
+        color: colors.white,
+    },
+};
+
 export default Login;

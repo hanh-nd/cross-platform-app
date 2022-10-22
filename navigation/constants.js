@@ -1,5 +1,6 @@
 export const PageName = {
-    UI_TAB: 'UITab',
+    LOADING: 'Loading',
+    BOTTOM_NAVIGATION: 'BottomNavigation',
     LOGIN: 'Login',
     REGISTER: 'Register',
     HOME: 'Home',
