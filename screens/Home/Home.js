@@ -1,7 +1,8 @@
 import { useFocusEffect } from '@react-navigation/native';
 import { useCallback } from 'react';
-import { BackHandler, Text } from 'react-native';
+import { BackHandler, Text, Button } from 'react-native';
 import { DismissKeyboardView } from '../../components';
+import { PageName } from '../../navigation/constants';
 
 function Home(props) {
     useFocusEffect(
@@ -23,6 +24,7 @@ function Home(props) {
     return (
         <DismissKeyboardView>
             <Text>HOME</Text>
+            <Button onPress={() => props.navigation.navigate(PageName.LOGIN)} title='logout'/>
         </DismissKeyboardView>
     );
 }

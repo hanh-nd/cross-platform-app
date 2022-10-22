@@ -29,7 +29,7 @@ function Register(props) {
                 username,
                 password,
             });
-            showSuccessMessage('Dang ky thanh cong');
+            showSuccessMessage('Đăng ký thành công');
             navigate({
                 name: PageName.HOME,
             });
@@ -54,35 +54,35 @@ function Register(props) {
                         containerStyle={styles.logoContainer}
                     />
                     <Input
-                        label="So dien thoai"
-                        placeholder="Nhap so dien thoai"
+                        label="Số điện thoại"
+                        placeholder="Nhập số điện thoại"
                         keyboardType="numeric"
                         onChangeText={(phoneNumber) =>
                             setPhoneNumber(phoneNumber)
                         }
                         placeholderTextColor={colors.gray}
                         labelStyle={styles.label}
-                        input={styles.input}
+                        inputStyle={styles.input}
                     ></Input>
                     <Input
-                        label="Ten tai khoan"
-                        placeholder="Nhap ten tai khoan"
+                        label="Tên tài khoản"
+                        placeholder="Nhập tên tài khoản"
                         onChangeText={(username) => setUsername(username)}
                         placeholderTextColor={colors.gray}
                         labelStyle={styles.label}
-                        input={styles.input}
+                        inputStyle={styles.input}
                     ></Input>
                     <Input
-                        label="Mat khau"
-                        placeholder="Nhap mat khau"
+                        label="Mật khẩu"
+                        placeholder="Nhập mật khẩu"
                         onChangeText={(password) => setPassword(password)}
                         secureTextEntry={true}
                         placeholderTextColor={colors.gray}
                         labelStyle={styles.label}
-                        input={styles.input}
+                        inputStyle={styles.input}
                     ></Input>
                     <Button
-                        title="Dang ky"
+                        title="Đăng ký"
                         type="solid"
                         loading={loading}
                         onPress={onRegister}
@@ -94,7 +94,7 @@ function Register(props) {
                         style={styles.text}
                         onPress={() => navigate({ name: PageName.LOGIN })}
                     >
-                        Da co tai khoan? Dang nhap
+                        Đã có tài khoản? Đăng nhập
                     </Text>
                 </View>
             </DismissKeyboardView>

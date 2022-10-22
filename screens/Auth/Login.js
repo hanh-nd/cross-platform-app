@@ -44,7 +44,7 @@ function Login(props) {
                 phonenumber: phoneNumber,
                 password,
             });
-            showSuccessMessage('Dang nhap thanh cong');
+            showSuccessMessage('Đăng nhập thành công');
             navigate({
                 name: PageName.BOTTOM_NAVIGATION,
             });
@@ -66,8 +66,8 @@ function Login(props) {
                         containerStyle={styles.logoContainer}
                     />
                     <Input
-                        label="So dien thoai"
-                        placeholder="Nhap so dien thoai"
+                        label="Số điện thoại"
+                        placeholder="Nhập số điện thoại"
                         keyboardType="numeric"
                         onChangeText={(phoneNumber) =>
                             setPhoneNumber(phoneNumber)
@@ -77,8 +77,8 @@ function Login(props) {
                         inputStyle={styles.input}
                     />
                     <Input
-                        label="Mat khau"
-                        placeholder="Nhap mat khau"
+                        label="Mật khẩu"
+                        placeholder="Nhập mật khẩu"
                         secureTextEntry={true}
                         onChangeText={(password) => setPassword(password)}
                         placeholderTextColor={colors.gray}
@@ -86,7 +86,7 @@ function Login(props) {
                         inputStyle={styles.input}
                     />
                     <Button
-                        title="Dang nhap"
+                        title="Đăng nhập"
                         type="solid"
                         onPress={onLogin}
                         loading={loading}
@@ -98,7 +98,7 @@ function Login(props) {
                         style={styles.text}
                         onPress={() => navigate({ name: PageName.REGISTER })}
                     >
-                        Chua co tai khoan? Dang ky
+                        Chưa có tài khoản? Đăng ký
                     </Text>
                 </View>
             </DismissKeyboardView>
