@@ -4,4 +4,4 @@ export const isValidEmail = (stringEmail) => {
 }
     
 //validate password
-export const isValidPassword = (stringPassword) => stringPassword.length >= 3
+export const isValidPassword = (stringPassword) => stringPassword.length >= 8

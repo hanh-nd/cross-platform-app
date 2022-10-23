@@ -25,3 +25,8 @@ export const register = async (registerBody) => {
         throw new Error(response?.message || '');
     }
 };
+
+export const logout = async () => {
+    store.dispatch(setLoginUser({}));
+    await setAccessToken('');
+}
