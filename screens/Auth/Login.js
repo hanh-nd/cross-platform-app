@@ -1,4 +1,4 @@
-import { Button, Image, Input, Text } from "@rneui/themed";
+import { Button, Image, Input, Text, Icon } from "@rneui/themed";
 import React, { useState, useEffect } from "react";
 import { View } from "react-native";
 import { useDispatch } from "react-redux";
@@ -26,7 +26,7 @@ function Login(props) {
   const [phoneNumber, setPhoneNumber] = useState();
   const [password, setPassword] = useState("");
   const isValidationOK = () =>
-    phoneNumber.length > 0 && password.length > 0 && isValidPassword(password) === true;
+    validator.isMobilePhone(phoneNumber) && isValidPassword(password) === true;
   const [loading, setLoading] = useState(false);
 
   //navigation
@@ -72,6 +72,18 @@ function Login(props) {
     }
   }, [phoneNumber]);
 
+  useEffect(() => {
+    if (password) {
+      if (!isValidPassword(password)) {
+        setErrorMessagePassword("Mật khẩu phải tối thiểu 8 ký tự");
+      } else {
+        setErrorMessagePassword();
+      }
+    } else {
+      setErrorMessagePassword();
+    }
+  }, [password]);
+
   return (
     <>
       <DismissKeyboardView style={styles.layout}>
@@ -89,7 +101,15 @@ function Login(props) {
             placeholderTextColor={colors.gray}
             labelStyle={styles.label}
             inputStyle={styles.input}
-            errorMessage={errorMessagePhoneNumber ? errorMessagePhoneNumber : null}
+            errorMessage={
+              errorMessagePhoneNumber ? 
+              <View style={styles.errorLayout}>
+                <Icon name='warning' color='#FFFF00' size={15}/>
+                <Text style={styles.error}>&nbsp;{errorMessagePhoneNumber}</Text>
+              </View>
+                : 
+              null
+            }
           />
           <Input
             label="Mật khẩu"
@@ -99,7 +119,15 @@ function Login(props) {
             placeholderTextColor={colors.gray}
             labelStyle={styles.label}
             inputStyle={styles.input}
-            errorMessage={errorMessagePassword? errorMessagePassword : null}
+            errorMessage={
+              errorMessagePassword ? 
+              <View style={styles.errorLayout}>
+                <Icon name='warning' color='#FFFF00' size={15}/>
+                <Text style={styles.error}>&nbsp;{errorMessagePassword}</Text>
+              </View>
+                : 
+              null
+            }
           />
           <Button
             title="Đăng nhập"
@@ -107,6 +135,7 @@ function Login(props) {
             onPress={onLogin}
             loading={loading}
             buttonStyle={styles.button}
+            disabled={!isValidationOK()}
           ></Button>
         </View>
         <View>
@@ -160,6 +189,14 @@ const styles = {
     fontSize: 18,
     color: colors.white,
   },
+  error: {
+    color: '#FFFF00',
+    fontWeight: '550'
+  },
+  errorLayout: {
+    alignItems: 'center',
+    flexDirection: 'row'
+  }
 };
 
 export default Login;
