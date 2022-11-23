@@ -1,3 +1,3 @@
-import UIHeader from './UIHeader';
-import DismissKeyboardView from './views/DismissKeyboardView';
-export { UIHeader, DismissKeyboardView };
+import HeaderView from './HeaderView/HeaderView';
+import DismissKeyboardView from './DismissKeyboardView/DismissKeyboardView';
+export { HeaderView, DismissKeyboardView };

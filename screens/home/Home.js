@@ -4,8 +4,7 @@ import { BackHandler, Text, Button } from 'react-native';
 import { useDispatch } from 'react-redux';
 import { DismissKeyboardView } from '../../components';
 import { PageName } from '../../navigation/constants';
-import { setIsLoggedIn } from '../../redux/features/app/appSlice';
-import { logout } from '../../repositories/auth.api';
+import { handleLogout, setIsLoggedIn } from '../auth/reducers/auth.reducer';
 
 function Home(props) {
     const dispatch = useDispatch();
@@ -30,17 +29,17 @@ function Home(props) {
     };
 
     const onLogout = () => {
-        logout();
+        dispatch(handleLogout());
         dispatch(setIsLoggedIn(false));
         navigate({
-          name: PageName.LOGIN,
+            name: PageName.LOGIN,
         });
-    }
+    };
 
     return (
         <DismissKeyboardView>
             <Text>HOME</Text>
-            <Button onPress={onLogout} title='logout'/>
+            <Button onPress={onLogout} title="logout" />
         </DismissKeyboardView>
     );
 }

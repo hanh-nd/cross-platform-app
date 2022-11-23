@@ -4,9 +4,9 @@ import { StatusBar } from 'expo-status-bar';
 import React from 'react';
 import Toast from 'react-native-toast-message';
 import { Provider } from 'react-redux';
-import { store } from '../redux/store';
-import { PageName } from './constants';
+import { store } from '../plugins/redux-toolkit/store';
 import { routes } from './routers';
+import { PageName } from './constants';
 
 const Stack = createNativeStackNavigator();
 

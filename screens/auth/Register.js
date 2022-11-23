@@ -4,13 +4,17 @@ import { View } from 'react-native';
 import { DismissKeyboardView } from '../../components';
 import { colors } from '../../constants';
 import { PageName } from '../../navigation/constants';
-import { register } from '../../repositories/auth.api';
+import { handleRegister } from './reducers/auth.reducer';
 import {
     showErrorMessage,
     showSuccessMessage,
 } from '../../utilities/Notification';
+import { useDispatch } from 'react-redux';
 
 function Register(props) {
+    // redux
+    const dispatch = useDispatch();
+
     //states for validating
     const [errorEmail, setErrorEmail] = useState('');
     const [errorPassword, setErrorPassword] = useState('');
@@ -24,11 +28,13 @@ function Register(props) {
         setLoading(true);
 
         try {
-            await register({
-                phonenumber: phoneNumber,
-                username,
-                password,
-            });
+            await dispatch(
+                handleRegister({
+                    phonenumber: phoneNumber,
+                    username,
+                    password,
+                })
+            );
             showSuccessMessage('Đăng ký thành công');
             navigate({
                 name: PageName.HOME,

@@ -1,9 +1,9 @@
 import React from 'react';
 import { Text, View } from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome5';
-import { colors, fontSizes } from '../constants';
+import { colors, fontSizes } from '../../constants';
 
-function UIHeader(props) {
+function HeaderView(props) {
     const {
         title,
         leftIconName,
@@ -56,4 +56,4 @@ function UIHeader(props) {
         </View>
     );
 }
-export default UIHeader;
+export default HeaderView;
