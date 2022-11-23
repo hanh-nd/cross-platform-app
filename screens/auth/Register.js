@@ -1,5 +1,5 @@
-import { Button, Image, Input, Text } from '@rneui/themed';
-import React, { useState } from 'react';
+import { Button, Image, Input, Text, Icon } from '@rneui/themed';
+import React, { useState, useEffect } from 'react';
 import { View } from 'react-native';
 import { DismissKeyboardView } from '../../components';
 import { colors } from '../../constants';
@@ -111,7 +111,7 @@ function Register(props) {
                         labelStyle={styles.label}
                         inputStyle={styles.input}
                         errorMessage={
-                            errorMessagePassword ? (
+                            errorMessagePhoneNumber ? (
                                 <View style={styles.errorLayout}>
                                     <Icon
                                         name="warning"
@@ -119,7 +119,7 @@ function Register(props) {
                                         size={15}
                                     />
                                     <Text style={styles.error}>
-                                        &nbsp;{errorMessagePassword}
+                                        &nbsp;{errorMessagePhoneNumber}
                                     </Text>
                                 </View>
                             ) : null
