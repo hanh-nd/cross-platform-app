@@ -40,30 +40,33 @@ function Login(props) {
     const onLogin = async () => {
         if (!phoneNumber) {
             setErrorMessagePhoneNumber('Vui lòng nhập số điện thoại của bạn!');
-        } else if (!password) {
-            setErrorMessagePassword('Vui lòng nhập mật khẩu!');
-        } else {
-            setLoading(true);
-
-            try {
-                await dispatch(
-                    handleLogin({
-                        phonenumber: phoneNumber,
-                        password,
-                    })
-                );
-
-                showSuccessMessage('Đăng nhập thành công');
-                navigate({
-                    name: PageName.BOTTOM_NAVIGATION,
-                });
-                setLoginState(true);
-            } catch (error) {
-                showErrorMessage(error?.message);
-            }
-
-            setLoading(false);
+            return;
         }
+        if (!password) {
+            setErrorMessagePassword('Vui lòng nhập mật khẩu!');
+            return;
+        }
+
+        setLoading(true);
+
+        try {
+            await dispatch(
+                handleLogin({
+                    phonenumber: phoneNumber,
+                    password,
+                })
+            );
+
+            showSuccessMessage('Đăng nhập thành công');
+            navigate({
+                name: PageName.BOTTOM_NAVIGATION,
+            });
+            setLoginState(true);
+        } catch (error) {
+            showErrorMessage(error?.message);
+        }
+
+        setLoading(false);
     };
 
     useEffect(() => {
