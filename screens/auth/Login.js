@@ -1,36 +1,40 @@
-import { Button, Image, Input, Text, Icon } from '@rneui/themed';
-import React, { useState, useEffect } from 'react';
-import { View } from 'react-native';
-import { useDispatch } from 'react-redux';
+import { useFocusEffect } from '@react-navigation/native';
+import { Button, Icon, Image, Input, Text } from '@rneui/themed';
+import React, { useCallback, useEffect, useState } from 'react';
+import { BackHandler, View } from 'react-native';
+import { useDispatch, useSelector } from 'react-redux';
+import validator from 'validator';
 import { DismissKeyboardView } from '../../components';
 import { colors } from '../../constants';
 import { PageName } from '../../navigation/constants';
+import { setAccessToken } from '../../plugins/axios/axios';
 import {
     showErrorMessage,
     showSuccessMessage,
 } from '../../utilities/Notification';
-import validator from 'validator';
 import { isValidPassword } from '../../utilities/Validations';
-import { handleLogin, setIsLoggedIn } from './reducers/auth.reducer';
+import {
+    handleLogin,
+    selectIsLoading,
+    setIsLoggedIn,
+} from './reducers/auth.reducer';
 
 function Login(props) {
     // redux
     const dispatch = useDispatch();
-    const setLoginState = (state) => {
-        dispatch(setIsLoggedIn(state));
-    };
+    const isLoading = useSelector(selectIsLoading);
+
     //states for validating
     //   const [errorEmail, setErrorEmail] = useState("");
     //   const [errorPassword, setErrorPassword] = useState("");
     const [errorMessagePhoneNumber, setErrorMessagePhoneNumber] = useState();
     const [errorMessagePassword, setErrorMessagePassword] = useState();
     //states to store email/password
-    const [phoneNumber, setPhoneNumber] = useState();
+    const [phoneNumber, setPhoneNumber] = useState('');
     const [password, setPassword] = useState('');
     const isValidationOK = () =>
         validator.isMobilePhone(phoneNumber || '') &&
         isValidPassword(password || '') === true;
-    const [loading, setLoading] = useState(false);
 
     //navigation
     const { navigation, route } = props;
@@ -47,26 +51,40 @@ function Login(props) {
             return;
         }
 
-        setLoading(true);
+        const response = await dispatch(
+            handleLogin({
+                phonenumber: phoneNumber,
+                password,
+            })
+        ).unwrap();
 
-        try {
-            await dispatch(
-                handleLogin({
-                    phonenumber: phoneNumber,
-                    password,
-                })
-            );
-
+        if (response?.success) {
             showSuccessMessage('Đăng nhập thành công');
+            setIsLoggedIn(true);
+            setAccessToken(response.token);
             navigate({
                 name: PageName.BOTTOM_NAVIGATION,
             });
-            setLoginState(true);
-        } catch (error) {
-            showErrorMessage(error?.message);
+            return;
         }
 
-        setLoading(false);
+        showErrorMessage('Đăng nhập thất bại', response?.message);
+    };
+
+    useFocusEffect(
+        useCallback(() => {
+            BackHandler.addEventListener('hardwareBackPress', backAction);
+            return () => {
+                BackHandler.removeEventListener(
+                    'hardwareBackPress',
+                    backAction
+                );
+            };
+        }, [])
+    );
+
+    const backAction = async () => {
+        BackHandler.exitApp();
     };
 
     useEffect(() => {
@@ -154,7 +172,7 @@ function Login(props) {
                         title="Đăng nhập"
                         type="solid"
                         onPress={onLogin}
-                        loading={loading}
+                        loading={isLoading}
                         buttonStyle={styles.button}
                         disabled={!isValidationOK()}
                     ></Button>

@@ -1,11 +1,11 @@
-import { BASE_URL } from '@env';
+import { env } from '../../constants';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import axios from 'axios';
 import { isEmpty } from 'lodash';
 import { isParsable } from '../../utilities/Parser';
 
 export const client = axios.create({
-    baseURL: BASE_URL,
+    baseURL: env.BASE_URL,
     timeout: 60000,
     headers: {
         'Access-Control-Allow-Origin': '*',

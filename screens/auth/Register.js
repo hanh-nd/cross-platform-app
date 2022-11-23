@@ -1,24 +1,29 @@
-import { Button, Image, Input, Text, Icon } from '@rneui/themed';
-import React, { useState, useEffect } from 'react';
+import { Button, Icon, Image, Input, Text } from '@rneui/themed';
+import React, { useEffect, useState } from 'react';
 import { View } from 'react-native';
+import { useDispatch, useSelector } from 'react-redux';
+import validator from 'validator';
 import { DismissKeyboardView } from '../../components';
 import { colors } from '../../constants';
 import { PageName } from '../../navigation/constants';
-import { handleRegister, setIsLoggedIn } from './reducers/auth.reducer';
+import { setAccessToken } from '../../plugins/axios/axios';
 import {
     showErrorMessage,
     showSuccessMessage,
 } from '../../utilities/Notification';
-import validator from 'validator';
 import { isValidPassword } from '../../utilities/Validations';
-import { useDispatch } from 'react-redux';
+import {
+    handleRegister,
+    selectIsLoading,
+    selectIsLoggedIn,
+    setIsLoggedIn,
+} from './reducers/auth.reducer';
 
 function Register(props) {
     // redux
     const dispatch = useDispatch();
-    const setLoginState = (state) => {
-        dispatch(setIsLoggedIn(state));
-    };
+    const isLoggedIn = useSelector(selectIsLoggedIn);
+    const isLoading = useSelector(selectIsLoading);
     //states for validating
     const [errorMessagePhoneNumber, setErrorMessagePhoneNumber] = useState();
     const [errorMessagePassword, setErrorMessagePassword] = useState();
@@ -29,7 +34,6 @@ function Register(props) {
     const isValidationOK = () =>
         validator.isMobilePhone(phoneNumber || '') &&
         isValidPassword(password || '') === true;
-    const [loading, setLoading] = useState(false);
 
     const onRegister = async () => {
         if (!phoneNumber) {
@@ -41,31 +45,39 @@ function Register(props) {
             return;
         }
 
-        setLoading(true);
+        const response = await dispatch(
+            handleRegister({
+                phonenumber: phoneNumber,
+                username,
+                password,
+            })
+        ).unwrap();
 
-        try {
-            await dispatch(
-                handleRegister({
-                    phonenumber: phoneNumber,
-                    username,
-                    password,
-                })
-            );
+        if (response?.success) {
             showSuccessMessage('Đăng ký thành công');
+            setIsLoggedIn(true);
+            setAccessToken(response.token);
             navigate({
-                name: PageName.HOME,
+                name: PageName.BOTTOM_NAVIGATION,
             });
-            setLoginState(true);
-        } catch (error) {
-            showErrorMessage(error?.message);
+            return;
         }
 
-        setLoading(false);
+        showErrorMessage('Đăng ký thất bại', response?.message);
     };
+
     //navigation
     const { navigation, route } = props;
     //functions of navigate to/back
     const { navigate, goBack } = navigation;
+
+    useEffect(() => {
+        if (isLoggedIn) {
+            navigate({
+                name: PageName.BOTTOM_NAVIGATION,
+            });
+        }
+    }, [isLoggedIn]);
 
     useEffect(() => {
         if (phoneNumber) {
@@ -159,7 +171,7 @@ function Register(props) {
                     <Button
                         title="Đăng ký"
                         type="solid"
-                        loading={loading}
+                        loading={isLoading}
                         onPress={onRegister}
                         buttonStyle={styles.button}
                         disabled={!isValidationOK()}

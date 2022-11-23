@@ -1,10 +1,11 @@
 import { useFocusEffect } from '@react-navigation/native';
 import { useCallback } from 'react';
-import { BackHandler, Text, Button } from 'react-native';
+import { BackHandler, Button, Text } from 'react-native';
 import { useDispatch } from 'react-redux';
 import { DismissKeyboardView } from '../../components';
 import { PageName } from '../../navigation/constants';
-import { handleLogout, setIsLoggedIn } from '../auth/reducers/auth.reducer';
+import { setAccessToken } from '../../plugins/axios/axios';
+import { handleLogout } from '../auth/reducers/auth.reducer';
 
 function Home(props) {
     const dispatch = useDispatch();
@@ -30,7 +31,7 @@ function Home(props) {
 
     const onLogout = () => {
         dispatch(handleLogout());
-        dispatch(setIsLoggedIn(false));
+        setAccessToken('');
         navigate({
             name: PageName.LOGIN,
         });
