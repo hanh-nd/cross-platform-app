@@ -1,8 +1,8 @@
 import * as Font from 'expo-font';
 import { isEmpty } from 'lodash';
 import { useEffect } from 'react';
-import { PageName } from '../../navigation/constants';
-import { getAccessToken } from '../../plugins/axios/axios';
+import { PageName } from '../../../navigation/constants';
+import { getAccessToken } from '../../../plugins/axios/axios';
 
 function Loading(props) {
     const { navigation } = props;
