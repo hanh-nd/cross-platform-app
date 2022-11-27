@@ -1,6 +1,6 @@
 import { Icon } from '@rneui/themed';
 import { Chat, Home, Loading, Login, Register } from '../screens';
-import BottomNavigation from './BottomNavigation';
+import TabNavigator from './TabNavigator';
 import { PageName } from './constants';
 
 export const routes = [
@@ -9,8 +9,8 @@ export const routes = [
         component: Loading,
     },
     {
-        name: PageName.BOTTOM_NAVIGATION,
-        component: BottomNavigation,
+        name: PageName.TAB_NAVIGATOR,
+        component: TabNavigator,
     },
     {
         name: PageName.LOGIN,
@@ -30,7 +30,7 @@ export const routes = [
     },
 ];
 
-export const bottomNavigationRoutes = [
+export const tabNavigatorRoutes = [
     {
         name: PageName.HOME,
         component: Home,

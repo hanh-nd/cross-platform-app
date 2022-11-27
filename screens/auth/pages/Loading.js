@@ -25,7 +25,7 @@ function Loading(props) {
         if (isEmpty(accessToken)) {
             navigation.navigate({ name: PageName.LOGIN });
         } else {
-            navigation.navigate({ name: PageName.BOTTOM_NAVIGATION });
+            navigation.navigate({ name: PageName.TAB_NAVIGATOR });
         }
     };
     return null;

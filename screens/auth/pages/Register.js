@@ -47,7 +47,7 @@ function Register(props) {
             setIsLoggedIn(true);
             setAccessToken(response.token);
             navigate({
-                name: PageName.BOTTOM_NAVIGATION,
+                name: PageName.TAB_NAVIGATOR,
             });
             return;
         }

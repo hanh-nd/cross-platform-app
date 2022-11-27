@@ -1,6 +1,6 @@
 export const PageName = {
     LOADING: 'Loading',
-    BOTTOM_NAVIGATION: 'BottomNavigation',
+    TAB_NAVIGATOR: 'TabNavigator',
     LOGIN: 'Login',
     REGISTER: 'Register',
     HOME: 'Home',
