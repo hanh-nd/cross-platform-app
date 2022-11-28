@@ -13,4 +13,6 @@ export default {
     gray: '#d3d3d3',
     grayBlue: '#4e69a2',
     white: '#ffffff',
+
+    text: '#000000'
 };

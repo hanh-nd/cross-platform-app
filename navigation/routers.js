@@ -1,5 +1,5 @@
 import { Icon } from '@rneui/themed';
-import { Chat, Home, Loading, Login, Register } from '../screens';
+import { Chat, Home, Loading, Login, Register, Profile } from '../screens';
 import TabNavigator from './TabNavigator';
 import { PageName } from './constants';
 
@@ -28,6 +28,10 @@ export const routes = [
         name: PageName.CHAT,
         component: Chat,
     },
+    {
+        name: PageName.PROFILE,
+        component: Profile,
+    },
 ];
 
 export const tabNavigatorRoutes = [
@@ -43,6 +47,13 @@ export const tabNavigatorRoutes = [
         component: Chat,
         icon: ({ color, size }) => (
             <Icon name="chat" color={color} size={size} />
+        ),
+    },
+    {
+        name: PageName.PROFILE,
+        component: Profile,
+        icon: ({ color, size }) => (
+            <Icon name="person" color={color} size={size} />
         ),
     },
 ];
