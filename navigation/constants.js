@@ -5,4 +5,5 @@ export const PageName = {
     REGISTER: 'Register',
     HOME: 'Home',
     CHAT: 'Chat',
+    PROFILE: 'Profile',
 };
