@@ -1,5 +1,5 @@
 import { Icon } from '@rneui/themed';
-import { Chat, Home, Loading, Login, Register, Profile } from '../screens';
+import { Chat, Home, Loading, Login, Register, Profile, ListFriends, EditProfile, EditUser } from '../screens';
 import TabNavigator from './TabNavigator';
 import { PageName } from './constants';
 
@@ -7,30 +7,52 @@ export const routes = [
     {
         name: PageName.LOADING,
         component: Loading,
+        headerShown: false
     },
     {
         name: PageName.TAB_NAVIGATOR,
         component: TabNavigator,
+        headerShown: false
     },
     {
         name: PageName.LOGIN,
         component: Login,
+        headerShown: false
     },
     {
         name: PageName.REGISTER,
         component: Register,
+        headerShown: false
     },
     {
         name: PageName.HOME,
         component: Home,
+        headerShown: false
     },
     {
         name: PageName.CHAT,
         component: Chat,
+        headerShown: false
     },
     {
         name: PageName.PROFILE,
         component: Profile,
+        headerShown: false
+    },
+    {
+        name: PageName.LIST_FRIENDS,
+        component: ListFriends,
+        headerShown: true
+    },
+    {
+        name: PageName.EDIT_PROFILE,
+        component: EditProfile,
+        headerShown: true
+    },
+    {
+        name: PageName.EDIT_USER,
+        component: EditUser,
+        headerShown: true
     },
 ];
 

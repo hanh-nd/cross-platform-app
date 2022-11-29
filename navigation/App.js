@@ -18,9 +18,6 @@ function App(props) {
                 <NavigationContainer>
                     <Stack.Navigator
                         initialRouteName={PageName.LOADING}
-                        screenOptions={{
-                            headerShown: false,
-                        }}
                     >
                         {routes.map((router) => {
                             return (
@@ -28,6 +25,9 @@ function App(props) {
                                     name={router.name}
                                     component={router.component}
                                     key={router.name}
+                                    options={{
+                                        headerShown: router.headerShown
+                                    }}
                                 />
                             );
                         })}
