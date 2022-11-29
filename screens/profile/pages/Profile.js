@@ -8,9 +8,12 @@ import {
     Text,
     Image,
     Button,
-    Icon
+    Icon,
+    Divider,
+    Avatar
 } from '@rneui/themed';
-import { colors, screen } from '../../constants';
+import { PageName } from '../../../navigation/constants';
+import { colors, screen } from '../../../constants';
 
 const wait = (timeout) => {
     return new Promise(resolve => setTimeout(resolve, timeout));
@@ -19,6 +22,9 @@ const wait = (timeout) => {
 
 function Profile(props) {
     const [refreshing, setRefreshing] = React.useState(false);
+
+    const { navigation, route } = props;
+    const { navigate, goBack } = navigation;
 
     const onRefresh = React.useCallback(() => {
         setRefreshing(true);
@@ -36,56 +42,76 @@ function Profile(props) {
             }>
             <Image
                 style={styles.cover}
-                source={require('../../assets/default_cover.jpg')}
+                source={require('../../../assets/default_cover.jpg')}
                 containerStyle={styles.coverContainer} />
             <View style={styles.header}>
-                <Image
-                    style={styles.avatar}
-                    source={require('../../assets/default_avt.jpg')}
+                <Avatar
+                    size={130}
+                    rounded
+                    source={require('../../../assets/default_avt.jpg')}
+                    containerStyle={{ borderWidth: 4, borderColor: colors.white }}
                 />
                 <Text style={styles.name}>Hoang Anh</Text>
                 <View>
-                    <Button type="solid" color={colors.gray} buttonStyle={styles.button}>
+                    <Button 
+                        type="solid" 
+                        color={colors.gray} 
+                        buttonStyle={styles.button}
+                        onPress={() => navigate({ 
+                            name: PageName.EDIT_PROFILE                        
+                        })}
+                    >
                         <Icon name="edit" color="black" />
                         <Text style={styles.textButton}> Chỉnh sửa trang cá nhân</Text>
                     </Button>
                 </View>
             </View>
-            <View style={styles.divider}></View>
+            <Divider width={10} color={colors.gray} style={{marginVertical: 14}}/>
             <View style={styles.friend}>
                 <Text style={styles.label}>Bạn bè</Text>
                 <Text style={{color: colors.placeholder}}>83 người bạn</Text>
                 <View style={styles.preview}>
-                    <Image
-                        style={styles.friendAvatar}
-                        source={require('../../assets/default_avt.jpg')}
+                    <Avatar
+                        size={110}
+                        source={require('../../../assets/default_avt.jpg')}
+                        containerStyle={styles.friendAvatar}
                     />
-                    <Image
-                        style={styles.friendAvatar}
-                        source={require('../../assets/default_avt.jpg')}
+                    <Avatar
+                        size={110}
+                        source={require('../../../assets/default_avt.jpg')}
+                        containerStyle={styles.friendAvatar}
                     />
-                    <Image
-                        style={styles.friendAvatar}
-                        source={require('../../assets/default_avt.jpg')}
+                    <Avatar
+                        size={110}
+                        source={require('../../../assets/default_avt.jpg')}
+                        containerStyle={styles.friendAvatar}
                     />
-                    <Image
-                        style={styles.friendAvatar}
-                        source={require('../../assets/default_avt.jpg')}
+                    <Avatar
+                        size={110}
+                        source={require('../../../assets/default_avt.jpg')}
+                        containerStyle={styles.friendAvatar}
                     />
-                    <Image
-                        style={styles.friendAvatar}
-                        source={require('../../assets/default_avt.jpg')}
+                    <Avatar
+                        size={110}
+                        source={require('../../../assets/default_avt.jpg')}
+                        containerStyle={styles.friendAvatar}
                     />
-                    <Image
-                        style={styles.friendAvatar}
-                        source={require('../../assets/default_avt.jpg')}
+                    <Avatar
+                        size={110}
+                        source={require('../../../assets/default_avt.jpg')}
+                        containerStyle={styles.friendAvatar}
                     />
                 </View>
-                <Button type="solid" color={colors.gray} buttonStyle={styles.button}>
+                <Button
+                    type="solid"
+                    color={colors.gray}
+                    buttonStyle={styles.button}
+                    onPress={() => navigate({ name: PageName.LIST_FRIENDS })}
+                >
                     <Text style={styles.textButton}>Xem tất cả bạn bè</Text>
                 </Button>
             </View>
-            <View style={styles.divider}></View>
+            <Divider width={10} color={colors.gray} style={{marginVertical: 14}}/>
         </ScrollView>
     );
 }
@@ -101,13 +127,6 @@ const styles = {
     },
     coverContainer: {
         position: 'absolute',
-    },
-    avatar: {
-        width: 130,
-        height: 130,
-        borderRadius: 63,
-        borderWidth: 4,
-        borderColor: colors.white,
     },
     name: {
         fontSize: 25,
@@ -131,8 +150,6 @@ const styles = {
         justifyContent: 'space-between'
     },
     friendAvatar: {
-        width: 110,
-        height: 110,
         marginVertical: 5,
         borderRadius: 5
     },
@@ -140,13 +157,6 @@ const styles = {
         fontSize: 18,
         fontWeight: '700',
     },
-
-    divider: {
-        marginVertical: 14,
-        height: 12,
-        width: '100%',
-        backgroundColor: colors.gray
-    }
 };
 
 export default Profile;
