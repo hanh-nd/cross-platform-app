@@ -7,8 +7,8 @@ import {
 } from '@rneui/themed';
 
 import { View, Keyboard } from 'react-native';
-import { colors, screen } from '../../../constants';
-import { PageName } from '../../../navigation/constants';
+import { colors, screen } from 'constants';
+import { PageName } from 'navigation/constants';
 import { Picker } from '@react-native-picker/picker';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import moment from 'moment/moment';

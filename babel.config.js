@@ -15,6 +15,23 @@ module.exports = function (api) {
                     verbose: false,
                 },
             ],
+            [
+                'module-resolver',
+                {
+                    root: ['.'],
+                    extensions: ['.ios.js', '.android.js', '.js', '.ts', '.tsx', '.json'],
+                    alias: {
+                        '@': '.',
+                        screens: './screens',
+                        components: './components',
+                        constants: './constants',
+                        utilities: './utilities',
+                        assets: './assets',
+                        navigation: './navigation',
+                        plugins: './plugins',
+                    },
+                },
+            ]
         ],
     };
 };
