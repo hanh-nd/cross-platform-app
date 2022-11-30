@@ -7,8 +7,8 @@ import {
     Avatar
 } from '@rneui/themed';
 import { View } from 'react-native';
-import { colors, screen } from '../../../constants';
-import { PageName } from '../../../navigation/constants';
+import { colors, screen } from 'constants';
+import { PageName } from 'navigation/constants';
 
 function EditProfile(props) {
 
@@ -25,7 +25,7 @@ function EditProfile(props) {
                 <Avatar
                     size={130}
                     rounded
-                    source={require('../../../assets/default_avt.jpg')}
+                    source={require('assets/default_avt.jpg')}
                 />
             </View>
             <Divider width={1} color={colors.gray} style={{marginVertical: 14}}/>
@@ -36,7 +36,7 @@ function EditProfile(props) {
             <View style={{ width: '100%' }}>
                 <Image
                     style={styles.cover}
-                    source={require('../../../assets/default_cover.jpg')}
+                    source={require('assets/default_cover.jpg')}
                 />
             </View>
             <Divider width={1} color={colors.gray} style={{marginVertical: 14}}/>

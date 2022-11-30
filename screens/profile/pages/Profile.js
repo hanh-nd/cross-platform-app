@@ -12,8 +12,8 @@ import {
     Divider,
     Avatar
 } from '@rneui/themed';
-import { PageName } from '../../../navigation/constants';
-import { colors, screen } from '../../../constants';
+import { PageName } from 'navigation/constants';
+import { colors, screen } from 'constants';
 
 const wait = (timeout) => {
     return new Promise(resolve => setTimeout(resolve, timeout));
@@ -42,19 +42,18 @@ function Profile(props) {
             }>
             <Image
                 style={styles.cover}
-                source={require('../../../assets/default_cover.jpg')}
+                source={require('assets/default_cover.jpg')}
                 containerStyle={styles.coverContainer} />
             <View style={styles.header}>
                 <Avatar
                     size={130}
                     rounded
-                    source={require('../../../assets/default_avt.jpg')}
+                    source={require('assets/default_avt.jpg')}
                     containerStyle={{ borderWidth: 4, borderColor: colors.white }}
                 />
                 <Text style={styles.name}>Hoang Anh</Text>
                 <View>
                     <Button 
-                        type="solid" 
                         color={colors.gray} 
                         buttonStyle={styles.button}
                         onPress={() => navigate({ 
@@ -65,6 +64,39 @@ function Profile(props) {
                         <Text style={styles.textButton}> Chỉnh sửa trang cá nhân</Text>
                     </Button>
                 </View>
+                {/* friend profile */}
+                {/* <View style={{flexDirection: 'row', justifyContent: 'space-between'}}>
+                    <Button 
+                        color={colors.grayBlue} 
+                        buttonStyle={styles.button}
+                        onPress={() => navigate({ 
+                            name: PageName.EDIT_PROFILE                        
+                        })}
+                    >
+                        <Icon name="person-add-alt-1" color="white" />
+                        <Text style={[styles.textButton, {color: 'white'}]}> Thêm bạn bè</Text>
+                    </Button>
+                    <Button 
+                        color={colors.gray} 
+                        buttonStyle={styles.button}
+                        onPress={() => navigate({ 
+                            name: PageName.EDIT_PROFILE                        
+                        })}
+                    >
+                        <Icon name="message" color="black" />
+                        <Text style={styles.textButton}> Nhắn tin</Text>
+                    </Button>
+                    <Button 
+                        color={colors.gray} 
+                        buttonStyle={styles.button}
+                        onPress={() => navigate({ 
+                            name: PageName.EDIT_PROFILE                        
+                        })}
+                    >
+                        <Icon name="block" color="black" />
+                        <Text style={styles.textButton}> Chặn</Text>
+                    </Button>
+                </View> */}
             </View>
             <Divider width={10} color={colors.gray} style={{marginVertical: 14}}/>
             <View style={styles.friend}>
@@ -73,37 +105,36 @@ function Profile(props) {
                 <View style={styles.preview}>
                     <Avatar
                         size={110}
-                        source={require('../../../assets/default_avt.jpg')}
+                        source={require('assets/default_avt.jpg')}
                         containerStyle={styles.friendAvatar}
                     />
                     <Avatar
                         size={110}
-                        source={require('../../../assets/default_avt.jpg')}
+                        source={require('assets/default_avt.jpg')}
                         containerStyle={styles.friendAvatar}
                     />
                     <Avatar
                         size={110}
-                        source={require('../../../assets/default_avt.jpg')}
+                        source={require('assets/default_avt.jpg')}
                         containerStyle={styles.friendAvatar}
                     />
                     <Avatar
                         size={110}
-                        source={require('../../../assets/default_avt.jpg')}
+                        source={require('assets/default_avt.jpg')}
                         containerStyle={styles.friendAvatar}
                     />
                     <Avatar
                         size={110}
-                        source={require('../../../assets/default_avt.jpg')}
+                        source={require('assets/default_avt.jpg')}
                         containerStyle={styles.friendAvatar}
                     />
                     <Avatar
                         size={110}
-                        source={require('../../../assets/default_avt.jpg')}
+                        source={require('assets/default_avt.jpg')}
                         containerStyle={styles.friendAvatar}
                     />
                 </View>
                 <Button
-                    type="solid"
                     color={colors.gray}
                     buttonStyle={styles.button}
                     onPress={() => navigate({ name: PageName.LIST_FRIENDS })}
@@ -151,7 +182,6 @@ const styles = {
     },
     friendAvatar: {
         marginVertical: 5,
-        borderRadius: 5
     },
     label: {
         fontSize: 18,
