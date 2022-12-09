@@ -34,7 +34,7 @@ function Home(props) {
             <View style={styles.createPost}>
                 <CreatePost />
             </View>
-            <View>
+            <View style={styles.postList}>
                 <PostList />
             </View>
         </DismissKeyboardView>
@@ -50,10 +50,14 @@ const styles = {
         width: screen.width,
         height: screen.height,
         backgroundColor: '#D9D9D9',
+        flex: 1,
     },
     createPost: {
         marginBottom: 16,
         width: screen.width,
+    },
+    postList: {
+        flex: 1,
     },
 };
 

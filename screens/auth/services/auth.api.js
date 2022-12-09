@@ -12,3 +12,7 @@ export const register = async (registerBody) => {
 export const logout = () => {
     return true;
 };
+
+export const getSelfProfile = async () => {
+    return await client.get(`${env.BASE_URL}/users/show`);
+};

@@ -3,17 +3,11 @@ import dayjs from '../../../plugins/dayjs';
 import { View } from 'react-native';
 import { env } from '../../../constants';
 import { screen } from 'constants';
+import { getUserName } from '../../../utilities/User';
 
 function Post(props) {
     const { post } = props;
     const { author, described, images, updatedAt } = post;
-
-    const getUserName = (author) => {
-        if (author?.firstName && author?.lastName)
-            return `${author?.firstName} ${author?.lastName}`;
-        if (author?.username) return author.username;
-        return author?.firstName ?? author?.lastName;
-    };
 
     return (
         <View style={styles.container}>

@@ -1,26 +1,19 @@
-import React from 'react';
-import {
-    View,
-    ScrollView,
-    RefreshControl
-} from 'react-native';
-import {
-    Text,
-    Image,
-    Button,
-    Icon,
-    Divider,
-    Avatar
-} from '@rneui/themed';
-import { PageName } from 'navigation/constants';
+import { Avatar, Button, Divider, Icon, Image, Text } from '@rneui/themed';
 import { colors, screen } from 'constants';
+import { PageName } from 'navigation/constants';
+import React from 'react';
+import { RefreshControl, ScrollView, View } from 'react-native';
+import { useSelector } from 'react-redux';
+import { getUserName } from '../../../utilities/User';
+import { selectLoginUser } from '../../auth/reducers/auth.reducer';
 
 const wait = (timeout) => {
-    return new Promise(resolve => setTimeout(resolve, timeout));
-}
-
+    return new Promise((resolve) => setTimeout(resolve, timeout));
+};
 
 function Profile(props) {
+    const loginUser = useSelector(selectLoginUser);
+
     const [refreshing, setRefreshing] = React.useState(false);
 
     const { navigation, route } = props;
@@ -35,33 +28,40 @@ function Profile(props) {
         <ScrollView
             showsVerticalScrollIndicator={false}
             refreshControl={
-                <RefreshControl
-                    refreshing={refreshing}
-                    onRefresh={onRefresh}
-                />
-            }>
+                <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+            }
+        >
             <Image
                 style={styles.cover}
                 source={require('assets/default_cover.jpg')}
-                containerStyle={styles.coverContainer} />
+                containerStyle={styles.coverContainer}
+            />
             <View style={styles.header}>
                 <Avatar
                     size={130}
                     rounded
                     source={require('assets/default_avt.jpg')}
-                    containerStyle={{ borderWidth: 4, borderColor: colors.white }}
+                    containerStyle={{
+                        borderWidth: 4,
+                        borderColor: colors.white,
+                    }}
                 />
-                <Text style={styles.name}>Hoang Anh</Text>
+                <Text style={styles.name}>{getUserName(loginUser)}</Text>
                 <View>
-                    <Button 
-                        color={colors.gray} 
+                    <Button
+                        color={colors.gray}
                         buttonStyle={styles.button}
-                        onPress={() => navigate({ 
-                            name: PageName.EDIT_PROFILE                        
-                        })}
+                        onPress={() =>
+                            navigate({
+                                name: PageName.EDIT_PROFILE,
+                            })
+                        }
                     >
                         <Icon name="edit" color="black" />
-                        <Text style={styles.textButton}> Chỉnh sửa trang cá nhân</Text>
+                        <Text style={styles.textButton}>
+                            {' '}
+                            Chỉnh sửa trang cá nhân
+                        </Text>
                     </Button>
                 </View>
                 {/* friend profile */}
@@ -98,10 +98,14 @@ function Profile(props) {
                     </Button>
                 </View> */}
             </View>
-            <Divider width={10} color={colors.gray} style={{marginVertical: 14}}/>
+            <Divider
+                width={10}
+                color={colors.gray}
+                style={{ marginVertical: 14 }}
+            />
             <View style={styles.friend}>
                 <Text style={styles.label}>Bạn bè</Text>
-                <Text style={{color: colors.placeholder}}>83 người bạn</Text>
+                <Text style={{ color: colors.placeholder }}>83 người bạn</Text>
                 <View style={styles.preview}>
                     <Avatar
                         size={110}
@@ -142,7 +146,11 @@ function Profile(props) {
                     <Text style={styles.textButton}>Xem tất cả bạn bè</Text>
                 </Button>
             </View>
-            <Divider width={10} color={colors.gray} style={{marginVertical: 14}}/>
+            <Divider
+                width={10}
+                color={colors.gray}
+                style={{ marginVertical: 14 }}
+            />
         </ScrollView>
     );
 }
@@ -150,11 +158,11 @@ function Profile(props) {
 const styles = {
     header: {
         paddingHorizontal: '5%',
-        marginTop: 100
+        marginTop: 100,
     },
     cover: {
         height: 200,
-        width: screen.width
+        width: screen.width,
     },
     coverContainer: {
         position: 'absolute',
@@ -176,9 +184,9 @@ const styles = {
     },
     preview: {
         marginVertical: 10,
-        flexDirection: "row",
-        flexWrap: "wrap",
-        justifyContent: 'space-between'
+        flexDirection: 'row',
+        flexWrap: 'wrap',
+        justifyContent: 'space-between',
     },
     friendAvatar: {
         marginVertical: 5,
