@@ -41,7 +41,6 @@ function PostList(props) {
 const styles = {
     container: {
         width: screen.width,
-        height: screen.height,
     },
     emptyList: {
         display: 'flex',

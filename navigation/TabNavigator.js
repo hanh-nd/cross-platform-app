@@ -1,12 +1,13 @@
-import * as React from 'react';
-import { Text, View, StatusBar } from 'react-native';
+import { createMaterialTopTabNavigator } from '@react-navigation/material-top-tabs';
+import { useEffect } from 'react';
+import { View } from 'react-native';
 import 'react-native-gesture-handler';
+import { SafeAreaView } from 'react-native-safe-area-context';
+import { useDispatch } from 'react-redux';
 import { colors, fontSizes } from '../constants';
+import { fetchSelfDetail } from '../screens/auth/reducers/auth.reducer';
 import { PageName } from './constants';
 import { tabNavigatorRoutes } from './routers';
-import { createMaterialTopTabNavigator } from '@react-navigation/material-top-tabs';
-import { isIOS } from '../utilities/Device';
-import { SafeAreaView } from 'react-native-safe-area-context';
 
 const Tab = createMaterialTopTabNavigator();
 
@@ -22,6 +23,12 @@ const screenOptions = ({ route }) => ({
 });
 
 function TabNavigator(props) {
+    const dispatch = useDispatch();
+
+    useEffect(() => {
+        dispatch(fetchSelfDetail());
+    }, []);
+
     return (
         <SafeAreaView style={{ flex: 1, backgroundColor: '#fff' }}>
             <Tab.Navigator

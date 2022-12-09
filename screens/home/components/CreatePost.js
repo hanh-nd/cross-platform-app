@@ -1,8 +1,18 @@
+import { useNavigation } from '@react-navigation/native';
 import { Avatar, Text } from '@rneui/themed';
-import { View } from 'react-native';
 import { screen } from 'constants';
+import { TouchableOpacity, View } from 'react-native';
+import { PageName } from '../../../navigation/constants';
 
 function CreatePost(props) {
+    const { navigate } = useNavigation();
+
+    const onPress = () => {
+        navigate({
+            name: PageName.CREATE_POST_PAGE,
+        });
+    };
+
     return (
         <View style={styles.container}>
             <Avatar
@@ -10,9 +20,11 @@ function CreatePost(props) {
                 size={48}
                 source={require('assets/default_avt.jpg')}
             />
-            <View style={styles.content}>
-                <Text>Bạn đang nghĩ gì?</Text>
-            </View>
+            <TouchableOpacity style={styles.content} onPress={onPress}>
+                <View>
+                    <Text>Bạn đang nghĩ gì?</Text>
+                </View>
+            </TouchableOpacity>
         </View>
     );
 }
