@@ -1,6 +1,6 @@
 import { Avatar, Button, Icon, Image, ListItem, Text } from '@rneui/themed';
 import dayjs from '../../../plugins/dayjs';
-import { View } from 'react-native';
+import { ActivityIndicator, View } from 'react-native';
 import { env } from '../../../constants';
 import { screen } from 'constants';
 import { getUserName } from '../../../utilities/User';
@@ -46,6 +46,8 @@ function Post(props) {
                             source={{
                                 uri: `${env.FILE_SERVICE_USER}/${images[0].fileName}`,
                             }}
+                            containerStyle={styles.image}
+                            PlaceholderContent={<ActivityIndicator />}
                         />
                     </View>
                 ) : null}
@@ -98,6 +100,11 @@ const styles = {
     },
     contentText: {
         padding: 8,
+    },
+    image: {
+        width: '100%',
+        aspectRatio: 1,
+        flex: 1,
     },
     buttonGroup: {
         flex: 1,

@@ -1,9 +1,12 @@
-import { Avatar, Button, Input, ListItem } from '@rneui/themed';
+import { Avatar, Button, Image, Input, ListItem } from '@rneui/themed';
 import { screen } from 'constants';
 import { Formik } from 'formik';
+import { useState } from 'react';
 import { Text, View } from 'react-native';
+import { FlatList } from 'react-native-gesture-handler';
 import { useDispatch, useSelector } from 'react-redux';
 import { PageName } from '../../../navigation/constants';
+import { getBase64ImageList } from '../../../plugins/image-picker';
 import {
     showErrorMessage,
     showSuccessMessage,
@@ -12,6 +15,7 @@ import { getUserName } from '../../../utilities/User';
 import { selectLoginUser } from '../../auth/reducers/auth.reducer';
 import { createNewPost, fetchPostList } from '../reducers/home.reducer';
 import { createPostSchema } from '../schema';
+
 function CreatePostPage(props) {
     const loginUser = useSelector(selectLoginUser);
 
@@ -20,11 +24,18 @@ function CreatePostPage(props) {
 
     const dispatch = useDispatch();
 
+    const [images, setImages] = useState();
+
     const initialValues = {
         described: '',
     };
 
     const createPost = async (body) => {
+        if (images.length) {
+            Object.assign(body, {
+                images,
+            });
+        }
         const response = await dispatch(createNewPost(body)).unwrap();
         if (response?.success) {
             showSuccessMessage('Tạo bài viết thành công');
@@ -36,6 +47,11 @@ function CreatePostPage(props) {
         }
 
         showErrorMessage('Tạo bài viết thất bại', response?.message);
+    };
+
+    const pickImages = async () => {
+        const images = await getBase64ImageList();
+        setImages(images);
     };
 
     return (
@@ -80,7 +96,6 @@ function CreatePostPage(props) {
                             multiline={true}
                             numberOfLines={10}
                         />
-
                         <Button
                             onPress={handleSubmit}
                             disabled={!isValid}
@@ -88,6 +103,17 @@ function CreatePostPage(props) {
                     </View>
                 )}
             </Formik>
+            <Button onPress={pickImages}>Pick Image</Button>
+            <FlatList
+                data={images}
+                ItemSeparatorComponent={() => <View style={{ height: 16 }} />}
+                renderItem={({ item }) => (
+                    <Image
+                        source={{ uri: item }}
+                        containerStyle={styles.image}
+                    />
+                )}
+            />
         </View>
     );
 }
@@ -125,6 +151,11 @@ const styles = {
         textAlignVertical: 'top',
         padding: 8,
         borderRadius: 8,
+    },
+    image: {
+        width: '100%',
+        aspectRatio: 1,
+        flex: 1,
     },
 };
 export default CreatePostPage;
