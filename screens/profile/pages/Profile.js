@@ -1,11 +1,13 @@
 import { Avatar, Button, Divider, Icon, Image, Text } from '@rneui/themed';
-import { colors, screen } from 'constants';
+import { colors, screen } from '@constants';
 import { PageName } from 'navigation/constants';
 import React from 'react';
 import { RefreshControl, ScrollView, View } from 'react-native';
-import { useSelector } from 'react-redux';
-import { getUserName } from '../../../utilities/User';
-import { selectLoginUser } from '../../auth/reducers/auth.reducer';
+import { useDispatch, useSelector } from 'react-redux';
+import { getUserName } from 'utilities/User';
+import { selectIsLoading, selectLoginUser } from '../../auth/reducers/auth.reducer';
+import { fetchSelfDetail } from 'screens/auth/reducers/auth.reducer';
+import { env } from '@constants';
 
 const wait = (timeout) => {
     return new Promise((resolve) => setTimeout(resolve, timeout));
@@ -13,15 +15,13 @@ const wait = (timeout) => {
 
 function Profile(props) {
     const loginUser = useSelector(selectLoginUser);
-
-    const [refreshing, setRefreshing] = React.useState(false);
-
+    const refreshing = useSelector(selectIsLoading);
+    const dispatch = useDispatch();
     const { navigation, route } = props;
     const { navigate, goBack } = navigation;
 
     const onRefresh = React.useCallback(() => {
-        setRefreshing(true);
-        wait(1500).then(() => setRefreshing(false));
+        dispatch(fetchSelfDetail());
     }, []);
 
     return (
@@ -33,14 +33,26 @@ function Profile(props) {
         >
             <Image
                 style={styles.cover}
-                source={require('assets/default_cover.jpg')}
+                source={
+                    loginUser?.cover_image
+                        ? {
+                            uri: `${env.FILE_SERVICE_USER}/${loginUser?.cover_image.fileName}`,
+                        }
+                        : require('assets/default_cover.jpg')
+                }
                 containerStyle={styles.coverContainer}
             />
             <View style={styles.header}>
                 <Avatar
                     size={130}
                     rounded
-                    source={require('assets/default_avt.jpg')}
+                    source={
+                        loginUser?.avatar
+                            ? {
+                                uri: `${env.FILE_SERVICE_USER}/${loginUser?.avatar.fileName}`,
+                            }
+                            : require('assets/default_avt.jpg')
+                    }
                     containerStyle={{
                         borderWidth: 4,
                         borderColor: colors.white,

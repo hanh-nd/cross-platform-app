@@ -5,7 +5,7 @@ import {
     Tab,
     TabView,
 } from '@rneui/themed';
-import { colors } from 'constants';
+import { colors } from '@constants';
 import Friends from './Friends';
 import Blocked from './Blocked';
 import Request from './Request';
