@@ -11,7 +11,7 @@ import {
     Avatar
 } from '@rneui/themed';
 import { PageName } from 'navigation/constants';
-import { colors, screen } from 'constants';
+import { colors, screen } from '@constants';
 
 function Friends(props) {
     const [isVisible, setIsVisible] = React.useState(false);

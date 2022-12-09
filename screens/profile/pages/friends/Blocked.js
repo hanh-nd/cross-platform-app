@@ -10,7 +10,7 @@ import {
     BottomSheet,
     Icon
 } from '@rneui/themed';
-import { colors, screen } from 'constants';
+import { colors, screen } from '@constants';
 
 function Blocked(props) {
     const [isVisible, setIsVisible] = React.useState(false);

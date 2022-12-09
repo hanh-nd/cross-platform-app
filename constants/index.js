@@ -4,5 +4,6 @@ import icons from './icons';
 import images from './images';
 import env from './env';
 import screen from './screen';
+import gender from './gender';
 
-export { images, icons, colors, fontSizes, env, screen };
+export { images, icons, colors, fontSizes, env, screen, gender };

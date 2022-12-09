@@ -2,7 +2,7 @@ import { Avatar, Button, Icon, Image, ListItem, Text } from '@rneui/themed';
 import dayjs from '../../../plugins/dayjs';
 import { ActivityIndicator, View } from 'react-native';
 import { env } from '../../../constants';
-import { screen } from 'constants';
+import { screen } from '@constants';
 import { getUserName } from '../../../utilities/User';
 
 function Post(props) {

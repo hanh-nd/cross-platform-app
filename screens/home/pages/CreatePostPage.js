@@ -1,5 +1,5 @@
 import { Avatar, Button, Image, Input, ListItem } from '@rneui/themed';
-import { screen } from 'constants';
+import { screen } from '@constants';
 import { Formik } from 'formik';
 import { useState } from 'react';
 import { Text, View } from 'react-native';

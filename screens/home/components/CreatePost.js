@@ -1,6 +1,6 @@
 import { useNavigation } from '@react-navigation/native';
 import { Avatar, Text } from '@rneui/themed';
-import { screen } from 'constants';
+import { screen } from '@constants';
 import { TouchableOpacity, View } from 'react-native';
 import { PageName } from '../../../navigation/constants';
 
