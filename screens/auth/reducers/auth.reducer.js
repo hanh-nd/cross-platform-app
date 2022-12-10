@@ -1,5 +1,5 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
-import { login, register } from '../services/auth.api';
+import { login, register, logout, getSelfProfile, editSelfProfile } from '../services/auth.api';
 
 const initialState = {
     isLoggedIn: false,
@@ -19,8 +19,22 @@ export const handleRegister = createAsyncThunk(
 );
 
 export const handleLogout = createAsyncThunk('auth/logout', async () => {
-    return await logout();
+    return logout();
 });
+
+export const fetchSelfDetail = createAsyncThunk(
+    'auth/fetchSelfDetail',
+    async () => {
+        return await getSelfProfile();
+    }
+);
+
+export const handleEditSelfProfile = createAsyncThunk(
+    'auth/editSelfDetail',
+    async (body) => {
+        return await editSelfProfile(body);
+    }
+);
 
 export const authSlice = createSlice({
     name: 'auth',
@@ -37,7 +51,6 @@ export const authSlice = createSlice({
         });
         builder.addCase(handleLogin.fulfilled, (state, action) => {
             state.isLoading = false;
-            state.loginUser = action.payload?.data || {};
         });
         builder.addCase(handleRegister.pending, (state, action) => {
             state.isLoggedIn = false;
@@ -45,11 +58,24 @@ export const authSlice = createSlice({
         });
         builder.addCase(handleRegister.fulfilled, (state, action) => {
             state.isLoading = false;
-            state.loginUser = action.payload?.data || {};
         });
         builder.addCase(handleLogout.fulfilled, (state, action) => {
             state.isLoggedIn = false;
             state.loginUser = {};
+        });
+        builder.addCase(fetchSelfDetail.pending, (state, action) => {
+            state.isLoading = true;
+        });
+        builder.addCase(fetchSelfDetail.fulfilled, (state, action) => {
+            state.isLoading = false;
+            state.loginUser = action.payload?.data || [];
+        });
+        builder.addCase(handleEditSelfProfile.pending, (state, action) => {
+            state.isLoading = true;
+        });
+        builder.addCase(handleEditSelfProfile.fulfilled, (state, action) => {
+            state.isLoading = false;
+            state.loginUser = action.payload?.data || state.loginUser;
         });
     },
 });

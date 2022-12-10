@@ -24,7 +24,7 @@ module.exports = function (api) {
                         '@': '.',
                         screens: './screens',
                         components: './components',
-                        constants: './constants',
+                        '@constants': './constants',
                         utilities: './utilities',
                         assets: './assets',
                         navigation: './navigation',

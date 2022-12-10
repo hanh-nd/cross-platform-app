@@ -1,7 +1,9 @@
 export const PageName = {
+    ROOT: 'Root',
     LOADING: 'Loading',
     TAB_NAVIGATOR: 'TabNavigator',
     LOGIN: 'Login',
+    LOGOUT: 'Logout',
     REGISTER: 'Register',
     HOME: 'Home',
     CHAT: 'Chat',
@@ -9,4 +11,5 @@ export const PageName = {
     EDIT_PROFILE: 'Chỉnh sửa trang cá nhân',
     LIST_FRIENDS: 'Danh sách bạn bè',
     EDIT_USER: 'Chỉnh sửa thông tin cá nhân',
+    CREATE_POST_PAGE: 'CreatePostPage',
 };
