@@ -19,19 +19,27 @@ module.exports = function (api) {
                 'module-resolver',
                 {
                     root: ['.'],
-                    extensions: ['.ios.js', '.android.js', '.js', '.ts', '.tsx', '.json'],
+                    extensions: [
+                        '.ios.js',
+                        '.android.js',
+                        '.js',
+                        '.ts',
+                        '.tsx',
+                        '.json',
+                    ],
                     alias: {
                         '@': '.',
                         screens: './screens',
                         components: './components',
-                        constants: './constants',
+                        '@constants': './constants',
                         utilities: './utilities',
                         assets: './assets',
                         navigation: './navigation',
                         plugins: './plugins',
+                        '@/*': './*',
                     },
                 },
-            ]
+            ],
         ],
     };
 };

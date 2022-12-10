@@ -1,10 +1,14 @@
+import { env, screen } from '@/constants';
 import { useNavigation } from '@react-navigation/native';
 import { Avatar, Text } from '@rneui/themed';
-import { screen } from 'constants';
 import { TouchableOpacity, View } from 'react-native';
+import { useSelector } from 'react-redux';
 import { PageName } from '../../../navigation/constants';
+import { selectLoginUser } from '../../auth/reducers/auth.reducer';
 
 function CreatePost(props) {
+    const loginUser = useSelector(selectLoginUser);
+
     const { navigate } = useNavigation();
 
     const onPress = () => {
@@ -18,7 +22,13 @@ function CreatePost(props) {
             <Avatar
                 rounded
                 size={48}
-                source={require('assets/default_avt.jpg')}
+                source={
+                    loginUser?.avatar
+                        ? {
+                              uri: `${env.FILE_SERVICE_USER}/${loginUser?.avatar.fileName}`,
+                          }
+                        : require('assets/default_avt.jpg')
+                }
             />
             <TouchableOpacity style={styles.content} onPress={onPress}>
                 <View>

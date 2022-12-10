@@ -1,5 +1,5 @@
 import { Avatar, Button, Icon, ListItem, Text } from '@rneui/themed';
-import { screen } from 'constants';
+import { screen } from '@/constants';
 import { ActivityIndicator, View } from 'react-native';
 import { UIImage } from '../../../components';
 import { env } from '../../../constants';

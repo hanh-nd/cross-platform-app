@@ -1,5 +1,5 @@
-import { env } from '../../../constants';
-import { client } from '../../../plugins/axios/axios';
+import { env } from '@/constants';
+import { client } from 'plugins/axios/axios';
 
 export const login = async (loginBody) => {
     return await client.post(`${env.BASE_URL}/users/login`, loginBody);
@@ -15,4 +15,8 @@ export const logout = () => {
 
 export const getSelfProfile = async () => {
     return await client.get(`${env.BASE_URL}/users/show`);
+};
+
+export const editSelfProfile = async (editBody) => {
+    return await client.post(`${env.BASE_URL}/users/edit`, editBody);
 };

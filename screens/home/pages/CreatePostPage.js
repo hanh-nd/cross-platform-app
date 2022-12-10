@@ -1,5 +1,5 @@
 import { Avatar, Button, Input, ListItem } from '@rneui/themed';
-import { screen } from 'constants';
+import { screen } from '@/constants';
 import { Formik } from 'formik';
 import { useState } from 'react';
 import { Text, View } from 'react-native';
@@ -16,6 +16,7 @@ import { getUserName } from '../../../utilities/User';
 import { selectLoginUser } from '../../auth/reducers/auth.reducer';
 import { createNewPost, fetchPostList } from '../reducers/home.reducer';
 import { createPostSchema } from '../schema';
+import { env } from '@/constants';
 
 function CreatePostPage(props) {
     const loginUser = useSelector(selectLoginUser);
@@ -32,7 +33,7 @@ function CreatePostPage(props) {
     };
 
     const createPost = async (body) => {
-        if (images.length) {
+        if (images && images.length) {
             Object.assign(body, {
                 images,
             });

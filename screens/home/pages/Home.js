@@ -6,7 +6,7 @@ import { useDispatch } from 'react-redux';
 import { DismissKeyboardView } from '../../../components';
 import CreatePost from '../components/CreatePost';
 import PostList from '../components/PostList';
-import { screen } from 'constants';
+import { screen } from '@constants';
 function Home(props) {
     const dispatch = useDispatch();
     const { navigation, route } = props;
