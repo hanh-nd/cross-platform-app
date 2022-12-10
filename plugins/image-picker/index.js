@@ -3,11 +3,12 @@ import * as ImagePicker from 'expo-image-picker';
 const concatBase64 = (base64) => {
     return `data:image/jpg;base64,${base64}`;
 };
-export const getBase64ImageList = async (options) => {
+export const getBase64MediaList = async (options) => {
     const _options = {
-        mediaTypes: ImagePicker.MediaTypeOptions.Images,
+        mediaTypes: ImagePicker.MediaTypeOptions.All,
         allowsMultipleSelection: true,
         selectionLimit: 4,
+        videoMaxDuration: 15,
         aspect: [4, 3],
         base64: true,
         quality: 1,
