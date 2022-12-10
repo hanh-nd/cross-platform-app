@@ -4,6 +4,7 @@ import { DismissKeyboardView } from "../../components";
 import ConversationItem from "../../components/Chat/ConversationItem";
 
 function Chat(props) {
+  const { navigation, route } = props;
   const data = [
     {
       imgLink: "https://randomuser.me/api/portraits/men/36.jpg",
@@ -43,7 +44,7 @@ function Chat(props) {
       <Divider width={1} style={{ marginTop: 5, marginBottom: 20 }} />
       {data
         ? data.map((item) => {
-            return <ConversationItem item={item} />;
+            return <ConversationItem key={Math.random()} item={item} navigation={navigation} />;
           })
         : null}
     </ScrollView>
