@@ -1,7 +1,7 @@
-import { Avatar, Divider, Input, Text } from "@rneui/themed";
-import { ScrollView, StyleSheet, View, TextInput } from "react-native";
-import { DismissKeyboardView } from "../../components";
-import ConversationItem from "../../components/Chat/ConversationItem";
+import { Avatar, Divider, Input, Text } from '@rneui/themed';
+import { ScrollView, StyleSheet, View, TextInput } from 'react-native';
+import { DismissKeyboardView } from '../../components';
+import ConversationItem from '../../components/Chat/ConversationItem';
 
 function Chat(props) {
   const { navigation, route } = props;
@@ -51,17 +51,17 @@ function Chat(props) {
   );
 }
 const styles = StyleSheet.create({
-  inputHeader: {
-    marginTop: 10,
-    flexDirection: "row",
-    alignItems: "center",
-  },
-  inputSearch: {
-    borderWidth: 1,
-    borderRadius: 10,
-    paddingHorizontal: 10,
-    paddingVertical: 5,
-    width: "100%",
-  },
+    inputHeader: {
+        marginTop: 10,
+        flexDirection: 'row',
+        alignItems: 'center',
+    },
+    inputSearch: {
+        borderWidth: 1,
+        borderRadius: 10,
+        paddingHorizontal: 10,
+        paddingVertical: 5,
+        width: '100%',
+    },
 });
 export default Chat;

@@ -19,7 +19,14 @@ module.exports = function (api) {
                 'module-resolver',
                 {
                     root: ['.'],
-                    extensions: ['.ios.js', '.android.js', '.js', '.ts', '.tsx', '.json'],
+                    extensions: [
+                        '.ios.js',
+                        '.android.js',
+                        '.js',
+                        '.ts',
+                        '.tsx',
+                        '.json',
+                    ],
                     alias: {
                         '@': '.',
                         screens: './screens',
@@ -29,9 +36,10 @@ module.exports = function (api) {
                         assets: './assets',
                         navigation: './navigation',
                         plugins: './plugins',
+                        '@/*': './*',
                     },
                 },
-            ]
+            ],
         ],
     };
 };

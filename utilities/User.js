@@ -1,5 +1,4 @@
-import { gender } from '@constants';
-
+import { gender } from '@/constants';
 
 export const getUserName = (author) => {
     if (author?.firstName && author?.lastName)
@@ -9,8 +8,7 @@ export const getUserName = (author) => {
 };
 
 export const getGender = (g) => {
-    const find = gender.find(e => e.value === g)
-    if(find?.label)
-        return find?.label;
+    const find = gender.find((e) => e.value === g);
+    if (find?.label) return find?.label;
     return g;
-}
+};

@@ -1,24 +1,20 @@
 import React, { useState } from 'react';
-import {
-    Text,
-    Button,
-    Input,
-    Icon
-} from '@rneui/themed';
+import { Text, Button, Input, Icon } from '@rneui/themed';
 
 import { View, Keyboard } from 'react-native';
-import { colors, screen, gender } from '@constants';
+import { colors, screen, gender } from '@/constants';
 import { PageName } from 'navigation/constants';
 import { Picker } from '@react-native-picker/picker';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import moment from 'moment/moment';
 import { useDispatch, useSelector } from 'react-redux';
-import { handleEditSelfProfile, selectIsLoading, selectLoginUser } from '../../auth/reducers/auth.reducer';
-import { getGender, getUserName } from 'utilities/User';
 import {
-    showErrorMessage,
-    showSuccessMessage,
-} from 'utilities/Notification';
+    handleEditSelfProfile,
+    selectIsLoading,
+    selectLoginUser,
+} from '../../auth/reducers/auth.reducer';
+import { getGender, getUserName } from 'utilities/User';
+import { showErrorMessage, showSuccessMessage } from 'utilities/Notification';
 import { Formik } from 'formik';
 import { editProfileSchema } from '../schema';
 
@@ -34,7 +30,8 @@ function EditUser(props) {
     const [isDisplayDate, setShow] = useState(false);
 
     const changeSelectedDate = (event, setBirthday) => {
-        const newBirthday = new Date(event?.nativeEvent?.timestamp) || initialValues.birthday;
+        const newBirthday =
+            new Date(event?.nativeEvent?.timestamp) || initialValues.birthday;
         setShow(false);
         setBirthday('birthday', newBirthday);
     };
@@ -42,7 +39,7 @@ function EditUser(props) {
     const showDatePicker = () => {
         Keyboard.dismiss();
         setShow(true);
-    }
+    };
 
     function openSelectPicker() {
         Keyboard.dismiss();
@@ -53,16 +50,18 @@ function EditUser(props) {
         phonenumber: loginUser.phonenumber,
         username: getUserName(loginUser),
         gender: loginUser.gender,
-        birthday: loginUser.birthday ? new Date(loginUser.birthday) : new Date()
+        birthday: loginUser.birthday
+            ? new Date(loginUser.birthday)
+            : new Date(),
     };
 
-    const editProfile = async ({phonenumber, username, gender, birthday}) => {
+    const editProfile = async ({ phonenumber, username, gender, birthday }) => {
         const response = await dispatch(
             handleEditSelfProfile({
                 phonenumber,
                 username,
                 gender,
-                birthday
+                birthday,
             })
         ).unwrap();
 
@@ -90,7 +89,7 @@ function EditUser(props) {
                     errors,
                     isValid,
                     dirty,
-                    setFieldValue
+                    setFieldValue,
                 }) => (
                     <>
                         <Input
@@ -106,9 +105,9 @@ function EditUser(props) {
                             value={moment(values.birthday).format('L')}
                             rightIcon={
                                 <Icon
-                                    name='edit'
-                                    color='#86939e'
-                                    type='material'
+                                    name="edit"
+                                    color="#86939e"
+                                    type="material"
                                     size={25}
                                     onPress={showDatePicker}
                                 />
@@ -121,9 +120,9 @@ function EditUser(props) {
                             value={getGender(values.gender)}
                             rightIcon={
                                 <Icon
-                                    color='#86939e'
-                                    name='edit'
-                                    type='material'
+                                    color="#86939e"
+                                    name="edit"
+                                    type="material"
                                     size={25}
                                     onPress={openSelectPicker}
                                 />
@@ -145,7 +144,9 @@ function EditUser(props) {
                             loading={isLoading}
                             disabled={!isValid || !dirty}
                         >
-                            <Text style={styles.textButton}>Thay đổi thông tin</Text>
+                            <Text style={styles.textButton}>
+                                Thay đổi thông tin
+                            </Text>
                         </Button>
 
                         {/* hidden picker */}
@@ -153,23 +154,29 @@ function EditUser(props) {
                             ref={pickerDateRef}
                             selectedValue={values.gender}
                             style={{ display: 'none' }}
-                            onValueChange={handleChange('gender')}>
-                            {
-                                gender.map((g) => {
-                                    return (
-                                        <Picker.Item style={styles.pickerItem} label={g.label} value={g.value} key={g.value} />
-                                    )
-                                })
-                            }
+                            onValueChange={handleChange('gender')}
+                        >
+                            {gender.map((g) => {
+                                return (
+                                    <Picker.Item
+                                        style={styles.pickerItem}
+                                        label={g.label}
+                                        value={g.value}
+                                        key={g.value}
+                                    />
+                                );
+                            })}
                         </Picker>
 
                         {isDisplayDate && (
                             <DateTimePicker
                                 value={values.birthday}
-                                mode='date'
+                                mode="date"
                                 is24Hour={true}
                                 display="default"
-                                onChange={(event) => changeSelectedDate(event, setFieldValue)}
+                                onChange={(event) =>
+                                    changeSelectedDate(event, setFieldValue)
+                                }
                             />
                         )}
                     </>
@@ -186,12 +193,12 @@ const styles = {
     },
     textButton: {
         fontWeight: '700',
-        color: colors.white
+        color: colors.white,
     },
     pickerItem: {
         fontWeight: '700',
         fontSize: 19,
-    }
-}
+    },
+};
 
 export default EditUser;

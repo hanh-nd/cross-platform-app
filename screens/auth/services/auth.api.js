@@ -1,4 +1,4 @@
-import { env } from '@constants';
+import { env } from '@/constants';
 import { client } from 'plugins/axios/axios';
 
 export const login = async (loginBody) => {
