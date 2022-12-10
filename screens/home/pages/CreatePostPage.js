@@ -1,12 +1,13 @@
-import { Avatar, Button, Image, Input, ListItem } from '@rneui/themed';
-import { screen } from '@constants';
+import { Avatar, Button, Input, ListItem } from '@rneui/themed';
+import { screen } from '@/constants';
 import { Formik } from 'formik';
 import { useState } from 'react';
 import { Text, View } from 'react-native';
 import { FlatList } from 'react-native-gesture-handler';
 import { useDispatch, useSelector } from 'react-redux';
+import { UIImage } from '../../../components';
 import { PageName } from '../../../navigation/constants';
-import { getBase64ImageList } from '../../../plugins/image-picker';
+import { getBase64MediaList } from '../../../plugins/image-picker';
 import {
     showErrorMessage,
     showSuccessMessage,
@@ -15,6 +16,7 @@ import { getUserName } from '../../../utilities/User';
 import { selectLoginUser } from '../../auth/reducers/auth.reducer';
 import { createNewPost, fetchPostList } from '../reducers/home.reducer';
 import { createPostSchema } from '../schema';
+import { env } from '@/constants';
 
 function CreatePostPage(props) {
     const loginUser = useSelector(selectLoginUser);
@@ -31,7 +33,7 @@ function CreatePostPage(props) {
     };
 
     const createPost = async (body) => {
-        if (images.length) {
+        if (images && images.length) {
             Object.assign(body, {
                 images,
             });
@@ -50,7 +52,7 @@ function CreatePostPage(props) {
     };
 
     const pickImages = async () => {
-        const images = await getBase64ImageList();
+        const images = await getBase64MediaList();
         setImages(images);
     };
 
@@ -107,12 +109,7 @@ function CreatePostPage(props) {
             <FlatList
                 data={images}
                 ItemSeparatorComponent={() => <View style={{ height: 16 }} />}
-                renderItem={({ item }) => (
-                    <Image
-                        source={{ uri: item }}
-                        containerStyle={styles.image}
-                    />
-                )}
+                renderItem={({ item }) => <UIImage source={{ uri: item }} />}
             />
         </View>
     );
@@ -151,11 +148,6 @@ const styles = {
         textAlignVertical: 'top',
         padding: 8,
         borderRadius: 8,
-    },
-    image: {
-        width: '100%',
-        aspectRatio: 1,
-        flex: 1,
     },
 };
 export default CreatePostPage;

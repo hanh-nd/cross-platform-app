@@ -22,6 +22,7 @@
       "supportsTablet": true
     },
     "android": {
+      "package": "vn.hust.crossplatform",
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#FFFFFF"
