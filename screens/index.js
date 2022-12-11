@@ -2,7 +2,7 @@ import Loading from './auth/pages/Loading';
 import Logout from './auth/pages/Logout';
 import Login from './auth/pages/Login';
 import Register from './auth/pages/Register';
-import Chat from './chat/Chat';
+import Chat from './chat/pages/Chat';
 import Home from './home/pages/Home';
 import Profile from './profile/pages/Profile';
 import EditProfile from './profile/pages/EditProfile';

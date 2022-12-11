@@ -1,7 +1,7 @@
 import { Avatar, Divider, Input, Text } from '@rneui/themed';
 import { ScrollView, StyleSheet, View, TextInput } from 'react-native';
-import { DismissKeyboardView } from '../../components';
-import ConversationItem from '../../components/Chat/ConversationItem';
+import { DismissKeyboardView } from '../../../components';
+import ConversationItem from '../components/ConversationItem';
 
 function Chat(props) {
   const { navigation, route } = props;

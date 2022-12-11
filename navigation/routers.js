@@ -14,7 +14,7 @@ import {
 } from '../screens';
 import TabNavigator from './TabNavigator';
 import { PageName } from './constants';
-import ChatDetail from '../screens/chat/chat-detail';
+import ChatDetail from '../screens/chat/pages/ChatDetail';
 
 export const routes = [
     {

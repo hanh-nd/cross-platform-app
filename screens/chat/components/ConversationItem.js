@@ -5,6 +5,7 @@ import { PageName } from "../../../navigation/constants";
 
 function ConversationItem(props) {
   const { item, navigation } = props;
+  console.log("🚀 ~ file: ConversationItem.js:8 ~ ConversationItem ~ item", item)
 
   return (
     <TouchableOpacity
