@@ -7,6 +7,7 @@ export const PageName = {
     REGISTER: 'Register',
     HOME: 'Home',
     CHAT: 'Chat',
+    CHAT_DETAIL: 'ChatDetail',
     PROFILE: 'Profile',
     EDIT_PROFILE: 'Chỉnh sửa trang cá nhân',
     LIST_FRIENDS: 'Danh sách bạn bè',

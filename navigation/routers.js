@@ -14,6 +14,7 @@ import {
 } from '../screens';
 import TabNavigator from './TabNavigator';
 import { PageName } from './constants';
+import ChatDetail from '../screens/chat/pages/ChatDetail';
 
 export const routes = [
     {
@@ -76,6 +77,11 @@ export const routes = [
         component: CreatePostPage,
         headerShown: true,
     },
+    {
+        name: PageName.CHAT_DETAIL,
+        component: ChatDetail,
+        headerShown: true,
+    }
 ];
 
 export const tabNavigatorRoutes = [
