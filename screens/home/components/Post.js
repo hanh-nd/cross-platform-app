@@ -1,6 +1,5 @@
 import { screen } from '@/constants';
 import { Avatar, Button, Divider, Icon, ListItem, Text } from '@rneui/themed';
-import { useEffect, useState } from 'react';
 import { ActivityIndicator, View } from 'react-native';
 import { useDispatch } from 'react-redux';
 import { UIImage } from '../../../components';
