@@ -1,19 +1,20 @@
+import { useNavigation } from "@react-navigation/native";
 import { Avatar, Divider, Icon } from "@rneui/themed";
 import React from "react";
 import { StyleSheet, Text, TouchableHighlight, TouchableOpacity, View } from "react-native";
 import { PageName } from "../../../navigation/constants";
 
 function ConversationItem(props) {
-  const { item, navigation } = props;
-  console.log("🚀 ~ file: ConversationItem.js:8 ~ ConversationItem ~ item", item)
+  const { item, setIsVisibleBlockSheet } = props;
+  const { navigate } = useNavigation();
 
   return (
     <TouchableOpacity
       onPress={() => {
-        navigation.navigate({
+        navigate({
           name: PageName.CHAT_DETAIL,
-          options: {
-            headerTitle: item.namePerson,
+          params: {
+            item: item,
           },
         });
       }}
@@ -29,8 +30,15 @@ function ConversationItem(props) {
           </Text>
           <Divider width={1} />
         </View>
-        <View style={{ flex: 0.15, alignItems: "center" }}>
-          <Icon type="font-awesome" name="ellipsis-h" />
+        <View style={{ flex: 0.15, alignItems: "center"}}>
+          <Icon
+            type="font-awesome"
+            name="ellipsis-h"
+            onPress={() => {
+              setIsVisibleBlockSheet(true);
+            }}
+            style={{padding:5, borderRadius: 50}}
+          />
         </View>
       </View>
     </TouchableOpacity>

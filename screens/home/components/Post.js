@@ -1,15 +1,32 @@
-import { Avatar, Button, Icon, ListItem, Text } from '@rneui/themed';
 import { screen } from '@/constants';
+import { Avatar, Button, Divider, Icon, ListItem, Text } from '@rneui/themed';
 import { ActivityIndicator, View } from 'react-native';
+import { useDispatch } from 'react-redux';
 import { UIImage } from '../../../components';
 import { env } from '../../../constants';
 import dayjs from '../../../plugins/dayjs';
 import { getUserName } from '../../../utilities/User';
+import { fetchPostList, likePost } from '../reducers/home.reducer';
 
 function Post(props) {
     const { post } = props;
-    const { author, described, images, updatedAt } = post;
+    const {
+        _id,
+        author,
+        described,
+        images,
+        createdAt,
+        isLike,
+        like,
+        countComments,
+    } = post;
 
+    const dispatch = useDispatch();
+
+    const actionLike = async () => {
+        await dispatch(likePost(_id)).unwrap();
+        dispatch(fetchPostList());
+    };
     return (
         <View style={styles.container}>
             <View style={styles.header}>
@@ -33,7 +50,7 @@ function Post(props) {
                         </ListItem.Title>
                         <ListItem.Subtitle>
                             <Text>{`${dayjs(
-                                updatedAt
+                                createdAt
                             ).fmHHmmDDMMYYYY()}`}</Text>
                         </ListItem.Subtitle>
                     </ListItem.Content>
@@ -52,21 +69,40 @@ function Post(props) {
                     </View>
                 ) : null}
             </View>
+            <View style={styles.statisticGroup}>
+                <View style={styles.statisticItem}>
+                    <Icon
+                        name={'thumb-up'}
+                        size={14}
+                        style={{ marginRight: 4 }}
+                    />
+                    <Text>{like.length}</Text>
+                </View>
+                <View style={styles.statisticItem}>
+                    <Text>{countComments} bình luận</Text>
+                </View>
+            </View>
+            <Divider />
             <View style={styles.buttonGroup}>
                 <Button
                     type="solid"
                     containerStyle={styles.buttonContainer}
                     buttonStyle={styles.buttonStyle}
                     title="Thích"
-                    icon={<Icon name="sports" />}
-                    titleStyle={styles.title}
+                    icon={
+                        <Icon name={isLike ? 'thumb-up' : 'thumb-up-off-alt'} />
+                    }
+                    titleStyle={{
+                        ...styles.title,
+                    }}
+                    onPress={actionLike}
                 />
                 <Button
                     type="solid"
                     containerStyle={styles.buttonContainer}
                     buttonStyle={styles.buttonStyle}
                     title="Bình luận"
-                    icon={<Icon name="sports" />}
+                    icon={<Icon name="chat-bubble" />}
                     titleStyle={styles.title}
                 />
             </View>
@@ -96,11 +132,25 @@ const styles = {
         padding: 8,
     },
     content: {
-        marginBottom: 16,
+        marginBottom: 8,
     },
     contentText: {
         padding: 8,
     },
+    statisticGroup: {
+        flex: 1,
+        display: 'flex',
+        flexDirection: 'row',
+        alignItems: 'center',
+        justifyContent: 'space-between',
+        padding: 8,
+    },
+    statisticItem: {
+        display: 'flex',
+        flexDirection: 'row',
+        alignItems: 'center',
+    },
+
     buttonGroup: {
         flex: 1,
         display: 'flex',

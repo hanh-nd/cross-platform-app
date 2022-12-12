@@ -8,3 +8,7 @@ export const getPosts = async () => {
 export const createPost = async (post) => {
     return await client.post(`${env.BASE_URL}/posts/create`, post);
 };
+
+export const actionLikePost = async (postId) => {
+    return await client.post(`${env.BASE_URL}/postLike/action/${postId}`);
+};
