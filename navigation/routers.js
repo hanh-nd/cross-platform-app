@@ -11,7 +11,6 @@ import {
     EditProfile,
     EditUser,
     CreatePostPage,
-    FriendProfile
 } from '../screens';
 import TabNavigator from './TabNavigator';
 import { PageName } from './constants';
