@@ -1,26 +1,22 @@
+import { useNavigation, useRoute } from "@react-navigation/native";
 import { Avatar } from "@rneui/themed";
-import React from "react";
+import React, { useEffect } from "react";
 import { Button, Text, View } from "react-native";
+import ConversationHeader from "../components/ConversationHeader";
 
 function ChatDetail(props) {
-  const { navigation, item } = props;
+  const { params } = props;
+  const navigation = useNavigation();
+  const route = useRoute();
+  const item = route.params.item;
+  useEffect(() => {
+    navigation.setOptions({
+      headerTitle: () => <ConversationHeader item={item} />,
+    });
+  }, []);
   return (
     <View>
       <Text>Chate Detail</Text>
-      <Button
-        onPress={() =>
-          navigation.setOptions({
-            headerTitle: () => (
-              <Avatar
-                size={40}
-                rounded
-                source={{ uri: "https://randomuser.me/api/portraits/men/36.jpg" }}
-              />
-            ),
-          })
-        }
-        title="Update header"
-      />
     </View>
   );
 }

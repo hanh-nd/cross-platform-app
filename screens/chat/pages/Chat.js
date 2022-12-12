@@ -1,10 +1,12 @@
-import { Avatar, Divider, Input, Text } from '@rneui/themed';
-import { ScrollView, StyleSheet, View, TextInput } from 'react-native';
-import { DismissKeyboardView } from '../../../components';
-import ConversationItem from '../components/ConversationItem';
+import { Avatar, BottomSheet, Divider, Icon, Input, ListItem, Text } from "@rneui/themed";
+import { useState } from "react";
+import { ScrollView, StyleSheet, View, TextInput } from "react-native";
+import { DismissKeyboardView } from "../../../components";
+import ConversationItem from "../components/ConversationItem";
+import { colors } from "../../../constants";
 
 function Chat(props) {
-  const { navigation, route } = props;
+  const [isVisible, setIsVisible] = useState(false);
   const data = [
     {
       imgLink: "https://randomuser.me/api/portraits/men/36.jpg",
@@ -27,6 +29,16 @@ function Chat(props) {
       lastMessage: "Hôm nay ăn gì nhỉ?",
     },
   ];
+  const list = [
+    {
+      title: "Xóa",
+      iconName: "delete",
+    },
+    {
+      title: "Chặn",
+      iconName: "block",
+    },
+  ];
   return (
     <ScrollView>
       <View style={styles.inputHeader}>
@@ -44,24 +56,56 @@ function Chat(props) {
       <Divider width={1} style={{ marginTop: 5, marginBottom: 20 }} />
       {data
         ? data.map((item) => {
-            return <ConversationItem key={Math.random()} item={item} navigation={navigation} />;
+            return (
+              <ConversationItem
+                key={Math.random()}
+                item={item}
+                setIsVisibleBlockSheet={setIsVisible}
+              />
+            );
           })
         : null}
+      <BottomSheet
+        isVisible={isVisible}
+        modalProps={{
+          animationType: "fade",
+        }}
+        onBackdropPress={() => setIsVisible(false)}
+      >
+        {list.map((l, i) => (
+          <ListItem key={i} onPress={l.onPress}>
+            <ListItem.Content style={styles.contentStyle}>
+              <Icon name={l.iconName} type="material" color='#ff0000' />
+              <ListItem.Title style={styles.titleStyle}>{l.title}</ListItem.Title>
+            </ListItem.Content>
+          </ListItem>
+        ))}
+      </BottomSheet>
     </ScrollView>
   );
 }
 const styles = StyleSheet.create({
-    inputHeader: {
-        marginTop: 10,
-        flexDirection: 'row',
-        alignItems: 'center',
-    },
-    inputSearch: {
-        borderWidth: 1,
-        borderRadius: 10,
-        paddingHorizontal: 10,
-        paddingVertical: 5,
-        width: '100%',
-    },
+  inputHeader: {
+    marginTop: 10,
+    flexDirection: "row",
+    alignItems: "center",
+  },
+  inputSearch: {
+    borderWidth: 1,
+    borderRadius: 10,
+    paddingHorizontal: 10,
+    paddingVertical: 5,
+    width: "100%",
+  },
+  contentStyle: {
+    flexDirection: "row",
+    justifyContent: "flex-start",
+    color: "#ff0000",
+  },
+  titleStyle: {
+    fontWeight: "700",
+    color: '#ff0000',
+    marginHorizontal: 10,
+  },
 });
 export default Chat;
