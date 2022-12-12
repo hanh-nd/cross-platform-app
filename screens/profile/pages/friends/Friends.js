@@ -11,9 +11,13 @@ import {
     Avatar
 } from '@rneui/themed';
 import { PageName } from 'navigation/constants';
-import { colors, screen } from '@constants';
+import { colors, screen, env } from '@constants';
+import { useSelector } from 'react-redux';
+import { selectFriendList } from '../../reducers/friend.reducer';
 
 function Friends(props) {
+    const listFriend = useSelector(selectFriendList);
+
     const [isVisible, setIsVisible] = React.useState(false);
 
     const list = [
@@ -42,22 +46,38 @@ function Friends(props) {
                 containerStyle={{ height: 55 }}
                 inputContainerStyle={styles.inputSearchContainer}
             />
-            <View style={styles.container}>
-                <View style={styles.row}>
-                    <Avatar
-                        size={75}
-                        rounded
-                        source={require('assets/default_avt.jpg')}
-                    />
-                    <Text style={styles.name}>Roronoa Zoro</Text>
-                </View>
-                <Icon
-                    type="material"
-                    name="more-horiz"
-                    style={{ padding: 8 }}
-                    onPress={() => setIsVisible(true)}
-                />
-            </View>
+            <Text style={[styles.name, {fontSize: 20, paddingBottom: 10}]}>
+                {listFriend.length} người bạn
+            </Text>
+            {
+                listFriend.map(f => {
+                    return (
+                        <View style={styles.container} key={f._id}>
+                            <View style={styles.row}>
+                                <Avatar
+                                    size={75}
+                                    rounded
+                                    source={
+                                        f?.avatar
+                                            ? {
+                                                uri: `${env.FILE_SERVICE_USER}/${f?.avatar.fileName}`,
+                                            }
+                                            : require('assets/default_avt.jpg')
+                                    }
+                                />
+                                <Text style={styles.name}>{f.username}</Text>
+                            </View>
+                            <Icon
+                                type="material"
+                                name="more-horiz"
+                                style={{ padding: 8 }}
+                                onPress={() => setIsVisible(true)}
+                            />
+                        </View>
+                    )
+                })
+            }
+
 
             <BottomSheet
                 isVisible={isVisible}
