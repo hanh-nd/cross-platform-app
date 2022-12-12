@@ -9,6 +9,7 @@ import EditProfile from './profile/pages/EditProfile';
 import ListFriends from './profile/pages/friends/ListFriends';
 import EditUser from './profile/pages/EditUser';
 import CreatePostPage from './home/pages/CreatePostPage';
+import FriendProfile from './profile/pages/FriendProfile';
 
 export {
     Loading,
@@ -22,4 +23,5 @@ export {
     ListFriends,
     EditUser,
     CreatePostPage,
+    FriendProfile
 };

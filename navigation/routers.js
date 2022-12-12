@@ -11,6 +11,7 @@ import {
     EditProfile,
     EditUser,
     CreatePostPage,
+    FriendProfile
 } from '../screens';
 import TabNavigator from './TabNavigator';
 import { PageName } from './constants';
@@ -56,6 +57,11 @@ export const routes = [
         name: PageName.PROFILE,
         component: Profile,
         headerShown: false,
+    },
+    {
+        name: PageName.FRIEND_PROFILE,
+        component: FriendProfile,
+        headerShown: true,
     },
     {
         name: PageName.LIST_FRIENDS,

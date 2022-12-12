@@ -13,4 +13,5 @@ export const PageName = {
     LIST_FRIENDS: 'Danh sách bạn bè',
     EDIT_USER: 'Chỉnh sửa thông tin cá nhân',
     CREATE_POST_PAGE: 'CreatePostPage',
+    FRIEND_PROFILE: 'Trang cá nhân bạn bè'
 };
