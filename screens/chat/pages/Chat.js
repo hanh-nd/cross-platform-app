@@ -91,10 +91,11 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   inputSearch: {
-    borderWidth: 1,
+    backgroundColor: '#ffffff',
+    borderWidth: 0,
     borderRadius: 10,
     paddingHorizontal: 10,
-    paddingVertical: 5,
+    paddingVertical: 8,
     width: "100%",
   },
   contentStyle: {
