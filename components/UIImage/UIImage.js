@@ -1,7 +1,6 @@
 import { Image, Overlay } from '@rneui/themed';
 import { useState } from 'react';
 import { View } from 'react-native';
-import { TouchableOpacity } from 'react-native-gesture-handler';
 
 function UIImage(props) {
     const { source, ...args } = props;
@@ -10,16 +9,12 @@ function UIImage(props) {
     return (
         <>
             <View style={styles.imageContainerStyle}>
-                <TouchableOpacity
-                    style={{ flex: 1 }}
+                <Image
+                    containerStyle={styles.imageStyle}
+                    source={source}
+                    {...args}
                     onPress={() => setModalVisibleStatus(!modalVisibleStatus)}
-                >
-                    <Image
-                        containerStyle={styles.imageStyle}
-                        source={source}
-                        {...args}
-                    />
-                </TouchableOpacity>
+                />
             </View>
             <Overlay
                 isVisible={modalVisibleStatus}
@@ -41,14 +36,12 @@ function UIImage(props) {
 
 const styles = {
     imageContainerStyle: {
-        flex: 1,
         flexDirection: 'column',
         margin: 1,
     },
     imageStyle: {
         width: '100%',
         aspectRatio: 1,
-        flex: 1,
     },
     fullImageStyle: {
         justifyContent: 'center',
