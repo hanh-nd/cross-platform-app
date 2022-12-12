@@ -23,6 +23,9 @@ function ChatDetail(props) {
           onPress={() => {
             navigation.navigate({
               name: PageName.CHAT_PERSONAL,
+              params: {
+                item: item,
+              },
             });
           }}
         />
