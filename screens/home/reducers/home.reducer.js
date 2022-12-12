@@ -1,5 +1,5 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
-import { getPosts, createPost } from '../services/home.api';
+import { getPosts, createPost, actionLikePost } from '../services/home.api';
 
 const initialState = {
     postList: [],
@@ -19,6 +19,10 @@ export const createNewPost = createAsyncThunk(
         return await createPost(body);
     }
 );
+
+export const likePost = createAsyncThunk('home/likePost', async (postId) => {
+    return await actionLikePost(postId);
+});
 
 export const homeSlice = createSlice({
     name: 'home',
