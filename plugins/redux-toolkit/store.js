@@ -8,7 +8,6 @@ function makeStore() {
         reducer: {
             auth: authReducer,
             home: homeReducer,
-            friend: friendReducer,
         },
     });
 }

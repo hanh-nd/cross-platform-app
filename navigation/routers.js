@@ -59,11 +59,6 @@ export const routes = [
         headerShown: false,
     },
     {
-        name: PageName.FRIEND_PROFILE,
-        component: FriendProfile,
-        headerShown: true,
-    },
-    {
         name: PageName.LIST_FRIENDS,
         component: ListFriends,
         headerShown: true,
