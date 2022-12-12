@@ -1,15 +1,23 @@
-import { screen } from '@/constants';
+import { UIImage } from '@/components';
+import { env, screen } from '@/constants';
+import { PageName } from '@/navigation/constants';
+import dayjs from '@/plugins/dayjs';
+import { getUserName } from '@/utilities/User';
+import { useNavigation } from '@react-navigation/native';
 import { Avatar, Button, Divider, Icon, ListItem, Text } from '@rneui/themed';
 import { ActivityIndicator, View } from 'react-native';
 import { useDispatch } from 'react-redux';
-import { UIImage } from '../../../components';
-import { env } from '../../../constants';
-import dayjs from '../../../plugins/dayjs';
-import { getUserName } from '../../../utilities/User';
-import { fetchPostList, likePost } from '../reducers/home.reducer';
+import {
+    likePost,
+    fetchPostList,
+} from '../../screens/home/reducers/home.reducer';
 
 function Post(props) {
-    const { post } = props;
+    const { post, onLike } = props;
+    const navigation = useNavigation();
+
+    const dispatch = useDispatch();
+
     const {
         _id,
         author,
@@ -21,11 +29,23 @@ function Post(props) {
         countComments,
     } = post;
 
-    const dispatch = useDispatch();
+    const { navigate } = navigation;
 
     const actionLike = async () => {
         await dispatch(likePost(_id)).unwrap();
         dispatch(fetchPostList());
+        if (onLike) {
+            onLike(_id);
+        }
+    };
+
+    const actionComment = () => {
+        navigate({
+            name: PageName.POST_DETAIL_PAGE,
+            params: {
+                postId: _id,
+            },
+        });
     };
     return (
         <View style={styles.container}>
@@ -59,7 +79,7 @@ function Post(props) {
             <View style={styles.content}>
                 <Text style={styles.contentText}>{described}</Text>
                 {images && images.length ? (
-                    <View>
+                    <View style={styles.imageContainer}>
                         <UIImage
                             source={{
                                 uri: `${env.FILE_SERVICE_USER}/${images[0].fileName}`,
@@ -76,7 +96,7 @@ function Post(props) {
                         size={14}
                         style={{ marginRight: 4 }}
                     />
-                    <Text>{like.length}</Text>
+                    <Text>{like?.length || 0}</Text>
                 </View>
                 <View style={styles.statisticItem}>
                     <Text>{countComments} bình luận</Text>
@@ -104,6 +124,7 @@ function Post(props) {
                     title="Bình luận"
                     icon={<Icon name="chat-bubble" />}
                     titleStyle={styles.title}
+                    onPress={actionComment}
                 />
             </View>
         </View>
@@ -138,7 +159,6 @@ const styles = {
         padding: 8,
     },
     statisticGroup: {
-        flex: 1,
         display: 'flex',
         flexDirection: 'row',
         alignItems: 'center',
@@ -152,12 +172,10 @@ const styles = {
     },
 
     buttonGroup: {
-        flex: 1,
         display: 'flex',
         flexDirection: 'row',
         alignItems: 'center',
         justifyContent: 'center',
-        marginBottom: 10,
     },
     buttonContainer: {
         flex: 1,

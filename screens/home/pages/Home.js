@@ -1,5 +1,5 @@
 import { useFocusEffect } from '@react-navigation/native';
-import { useCallback } from 'react';
+import { useCallback, useEffect } from 'react';
 import { Text, View } from 'react-native';
 import { BackHandler } from 'react-native';
 import { useDispatch } from 'react-redux';
