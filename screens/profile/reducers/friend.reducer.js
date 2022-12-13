@@ -1,10 +1,11 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
-import { acceptRequest, getFriendProfile, getFriendStatus, getRequestedFriends, listFriend, removeFriend, sendFriendRequest } from '../services/friend.api';
+import { acceptRequest, cancelRequest, getFriendProfile, getFriendStatus, getListRequest, getRequestedFriends, listFriend, removeFriend, sendFriendRequest } from '../services/friend.api';
 import { status } from '@constants'
 
 const initialState = {
     friendList: [],
-    requestList: [],
+    sentList: [],
+    receivedList: [],
     blockList: [],
     targetUser: {},
     isLoading: false,
@@ -24,10 +25,18 @@ export const getRequestedFriend = createAsyncThunk(
     }
 );
 
+//1: ket ban 2: huy loi moi
 export const acceptRequestFriend = createAsyncThunk(
     'friend/accept',
     async (body) => {
         return await acceptRequest(body);
+    }
+);
+
+export const cancelRequestFriend = createAsyncThunk(
+    'friend/cancel',
+    async (body) => {
+        return await cancelRequest(body);
     }
 );
 
@@ -49,6 +58,13 @@ export const getStatusFriend = createAsyncThunk(
     'friend/getListFriends',
     async (params) => {
         return await getFriendStatus(params);
+    }
+);
+
+export const listRequest = createAsyncThunk(
+    'friend/listRequest',
+    async () => {
+        return await getListRequest();
     }
 );
 
@@ -79,12 +95,18 @@ export const friendSlice = createSlice({
             state.targetUser = action.payload?.data || {};
         });
         builder.addCase(getStatusFriend.fulfilled, (state, action) => {
-            state.targetUser.status = action.payload?.data?.satus || status.NOT_FRIEND;
+            state.targetUser.status = action.payload?.data?.status || status.NOT_FRIEND;
+        });
+        builder.addCase(listRequest.fulfilled, (state, action) => {
+            state.sentList = action.payload?.data?.sentList || [];
+            state.receivedList = action.payload?.data?.receivedList || [];
         });
     },
 });
 
 export const selectFriendList = (state) => state.friend.friendList;
+export const selectSentList = (state) => state.friend.sentList;
+export const selectReceivedList = (state) => state.friend.receivedList;
 export const selectFriendProfile = (state) => state.friend.targetUser;
 export const selectIsLoading = (state) => state.friend.isLoading;
 
