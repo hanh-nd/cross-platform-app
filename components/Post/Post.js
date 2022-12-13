@@ -11,6 +11,7 @@ import {
     likePost,
     fetchPostList,
 } from '../../screens/home/reducers/home.reducer';
+import ReadMore from 'react-native-read-more-text';
 
 function Post(props) {
     const { post, onLike } = props;
@@ -77,7 +78,9 @@ function Post(props) {
                 </View>
             </View>
             <View style={styles.content}>
-                <Text style={styles.contentText}>{described}</Text>
+                <View style={styles.contentText}>
+                    <ReadMore numberOfLines={5}>{described}</ReadMore>
+                </View>
                 {images && images.length ? (
                     <View style={styles.imageContainer}>
                         <UIImage

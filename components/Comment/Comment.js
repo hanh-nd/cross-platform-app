@@ -1,7 +1,8 @@
 import { env, screen } from '@/constants';
+import { getUserName } from '@/utilities/User';
 import { Avatar } from '@rneui/themed';
 import { Text, View } from 'react-native';
-import { getUserName } from '@/utilities/User';
+import ReadMore from 'react-native-read-more-text';
 
 function Comment(props) {
     const { comment } = props;
@@ -21,10 +22,12 @@ function Comment(props) {
                             : require('assets/default_avt.jpg')
                     }
                 />
-                <Text style={styles.username}>{`${getUserName(user)}`}</Text>
             </View>
             <View style={styles.content}>
-                <Text>{content}</Text>
+                <Text style={styles.username}>{`${getUserName(user)}`}</Text>
+                <ReadMore numberOfLines={3}>
+                    <Text>{content}</Text>
+                </ReadMore>
             </View>
         </View>
     );
@@ -32,6 +35,8 @@ function Comment(props) {
 
 const styles = {
     container: {
+        display: 'flex',
+        flexDirection: 'row',
         width: screen.width,
         backgroundColor: 'white',
     },
@@ -42,7 +47,12 @@ const styles = {
         padding: 8,
     },
     content: {
+        flex: 1,
         padding: 8,
+    },
+    username: {
+        fontWeight: 'bold',
+        fontSize: 15,
     },
 };
 

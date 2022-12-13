@@ -1,12 +1,11 @@
+import { env, screen } from '@/constants';
 import { Avatar, Button, Input, ListItem } from '@rneui/themed';
-import { screen } from '@/constants';
 import { Formik } from 'formik';
 import { useState } from 'react';
 import { Text, View } from 'react-native';
 import { FlatList } from 'react-native-gesture-handler';
 import { useDispatch, useSelector } from 'react-redux';
 import { UIImage } from '../../../components';
-import { PageName } from '../../../navigation/constants';
 import { getBase64MediaList } from '../../../plugins/image-picker';
 import {
     showErrorMessage,
@@ -16,13 +15,12 @@ import { getUserName } from '../../../utilities/User';
 import { selectLoginUser } from '../../auth/reducers/auth.reducer';
 import { createNewPost, fetchPostList } from '../reducers/home.reducer';
 import { createPostSchema } from '../schema';
-import { env } from '@/constants';
 
 function CreatePostPage(props) {
     const loginUser = useSelector(selectLoginUser);
 
     const { navigation } = props;
-    const { navigate } = navigation;
+    const { navigate, goBack } = navigation;
 
     const dispatch = useDispatch();
 
@@ -41,9 +39,7 @@ function CreatePostPage(props) {
         const response = await dispatch(createNewPost(body)).unwrap();
         if (response?.success) {
             showSuccessMessage('Tạo bài viết thành công');
-            navigate(PageName.TAB_NAVIGATOR, {
-                screen: PageName.HOME,
-            });
+            goBack();
             dispatch(fetchPostList());
             return;
         }

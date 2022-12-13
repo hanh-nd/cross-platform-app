@@ -52,5 +52,6 @@ export const postDetailSlice = createSlice({
 
 export const selectPostDetail = (state) => state.postDetail.post;
 export const selectPostComments = (state) => state.postDetail.comments;
+export const selectIsLoading = (state) => state.postDetail.isLoading;
 
 export default postDetailSlice.reducer;
