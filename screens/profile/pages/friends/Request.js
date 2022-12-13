@@ -1,44 +1,123 @@
-import React from 'react';
+import React, { useCallback } from 'react';
 import {
+    FlatList,
     View,
 } from 'react-native';
 import {
     Text,
     Icon,
     Button,
-    Input,
     Avatar
 } from '@rneui/themed';
-import { PageName } from '../../../navigation/constants';
-import { colors, screen } from '../../../../constants';
+import { PageName } from 'navigation/constants';
+import { colors, screen } from '@constants';
+import { useDispatch, useSelector } from 'react-redux';
+import { listRequest, selectReceivedList, acceptRequestFriend, getListFriends, getUserProfile } from '../../reducers/friend.reducer';
+import { getUserName } from 'utilities/User';
+import { useFocusEffect } from '@react-navigation/native';
+import { showErrorMessage, showSuccessMessage } from 'utilities/Notification';
 
-function Request(props) {
+function Request({navigate}) {
+    const dispatch = useDispatch();
+
+    const receivedList = useSelector(selectReceivedList);
+
+    useFocusEffect(
+        useCallback(() => {
+            dispatch(listRequest());
+        }, [])
+    );
+
+    const acceptRequest = async (user_id) => {
+        const response = await dispatch(acceptRequestFriend({
+            user_id,
+            is_accept: '1'
+        })).unwrap();
+
+        if (response?.success) {
+            dispatch(listRequest());
+            dispatch(getListFriends());
+            showSuccessMessage(response?.message);
+            return;
+        }
+        showErrorMessage(response?.message);
+    }
+
+    const cancelRequest = async (user_id) => {
+        const response = await dispatch(acceptRequestFriend({
+            user_id,
+            is_accept: '2'
+        })).unwrap();
+
+        if (response?.success) {
+            dispatch(listRequest());
+            showSuccessMessage(response?.message);
+            return;
+        }
+        showErrorMessage(response?.message);
+    }
+
+    const gotoFriendProfile = async (friend) => {
+        const response = await dispatch(getUserProfile(friend?._id)).unwrap();
+
+        if (response?.success) {
+            navigate({
+                name: PageName.FRIEND_PROFILE,
+                params: friend
+            });
+            return;
+        }
+        showErrorMessage(response?.message);
+    }
+
     return (
         <>
-            <Text style={styles.label}>Lời mời kết bạn</Text>
-
-            <View style={styles.container}>
-                <Avatar
-                    size={75}
-                    rounded
-                    source={require('../../../../assets/default_avt.jpg')}
-                />
-                <View>
-                    <Text style={styles.name}>Roronoa Zoro</Text>
-                    <View style={styles.buttonContainer}>
-                        <Button buttonStyle={styles.buttonAccept} color={colors.grayBlue}>
-                                Chấp nhận
-                        </Button>
-                        <Button 
-                            buttonStyle={styles.buttonReject}
-                            color={colors.gray}
-                            titleStyle={{color: 'black'}}
-                        >
-                            Từ chối
-                        </Button>
+            <Text style={[styles.name, { fontSize: 20, paddingBottom: 10 }]}>
+                {receivedList.length} lời mời
+            </Text>
+            <FlatList
+                data={receivedList}
+                showsVerticalScrollIndicator={false}
+                renderItem={({ item }) => (
+                    <View style={styles.container}>
+                        <Avatar
+                            size={75}
+                            rounded
+                            source={
+                                item?.sender?.avatar
+                                    ? {
+                                        uri: `${env.FILE_SERVICE_USER}/${item?.sender?.avatar.fileName}`,
+                                    }
+                                    : require('assets/default_avt.jpg')
+                            }
+                            onPress={() => gotoFriendProfile(item?.sender)}
+                        />
+                        <View>
+                            <Text style={styles.name} onPress={() => gotoFriendProfile(item?.sender)}>
+                                {getUserName(item?.sender)}
+                            </Text>
+                            <View style={styles.buttonContainer}>
+                                <Button
+                                    buttonStyle={styles.buttonAccept}
+                                    color={colors.grayBlue}
+                                    onPress={() => acceptRequest(item?.sender._id)}
+                                >
+                                    Chấp nhận
+                                </Button>
+                                <Button
+                                    buttonStyle={styles.buttonReject}
+                                    color={colors.gray}
+                                    titleStyle={{ color: 'black' }}
+                                    onPress={() => cancelRequest(item?.sender._id)}
+                                >
+                                    Từ chối
+                                </Button>
+                            </View>
+                        </View>
                     </View>
-                </View>
-            </View>
+                )}
+                keyExtractor={item => item._id}
+            />
         </>
     );
 }
