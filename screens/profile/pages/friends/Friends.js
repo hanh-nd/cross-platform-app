@@ -1,5 +1,6 @@
 import React from 'react';
 import {
+    FlatList,
     View,
 } from 'react-native';
 import {
@@ -12,12 +13,15 @@ import {
 } from '@rneui/themed';
 import { PageName } from 'navigation/constants';
 import { colors, screen, env } from '@constants';
-import { useSelector } from 'react-redux';
-import { selectFriendList } from '../../reducers/friend.reducer';
+import { useDispatch, useSelector } from 'react-redux';
+import { deleteFriend, getListFriends, getUserProfile, selectFriendList } from '../../reducers/friend.reducer';
+import { showErrorMessage, showSuccessMessage } from 'utilities/Notification';
+import { getUserName } from 'utilities/User';
 
-function Friends(props) {
+function Friends({navigate}) {
     const listFriend = useSelector(selectFriendList);
-
+    const dispatch = useDispatch();
+    const [targetId, setTargetId] = React.useState();
     const [isVisible, setIsVisible] = React.useState(false);
 
     const list = [
@@ -32,9 +36,42 @@ function Friends(props) {
         {
             title: 'Hủy kết bạn',
             iconName: 'highlight-off',
-            onPress: () => setIsVisible(false),
+            onPress: () => removeFriend()
         },
     ];
+
+    const removeFriend = async () => {
+        const response = await dispatch(deleteFriend({
+            user_id: targetId
+        })).unwrap();
+
+        if (response?.success) {
+            dispatch(getListFriends());
+            setIsVisible(false);
+            showSuccessMessage(response?.message);
+            return;
+        }
+        setIsVisible(false);
+        showErrorMessage(response?.message);
+    }
+
+    const openBottomSheet = (id) => {
+        setTargetId(id);
+        setIsVisible(true);
+    }
+    
+    const gotoFriendProfile = async (friend) => {
+        const response = await dispatch(getUserProfile(friend?._id)).unwrap();
+
+        if (response?.success) {
+            navigate({
+                name: PageName.FRIEND_PROFILE,
+                params: friend
+            });
+            return;
+        }
+        showErrorMessage(response?.message);
+    }
 
     return (
         <>
@@ -46,38 +83,41 @@ function Friends(props) {
                 containerStyle={{ height: 55 }}
                 inputContainerStyle={styles.inputSearchContainer}
             />
-            <Text style={[styles.name, {fontSize: 20, paddingBottom: 10}]}>
+            <Text style={[styles.name, { fontSize: 20, paddingBottom: 10 }]}>
                 {listFriend.length} người bạn
             </Text>
-            {
-                listFriend.map(f => {
-                    return (
-                        <View style={styles.container} key={f._id}>
-                            <View style={styles.row}>
-                                <Avatar
-                                    size={75}
-                                    rounded
-                                    source={
-                                        f?.avatar
-                                            ? {
-                                                uri: `${env.FILE_SERVICE_USER}/${f?.avatar.fileName}`,
-                                            }
-                                            : require('assets/default_avt.jpg')
-                                    }
-                                />
-                                <Text style={styles.name}>{f.username}</Text>
-                            </View>
-                            <Icon
-                                type="material"
-                                name="more-horiz"
-                                style={{ padding: 8 }}
-                                onPress={() => setIsVisible(true)}
+            <FlatList
+                data={listFriend}
+                showsVerticalScrollIndicator={false}
+                renderItem={({ item }) => (
+                    <View style={styles.container}>
+                        <View style={styles.row}>
+                            <Avatar
+                                size={75}
+                                rounded
+                                source={
+                                    item?.avatar
+                                        ? {
+                                            uri: `${env.FILE_SERVICE_USER}/${item?.avatar.fileName}`,
+                                        }
+                                        : require('assets/default_avt.jpg')
+                                }
+                                onPress={() => gotoFriendProfile(item)}
                             />
+                            <Text style={styles.name} onPress={() => gotoFriendProfile(item)}>
+                                {getUserName(item)}
+                            </Text>
                         </View>
-                    )
-                })
-            }
-
+                        <Icon
+                            type="material"
+                            name="more-horiz"
+                            style={{ padding: 8 }}
+                            onPress={() => openBottomSheet(item._id)}
+                        />
+                    </View>
+                )}
+                keyExtractor={item => item._id}
+            />
 
             <BottomSheet
                 isVisible={isVisible}

@@ -11,6 +11,7 @@ import { env } from '@constants';
 import { getListFriends, getUserProfile, selectFriendList } from '../reducers/friend.reducer';
 import CreatePost from 'screens/home/components/CreatePost';
 import { useFocusEffect } from '@react-navigation/native';
+import { showErrorMessage } from 'utilities/Notification';
 
 function Profile(props) {
     const loginUser = useSelector(selectLoginUser);

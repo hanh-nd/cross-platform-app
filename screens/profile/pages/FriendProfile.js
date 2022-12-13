@@ -1,13 +1,14 @@
 import { Avatar, Button, Divider, Icon, Image, Text } from '@rneui/themed';
 import { colors, screen, status } from '@constants';
 import { PageName } from 'navigation/constants';
-import React, { useCallback, useEffect } from 'react';
+import React, { useCallback } from 'react';
 import { RefreshControl, ScrollView, View } from 'react-native';
 import { useDispatch, useSelector } from 'react-redux';
 import { getUserName } from 'utilities/User';
 import { env } from '@constants';
-import { getStatusFriend, getUserProfile, selectFriendList, selectFriendProfile, selectIsLoading } from '../reducers/friend.reducer';
+import { deleteFriend, getStatusFriend, getUserProfile, selectFriendProfile, selectIsLoading, sendRequest } from '../reducers/friend.reducer';
 import { useFocusEffect } from '@react-navigation/native';
+import { showErrorMessage, showSuccessMessage } from 'utilities/Notification';
 
 function FriendProfile(props) {
     const { navigation, route } = props;
@@ -20,6 +21,7 @@ function FriendProfile(props) {
 
     const onRefresh = React.useCallback(() => {
         dispatch(getUserProfile(friendId));
+        dispatch(getStatusFriend(friendId));
     }, []);
 
     useFocusEffect(
@@ -27,6 +29,32 @@ function FriendProfile(props) {
             dispatch(getStatusFriend(friendId));
         }, [])
     );
+
+    const requestFriend = async () => {
+        const response = await dispatch(sendRequest({
+            user_id: friendId
+        })).unwrap();
+
+        if (response?.success) {
+            onRefresh();
+            showSuccessMessage(response?.message);
+            return;
+        }
+        showErrorMessage(response?.message);
+    }
+
+    const removeFriend = async () => {
+        const response = await dispatch(deleteFriend({
+            user_id: friendId
+        })).unwrap();
+
+        if (response?.success) {
+            onRefresh();
+            showSuccessMessage(response?.message);
+            return;
+        }
+        showErrorMessage(response?.message);
+    }
 
     return (
         <ScrollView
@@ -69,6 +97,7 @@ function FriendProfile(props) {
                             <Button
                                 color={colors.grayBlue}
                                 buttonStyle={styles.button}
+                                onPress={removeFriend}
                             >
                                 <Icon name="person-remove" color="white" />
                                 <Text style={[styles.textButton, { color: 'white' }]}> Xóa kết bạn</Text>
@@ -77,6 +106,7 @@ function FriendProfile(props) {
                             <Button
                                 color={colors.grayBlue}
                                 buttonStyle={styles.button}
+                                onPress={requestFriend}
                             >
                                 <Icon name="person-add-alt-1" color="white" />
                                 <Text style={[styles.textButton, { color: 'white' }]}> Thêm bạn bè</Text>

@@ -25,8 +25,8 @@ export const listFriend = async () => {
     return await client.post(`${env.BASE_URL}/friends/list`);
 };
 
-export const getListRequest = async (body) => {
-    return await client.post(`${env.BASE_URL}/friends/list_requests`, body);
+export const getListRequest = async () => {
+    return await client.get(`${env.BASE_URL}/friends/list_requests`);
 };
 
 export const getFriendStatus = async (params) => {
