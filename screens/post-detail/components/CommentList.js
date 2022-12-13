@@ -1,7 +1,7 @@
 import { screen } from '@/constants';
 import { View } from 'react-native';
 import { FlatList } from 'react-native-gesture-handler';
-import Comment from './Comment';
+import { Comment } from '@/components';
 
 function CommentList(props) {
     const { comments, ...rest } = props;

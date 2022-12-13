@@ -1,17 +1,11 @@
 import { Post } from '@/components';
 import { screen } from '@/constants';
-import { useEffect } from 'react';
 import { FlatList, Image, View } from 'react-native';
-import { useDispatch, useSelector } from 'react-redux';
-import { fetchPostList, selectPostList } from '../reducers/home.reducer';
+import { useSelector } from 'react-redux';
+import { selectPostList } from '../reducers/home.reducer';
 
 function PostList(props) {
     const postList = useSelector(selectPostList);
-    const dispatch = useDispatch();
-
-    useEffect(() => {
-        dispatch(fetchPostList());
-    }, []);
 
     return (
         <View style={styles.container}>

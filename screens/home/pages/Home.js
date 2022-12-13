@@ -1,17 +1,20 @@
+import { screen } from '@constants';
 import { useFocusEffect } from '@react-navigation/native';
 import { useCallback, useEffect } from 'react';
-import { Text, View } from 'react-native';
-import { BackHandler } from 'react-native';
-import { useDispatch } from 'react-redux';
+import { BackHandler, View } from 'react-native';
+import { RefreshControl, ScrollView } from 'react-native-gesture-handler';
+import { useDispatch, useSelector } from 'react-redux';
 import { DismissKeyboardView } from '../../../components';
 import CreatePost from '../components/CreatePost';
 import PostList from '../components/PostList';
-import { screen } from '@constants';
+import { fetchPostList, selectIsLoading } from '../reducers/home.reducer';
 function Home(props) {
     const dispatch = useDispatch();
     const { navigation, route } = props;
     //functions of navigate to/back
     const { navigate, goBack } = navigation;
+
+    const isLoading = useSelector(selectIsLoading);
 
     useFocusEffect(
         useCallback(() => {
@@ -28,15 +31,32 @@ function Home(props) {
     const backAction = async () => {
         BackHandler.exitApp();
     };
+    useEffect(() => {
+        dispatch(fetchPostList());
+    }, []);
+
+    const onRefresh = () => {
+        dispatch(fetchPostList());
+    };
 
     return (
         <DismissKeyboardView style={styles.container}>
-            <View style={styles.createPost}>
-                <CreatePost />
-            </View>
-            <View style={styles.postList}>
-                <PostList />
-            </View>
+            <ScrollView
+                horizontal={false}
+                refreshControl={
+                    <RefreshControl
+                        refreshing={isLoading}
+                        onRefresh={onRefresh}
+                    />
+                }
+            >
+                <View style={styles.createPost}>
+                    <CreatePost style={{ backgroundColor: 'white' }} />
+                </View>
+                <ScrollView horizontal={true} style={styles.postList}>
+                    <PostList />
+                </ScrollView>
+            </ScrollView>
         </DismissKeyboardView>
     );
 }
