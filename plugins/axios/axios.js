@@ -29,7 +29,7 @@ client.interceptors.request.use(
     },
     function (error) {
         return Promise.reject(error);
-    }
+    },
 );
 
 // Add a response interceptor
@@ -87,7 +87,7 @@ client.interceptors.response.use(
             data: undefined,
             code: 500,
         };
-    }
+    },
 );
 
 export const getAccessToken = async () => {

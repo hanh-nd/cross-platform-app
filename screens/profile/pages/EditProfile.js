@@ -34,7 +34,7 @@ function EditProfile(props) {
             const response = await dispatch(
                 handleEditSelfProfile({
                     avatar: avatar[0],
-                })
+                }),
             ).unwrap();
             if (response?.success) {
                 showSuccessMessage('Đổi ảnh đại diện thành công');
@@ -51,7 +51,7 @@ function EditProfile(props) {
             const response = await dispatch(
                 handleEditSelfProfile({
                     cover_image: cover[0],
-                })
+                }),
             ).unwrap();
             if (response?.success) {
                 showSuccessMessage('Đổi ảnh bìa thành công');

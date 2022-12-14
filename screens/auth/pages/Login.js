@@ -38,7 +38,7 @@ function Login(props) {
             handleLogin({
                 phonenumber,
                 password,
-            })
+            }),
         ).unwrap();
 
         if (response?.success) {
@@ -60,10 +60,10 @@ function Login(props) {
             return () => {
                 BackHandler.removeEventListener(
                     'hardwareBackPress',
-                    backAction
+                    backAction,
                 );
             };
-        }, [])
+        }, []),
     );
 
     const backAction = async () => {

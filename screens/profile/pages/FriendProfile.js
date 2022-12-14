@@ -6,7 +6,14 @@ import { RefreshControl, ScrollView, View } from 'react-native';
 import { useDispatch, useSelector } from 'react-redux';
 import { getUserName } from 'utilities/User';
 import { env } from '@constants';
-import { deleteFriend, getStatusFriend, getUserProfile, selectFriendProfile, selectIsLoading, sendRequest } from '../reducers/friend.reducer';
+import {
+    deleteFriend,
+    getStatusFriend,
+    getUserProfile,
+    selectFriendProfile,
+    selectIsLoading,
+    sendRequest,
+} from '../reducers/friend.reducer';
 import { useFocusEffect } from '@react-navigation/native';
 import { showErrorMessage, showSuccessMessage } from 'utilities/Notification';
 
@@ -27,13 +34,15 @@ function FriendProfile(props) {
     useFocusEffect(
         useCallback(() => {
             dispatch(getStatusFriend(friendId));
-        }, [])
+        }, []),
     );
 
     const requestFriend = async () => {
-        const response = await dispatch(sendRequest({
-            user_id: friendId
-        })).unwrap();
+        const response = await dispatch(
+            sendRequest({
+                user_id: friendId,
+            }),
+        ).unwrap();
 
         if (response?.success) {
             onRefresh();
@@ -41,12 +50,14 @@ function FriendProfile(props) {
             return;
         }
         showErrorMessage(response?.message);
-    }
+    };
 
     const removeFriend = async () => {
-        const response = await dispatch(deleteFriend({
-            user_id: friendId
-        })).unwrap();
+        const response = await dispatch(
+            deleteFriend({
+                user_id: friendId,
+            }),
+        ).unwrap();
 
         if (response?.success) {
             onRefresh();
@@ -54,7 +65,7 @@ function FriendProfile(props) {
             return;
         }
         showErrorMessage(response?.message);
-    }
+    };
 
     return (
         <ScrollView
@@ -68,8 +79,8 @@ function FriendProfile(props) {
                 source={
                     friend?.cover_image
                         ? {
-                            uri: `${env.FILE_SERVICE_USER}/${friend?.cover_image.fileName}`,
-                        }
+                              uri: `${env.FILE_SERVICE_USER}/${friend?.cover_image.fileName}`,
+                          }
                         : require('assets/default_cover.jpg')
                 }
                 containerStyle={styles.coverContainer}
@@ -81,8 +92,8 @@ function FriendProfile(props) {
                     source={
                         friend?.avatar
                             ? {
-                                uri: `${env.FILE_SERVICE_USER}/${friend?.avatar.fileName}`,
-                            }
+                                  uri: `${env.FILE_SERVICE_USER}/${friend?.avatar.fileName}`,
+                              }
                             : require('assets/default_avt.jpg')
                     }
                     containerStyle={{
@@ -91,39 +102,46 @@ function FriendProfile(props) {
                     }}
                 />
                 <Text style={styles.name}>{getUserName(friend)}</Text>
-                <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
-                    {
-                        friend?.status === status.FRIEND ? (
-                            <Button
-                                color={colors.grayBlue}
-                                buttonStyle={styles.button}
-                                onPress={removeFriend}
+                <View
+                    style={{
+                        flexDirection: 'row',
+                        justifyContent: 'space-between',
+                    }}
+                >
+                    {friend?.status === status.FRIEND ? (
+                        <Button
+                            color={colors.grayBlue}
+                            buttonStyle={styles.button}
+                            onPress={removeFriend}
+                        >
+                            <Icon name="person-remove" color="white" />
+                            <Text
+                                style={[styles.textButton, { color: 'white' }]}
                             >
-                                <Icon name="person-remove" color="white" />
-                                <Text style={[styles.textButton, { color: 'white' }]}> Xóa kết bạn</Text>
-                            </Button>
-                        ) : (
-                            <Button
-                                color={colors.grayBlue}
-                                buttonStyle={styles.button}
-                                onPress={requestFriend}
+                                {' '}
+                                Xóa kết bạn
+                            </Text>
+                        </Button>
+                    ) : (
+                        <Button
+                            color={colors.grayBlue}
+                            buttonStyle={styles.button}
+                            onPress={requestFriend}
+                        >
+                            <Icon name="person-add-alt-1" color="white" />
+                            <Text
+                                style={[styles.textButton, { color: 'white' }]}
                             >
-                                <Icon name="person-add-alt-1" color="white" />
-                                <Text style={[styles.textButton, { color: 'white' }]}> Thêm bạn bè</Text>
-                            </Button>
-                        )
-                    }
-                    <Button
-                        color={colors.gray}
-                        buttonStyle={styles.button}
-                    >
+                                {' '}
+                                Thêm bạn bè
+                            </Text>
+                        </Button>
+                    )}
+                    <Button color={colors.gray} buttonStyle={styles.button}>
                         <Icon name="message" color="black" />
                         <Text style={styles.textButton}> Nhắn tin</Text>
                     </Button>
-                    <Button
-                        color={colors.gray}
-                        buttonStyle={styles.button}
-                    >
+                    <Button color={colors.gray} buttonStyle={styles.button}>
                         <Icon name="block" color="black" />
                         <Text style={styles.textButton}> Chặn</Text>
                     </Button>

@@ -22,10 +22,10 @@ function Home(props) {
             return () => {
                 BackHandler.removeEventListener(
                     'hardwareBackPress',
-                    backAction
+                    backAction,
                 );
             };
-        }, [])
+        }, []),
     );
 
     const backAction = async () => {

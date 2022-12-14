@@ -15,21 +15,21 @@ export const getPostDetail = createAsyncThunk(
     'postDetail/getPostDetail',
     async (postId) => {
         return await getDetail(postId);
-    }
+    },
 );
 
 export const getPostComments = createAsyncThunk(
     'postDetail/getPostComments',
     async (postId) => {
         return await getCommentList(postId);
-    }
+    },
 );
 
 export const createPostComment = createAsyncThunk(
     'postDetail/createPostComment',
     async ({ postId, body }) => {
         return await createComment(postId, body);
-    }
+    },
 );
 
 export const postDetailSlice = createSlice({

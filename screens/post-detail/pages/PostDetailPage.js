@@ -51,7 +51,7 @@ function PostDetailPage(props) {
                 body: {
                     content: comment,
                 },
-            })
+            }),
         ).unwrap();
         resetForm();
         _getDetail(postId);

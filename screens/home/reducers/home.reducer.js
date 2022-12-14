@@ -10,14 +10,14 @@ export const fetchPostList = createAsyncThunk(
     'home/fetchPostList',
     async () => {
         return await getPosts();
-    }
+    },
 );
 
 export const createNewPost = createAsyncThunk(
     'home/createNewPost',
     async (body) => {
         return await createPost(body);
-    }
+    },
 );
 
 export const likePost = createAsyncThunk('home/likePost', async (postId) => {

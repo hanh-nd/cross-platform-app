@@ -2,7 +2,10 @@ import { env } from '@constants';
 import { client } from 'plugins/axios/axios';
 
 export const sendFriendRequest = async (body) => {
-    return await client.post(`${env.BASE_URL}/friends/set-request-friend`, body);
+    return await client.post(
+        `${env.BASE_URL}/friends/set-request-friend`,
+        body,
+    );
 };
 
 export const getRequestedFriends = async () => {
@@ -30,7 +33,6 @@ export const getListRequest = async () => {
 };
 
 export const getFriendStatus = async (params) => {
-
     return await client.get(`${env.BASE_URL}/friends/status/${params}`);
 };
 

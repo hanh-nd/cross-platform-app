@@ -1,14 +1,14 @@
 export default [
     {
         label: 'Nam',
-        value: 'male'
+        value: 'male',
     },
     {
         label: 'Nữ',
-        value: 'female'
+        value: 'female',
     },
     {
         label: 'Giới tính khác',
-        value: 'secret'
+        value: 'secret',
     },
 ];

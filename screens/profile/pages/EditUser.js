@@ -62,7 +62,7 @@ function EditUser(props) {
                 username,
                 gender,
                 birthday,
-            })
+            }),
         ).unwrap();
 
         if (response?.success) {

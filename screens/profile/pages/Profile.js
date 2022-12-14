@@ -5,10 +5,17 @@ import React, { useCallback } from 'react';
 import { RefreshControl, ScrollView, View } from 'react-native';
 import { useDispatch, useSelector } from 'react-redux';
 import { getUserName } from 'utilities/User';
-import { selectIsLoading, selectLoginUser } from '../../auth/reducers/auth.reducer';
+import {
+    selectIsLoading,
+    selectLoginUser,
+} from '../../auth/reducers/auth.reducer';
 import { fetchSelfDetail } from 'screens/auth/reducers/auth.reducer';
 import { env } from '@constants';
-import { getListFriends, getUserProfile, selectFriendList } from '../reducers/friend.reducer';
+import {
+    getListFriends,
+    getUserProfile,
+    selectFriendList,
+} from '../reducers/friend.reducer';
 import CreatePost from 'screens/home/components/CreatePost';
 import { useFocusEffect } from '@react-navigation/native';
 import { showErrorMessage } from 'utilities/Notification';
@@ -31,7 +38,7 @@ function Profile(props) {
         useCallback(() => {
             dispatch(fetchSelfDetail());
             dispatch(getListFriends());
-        }, [])
+        }, []),
     );
 
     const gotoFriendProfile = async (friend) => {
@@ -40,12 +47,12 @@ function Profile(props) {
         if (response?.success) {
             navigate({
                 name: PageName.FRIEND_PROFILE,
-                params: friend
+                params: friend,
             });
             return;
         }
         showErrorMessage(response?.message);
-    }
+    };
 
     return (
         <ScrollView
@@ -59,8 +66,8 @@ function Profile(props) {
                 source={
                     loginUser?.cover_image
                         ? {
-                            uri: `${env.FILE_SERVICE_USER}/${loginUser?.cover_image.fileName}`,
-                        }
+                              uri: `${env.FILE_SERVICE_USER}/${loginUser?.cover_image.fileName}`,
+                          }
                         : require('assets/default_cover.jpg')
                 }
                 containerStyle={styles.coverContainer}
@@ -72,8 +79,8 @@ function Profile(props) {
                     source={
                         loginUser?.avatar
                             ? {
-                                uri: `${env.FILE_SERVICE_USER}/${loginUser?.avatar.fileName}`,
-                            }
+                                  uri: `${env.FILE_SERVICE_USER}/${loginUser?.avatar.fileName}`,
+                              }
                             : require('assets/default_avt.jpg')
                     }
                     containerStyle={{
@@ -107,49 +114,59 @@ function Profile(props) {
             />
             <View style={styles.friend}>
                 <Text style={styles.label}>Bạn bè</Text>
-                {
-                    listFriend.length ? (
-                        <>
-                            <Text style={{ color: colors.placeholder }}>{listFriend.length} người bạn</Text>
-                            <View style={styles.preview}>
-                                {
-                                    listFriend.slice(0, 6).map(f => {
-                                        return (
-                                            <View style={{ flexDirection: 'column' }} key={f._id}>
-                                                <Avatar
-                                                    size={110}
-                                                    source={
-                                                        f?.avatar
-                                                            ? {
-                                                                uri: `${env.FILE_SERVICE_USER}/${f?.avatar.fileName}`,
-                                                            }
-                                                            : require('assets/default_avt.jpg')
-                                                    }
-                                                    containerStyle={styles.friendAvatar}
-                                                    onPress={() => gotoFriendProfile(f)}
-                                                />
-                                                <Text style={styles.friendName}
-                                                    onPress={() => gotoFriendProfile(f)}
-                                                >{f.username}</Text>
-                                            </View>
-                                        )
-                                    })
-                                }
-                            </View>
-                            <Button
-                                color={colors.gray}
-                                buttonStyle={styles.button}
-                                onPress={() => navigate({ name: PageName.LIST_FRIENDS })}
-                            >
-                                <Text style={styles.textButton}>Xem tất cả bạn bè</Text>
-                            </Button>
-                        </>
-                    ) : (
-                        <>
-                            <Text style={{ color: colors.placeholder }}>Bạn không có người bạn nào</Text>
-                        </>
-                    )
-                }
+                {listFriend.length ? (
+                    <>
+                        <Text style={{ color: colors.placeholder }}>
+                            {listFriend.length} người bạn
+                        </Text>
+                        <View style={styles.preview}>
+                            {listFriend.slice(0, 6).map((f) => {
+                                return (
+                                    <View
+                                        style={{ flexDirection: 'column' }}
+                                        key={f._id}
+                                    >
+                                        <Avatar
+                                            size={110}
+                                            source={
+                                                f?.avatar
+                                                    ? {
+                                                          uri: `${env.FILE_SERVICE_USER}/${f?.avatar.fileName}`,
+                                                      }
+                                                    : require('assets/default_avt.jpg')
+                                            }
+                                            containerStyle={styles.friendAvatar}
+                                            onPress={() => gotoFriendProfile(f)}
+                                        />
+                                        <Text
+                                            style={styles.friendName}
+                                            onPress={() => gotoFriendProfile(f)}
+                                        >
+                                            {f.username}
+                                        </Text>
+                                    </View>
+                                );
+                            })}
+                        </View>
+                        <Button
+                            color={colors.gray}
+                            buttonStyle={styles.button}
+                            onPress={() =>
+                                navigate({ name: PageName.LIST_FRIENDS })
+                            }
+                        >
+                            <Text style={styles.textButton}>
+                                Xem tất cả bạn bè
+                            </Text>
+                        </Button>
+                    </>
+                ) : (
+                    <>
+                        <Text style={{ color: colors.placeholder }}>
+                            Bạn không có người bạn nào
+                        </Text>
+                    </>
+                )}
             </View>
             <Divider
                 width={10}
@@ -157,7 +174,9 @@ function Profile(props) {
                 style={{ marginVertical: 14 }}
             />
             <View>
-                <Text style={[styles.label, { paddingHorizontal: '5%' }]}>Đăng bài</Text>
+                <Text style={[styles.label, { paddingHorizontal: '5%' }]}>
+                    Đăng bài
+                </Text>
                 <CreatePost />
             </View>
         </ScrollView>
@@ -199,7 +218,7 @@ const styles = {
     },
     friendAvatar: {
         marginVertical: 5,
-        marginHorizontal: '1.8%'
+        marginHorizontal: '1.8%',
     },
     label: {
         fontSize: 18,
@@ -208,8 +227,8 @@ const styles = {
     friendName: {
         fontWeight: '700',
         maxWidth: 130,
-        marginBottom: 5
-    }
+        marginBottom: 5,
+    },
 };
 
 export default Profile;
