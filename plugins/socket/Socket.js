@@ -10,7 +10,7 @@ class SocketProvider {
 
     static getSocket = () => {
         if (!SocketProvider._socket) {
-            this.initialize()
+            SocketProvider.initialize()
         }
         return SocketProvider._socket
     }
