@@ -9,23 +9,27 @@ function Chat(props) {
   const [isVisible, setIsVisible] = useState(false);
   const data = [
     {
+      id: Math.random(),
       imgLink: "https://randomuser.me/api/portraits/men/36.jpg",
       namePerson: "Nguyễn Văn A",
       lastMessage: "Hôm nay ăn gì nhỉ?",
     },
     {
-      imgLink: "https://randomuser.me/api/portraits/men/36.jpg",
-      namePerson: "Nguyễn Văn A",
+      id: Math.random(),
+      imgLink: "https://randomuser.me/api/portraits/men/37.jpg",
+      namePerson: "Nguyễn Văn B",
       lastMessage: "Hôm nay ăn gì nhỉ?",
     },
     {
-      imgLink: "https://randomuser.me/api/portraits/men/36.jpg",
-      namePerson: "Nguyễn Văn A",
+      id: Math.random(),
+      imgLink: "https://randomuser.me/api/portraits/men/38.jpg",
+      namePerson: "Nguyễn Văn C",
       lastMessage: "Hôm nay ăn gì nhỉ?",
     },
     {
-      imgLink: "https://randomuser.me/api/portraits/men/36.jpg",
-      namePerson: "Nguyễn Văn A",
+      id: Math.random(),
+      imgLink: "https://randomuser.me/api/portraits/men/39.jpg",
+      namePerson: "Nguyễn Văn D",
       lastMessage: "Hôm nay ăn gì nhỉ?",
     },
   ];
@@ -75,7 +79,7 @@ function Chat(props) {
         {list.map((l, i) => (
           <ListItem key={i} onPress={l.onPress}>
             <ListItem.Content style={styles.contentStyle}>
-              <Icon name={l.iconName} type="material" color='#ff0000' />
+              <Icon name={l.iconName} type="material" color="#ff0000" />
               <ListItem.Title style={styles.titleStyle}>{l.title}</ListItem.Title>
             </ListItem.Content>
           </ListItem>
@@ -91,7 +95,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   inputSearch: {
-    backgroundColor: '#ffffff',
+    backgroundColor: "#ffffff",
     borderWidth: 0,
     borderRadius: 10,
     paddingHorizontal: 10,
@@ -105,7 +109,7 @@ const styles = StyleSheet.create({
   },
   titleStyle: {
     fontWeight: "700",
-    color: '#ff0000',
+    color: "#ff0000",
     marginHorizontal: 10,
   },
 });
