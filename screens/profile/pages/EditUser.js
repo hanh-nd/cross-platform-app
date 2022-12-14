@@ -30,6 +30,10 @@ function EditUser(props) {
     const [isDisplayDate, setShow] = useState(false);
 
     const changeSelectedDate = (event, setBirthday) => {
+        if (event.type === 'dismissed') {
+            setShow(false);
+            return;
+        }
         const newBirthday =
             new Date(event?.nativeEvent?.timestamp) || initialValues.birthday;
         setShow(false);
@@ -67,9 +71,7 @@ function EditUser(props) {
 
         if (response?.success) {
             showSuccessMessage('Thay đổi thông tin thành công');
-            navigate({
-                name: PageName.PROFILE,
-            });
+            goBack();
             return;
         }
         showErrorMessage('Thay đổi thông tin thất bại', response?.message);
@@ -177,6 +179,7 @@ function EditUser(props) {
                                 onChange={(event) =>
                                     changeSelectedDate(event, setFieldValue)
                                 }
+                                onTouchCancel={() => console.log('111')}
                             />
                         )}
                     </>
