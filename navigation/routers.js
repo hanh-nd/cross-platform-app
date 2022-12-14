@@ -11,11 +11,13 @@ import {
   EditProfile,
   EditUser,
   CreatePostPage,
+  FriendProfile,
 } from "../screens";
 import TabNavigator from "./TabNavigator";
 import { PageName } from "./constants";
 import ChatDetail from "../screens/chat/pages/ChatDetail";
 import ChatPersonal from "../screens/chat/pages/ChatPersonal";
+import PostDetailPage from "../screens/post-detail/pages/PostDetailPage";
 
 export const routes = [
   {
@@ -59,6 +61,11 @@ export const routes = [
     headerShown: false,
   },
   {
+    name: PageName.FRIEND_PROFILE,
+    component: FriendProfile,
+    headerShown: true,
+  },
+  {
     name: PageName.LIST_FRIENDS,
     component: ListFriends,
     headerShown: true,
@@ -88,6 +95,11 @@ export const routes = [
     component: ChatPersonal,
     headerShown: true,
   },
+  {
+    name: PageName.POST_DETAIL_PAGE,
+    component: PostDetailPage,
+    headerShown: true
+  }
 ];
 
 export const tabNavigatorRoutes = [

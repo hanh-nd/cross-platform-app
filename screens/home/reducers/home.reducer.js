@@ -40,5 +40,6 @@ export const homeSlice = createSlice({
 });
 
 export const selectPostList = (state) => state.home.postList;
+export const selectIsLoading = (state) => state.home.isLoading;
 
 export default homeSlice.reducer;

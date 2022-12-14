@@ -7,6 +7,7 @@ import { PageName } from '../../../navigation/constants';
 import { selectLoginUser } from '../../auth/reducers/auth.reducer';
 
 function CreatePost(props) {
+    const { style, ...rest } = props;
     const loginUser = useSelector(selectLoginUser);
 
     const { navigate } = useNavigation();
@@ -18,7 +19,7 @@ function CreatePost(props) {
     };
 
     return (
-        <View style={styles.container}>
+        <View style={{ ...styles.container, ...style }} {...rest}>
             <Avatar
                 rounded
                 size={48}
@@ -46,7 +47,6 @@ const styles = {
         alignItems: 'center',
         width: screen.width,
         padding: 8,
-        backgroundColor: 'white',
     },
     content: {
         marginLeft: 8,

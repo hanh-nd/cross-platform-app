@@ -14,6 +14,8 @@ const tabName = ['Tất cả', 'Chặn', 'Lời mời kết bạn'];
 
 function ListFriends(props) {
     const [index, setIndex] = React.useState(0);
+    const { navigation, route } = props;
+    const { navigate, goBack } = navigation;
 
     return (
         <>
@@ -48,13 +50,13 @@ function ListFriends(props) {
 
             <TabView value={index} onChange={setIndex} animationType="spring">
                 <TabView.Item style={styles.tavView}>
-                    <Friends />
+                    <Friends navigate={navigate}/>
                 </TabView.Item>
                 <TabView.Item style={styles.tavView}>
-                    <Blocked />
+                    <Blocked navigate={navigate}/>
                 </TabView.Item>
                 <TabView.Item style={styles.tavView}>
-                    <Request />
+                    <Request navigate={navigate}/>
                 </TabView.Item>
             </TabView>
         </>
