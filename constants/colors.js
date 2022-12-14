@@ -15,5 +15,5 @@ export default {
     white: '#ffffff',
     red: '#ff0000',
 
-    text: '#000000'
+    text: '#000000',
 };

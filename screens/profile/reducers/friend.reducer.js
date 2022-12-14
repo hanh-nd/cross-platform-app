@@ -1,6 +1,16 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
-import { acceptRequest, cancelRequest, getFriendProfile, getFriendStatus, getListRequest, getRequestedFriends, listFriend, removeFriend, sendFriendRequest } from '../services/friend.api';
-import { status } from '@constants'
+import {
+    acceptRequest,
+    cancelRequest,
+    getFriendProfile,
+    getFriendStatus,
+    getListRequest,
+    getRequestedFriends,
+    listFriend,
+    removeFriend,
+    sendFriendRequest,
+} from '../services/friend.api';
+import { status } from '@constants';
 
 const initialState = {
     friendList: [],
@@ -15,14 +25,14 @@ export const sendRequest = createAsyncThunk(
     'friend/sendFriendRequest',
     async (body) => {
         return await sendFriendRequest(body);
-    }
+    },
 );
 
 export const getRequestedFriend = createAsyncThunk(
     'friend/getRequestedFriends',
     async (body) => {
         return await getRequestedFriends(body);
-    }
+    },
 );
 
 //1: ket ban 2: huy loi moi
@@ -30,49 +40,40 @@ export const acceptRequestFriend = createAsyncThunk(
     'friend/accept',
     async (body) => {
         return await acceptRequest(body);
-    }
+    },
 );
 
 export const cancelRequestFriend = createAsyncThunk(
     'friend/cancel',
     async (body) => {
         return await cancelRequest(body);
-    }
+    },
 );
 
-export const deleteFriend = createAsyncThunk(
-    'friend/remove',
-    async (body) => {
-        return await removeFriend(body);
-    }
-);
+export const deleteFriend = createAsyncThunk('friend/remove', async (body) => {
+    return await removeFriend(body);
+});
 
-export const getListFriends = createAsyncThunk(
-    'friend/status',
-    async () => {
-        return await listFriend();
-    }
-);
+export const getListFriends = createAsyncThunk('friend/status', async () => {
+    return await listFriend();
+});
 
 export const getStatusFriend = createAsyncThunk(
     'friend/getListFriends',
     async (params) => {
         return await getFriendStatus(params);
-    }
+    },
 );
 
-export const listRequest = createAsyncThunk(
-    'friend/listRequest',
-    async () => {
-        return await getListRequest();
-    }
-);
+export const listRequest = createAsyncThunk('friend/listRequest', async () => {
+    return await getListRequest();
+});
 
 export const getUserProfile = createAsyncThunk(
     'friend/profile',
     async (params) => {
         return await getFriendProfile(params);
-    }
+    },
 );
 
 export const friendSlice = createSlice({
@@ -95,7 +96,8 @@ export const friendSlice = createSlice({
             state.targetUser = action.payload?.data || {};
         });
         builder.addCase(getStatusFriend.fulfilled, (state, action) => {
-            state.targetUser.status = action.payload?.data?.status || status.NOT_FRIEND;
+            state.targetUser.status =
+                action.payload?.data?.status || status.NOT_FRIEND;
         });
         builder.addCase(listRequest.fulfilled, (state, action) => {
             state.sentList = action.payload?.data?.sentList || [];

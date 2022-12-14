@@ -39,7 +39,7 @@ function Register(props) {
                 phonenumber,
                 username,
                 password,
-            })
+            }),
         ).unwrap();
 
         if (response?.success) {

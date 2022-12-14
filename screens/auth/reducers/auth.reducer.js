@@ -1,5 +1,11 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
-import { login, register, logout, getSelfProfile, editSelfProfile } from '../services/auth.api';
+import {
+    login,
+    register,
+    logout,
+    getSelfProfile,
+    editSelfProfile,
+} from '../services/auth.api';
 
 const initialState = {
     isLoggedIn: false,
@@ -15,7 +21,7 @@ export const handleRegister = createAsyncThunk(
     'auth/register',
     async (body) => {
         return await register(body);
-    }
+    },
 );
 
 export const handleLogout = createAsyncThunk('auth/logout', async () => {
@@ -26,14 +32,14 @@ export const fetchSelfDetail = createAsyncThunk(
     'auth/fetchSelfDetail',
     async () => {
         return await getSelfProfile();
-    }
+    },
 );
 
 export const handleEditSelfProfile = createAsyncThunk(
     'auth/editSelfDetail',
     async (body) => {
         return await editSelfProfile(body);
-    }
+    },
 );
 
 export const authSlice = createSlice({

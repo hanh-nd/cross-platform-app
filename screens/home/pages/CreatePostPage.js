@@ -70,7 +70,7 @@ function CreatePostPage(props) {
                     <ListItem.Content>
                         <ListItem.Title>
                             <Text style={styles.username}>{`${getUserName(
-                                loginUser
+                                loginUser,
                             )}`}</Text>
                         </ListItem.Title>
                     </ListItem.Content>

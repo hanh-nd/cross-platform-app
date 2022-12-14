@@ -1,24 +1,26 @@
 import React from 'react';
-import {
-    FlatList,
-    View,
-} from 'react-native';
+import { FlatList, View } from 'react-native';
 import {
     Text,
     Icon,
     ListItem,
     BottomSheet,
     Input,
-    Avatar
+    Avatar,
 } from '@rneui/themed';
 import { PageName } from 'navigation/constants';
 import { colors, screen, env } from '@constants';
 import { useDispatch, useSelector } from 'react-redux';
-import { deleteFriend, getListFriends, getUserProfile, selectFriendList } from '../../reducers/friend.reducer';
+import {
+    deleteFriend,
+    getListFriends,
+    getUserProfile,
+    selectFriendList,
+} from '../../reducers/friend.reducer';
 import { showErrorMessage, showSuccessMessage } from 'utilities/Notification';
 import { getUserName } from 'utilities/User';
 
-function Friends({navigate}) {
+function Friends({ navigate }) {
     const listFriend = useSelector(selectFriendList);
     const dispatch = useDispatch();
     const [targetId, setTargetId] = React.useState();
@@ -27,23 +29,25 @@ function Friends({navigate}) {
     const list = [
         {
             title: 'Nhắn tin',
-            iconName: 'message'
+            iconName: 'message',
         },
         {
             title: 'Chặn',
-            iconName: 'block'
+            iconName: 'block',
         },
         {
             title: 'Hủy kết bạn',
             iconName: 'highlight-off',
-            onPress: () => removeFriend()
+            onPress: () => removeFriend(),
         },
     ];
 
     const removeFriend = async () => {
-        const response = await dispatch(deleteFriend({
-            user_id: targetId
-        })).unwrap();
+        const response = await dispatch(
+            deleteFriend({
+                user_id: targetId,
+            }),
+        ).unwrap();
 
         if (response?.success) {
             dispatch(getListFriends());
@@ -53,32 +57,32 @@ function Friends({navigate}) {
         }
         setIsVisible(false);
         showErrorMessage(response?.message);
-    }
+    };
 
     const openBottomSheet = (id) => {
         setTargetId(id);
         setIsVisible(true);
-    }
-    
+    };
+
     const gotoFriendProfile = async (friend) => {
         const response = await dispatch(getUserProfile(friend?._id)).unwrap();
 
         if (response?.success) {
             navigate({
                 name: PageName.FRIEND_PROFILE,
-                params: friend
+                params: friend,
             });
             return;
         }
         showErrorMessage(response?.message);
-    }
+    };
 
     return (
         <>
             <Input
-                returnKeyType='search'
-                placeholder='Search'
-                leftIcon={<Icon name='search' />}
+                returnKeyType="search"
+                placeholder="Search"
+                leftIcon={<Icon name="search" />}
                 inputStyle={{ fontSize: 17 }}
                 containerStyle={{ height: 55 }}
                 inputContainerStyle={styles.inputSearchContainer}
@@ -98,13 +102,16 @@ function Friends({navigate}) {
                                 source={
                                     item?.avatar
                                         ? {
-                                            uri: `${env.FILE_SERVICE_USER}/${item?.avatar.fileName}`,
-                                        }
+                                              uri: `${env.FILE_SERVICE_USER}/${item?.avatar.fileName}`,
+                                          }
                                         : require('assets/default_avt.jpg')
                                 }
                                 onPress={() => gotoFriendProfile(item)}
                             />
-                            <Text style={styles.name} onPress={() => gotoFriendProfile(item)}>
+                            <Text
+                                style={styles.name}
+                                onPress={() => gotoFriendProfile(item)}
+                            >
                                 {getUserName(item)}
                             </Text>
                         </View>
@@ -116,20 +123,20 @@ function Friends({navigate}) {
                         />
                     </View>
                 )}
-                keyExtractor={item => item._id}
+                keyExtractor={(item) => item._id}
             />
 
             <BottomSheet
                 isVisible={isVisible}
                 modalProps={{
-                    animationType: 'fade'
+                    animationType: 'fade',
                 }}
                 onBackdropPress={() => setIsVisible(false)}
             >
                 {list.map((l, i) => (
                     <ListItem key={i} onPress={l.onPress}>
                         <ListItem.Content style={styles.contentStyle}>
-                            <Icon name={l.iconName} type='material' />
+                            <Icon name={l.iconName} type="material" />
                             <ListItem.Title style={styles.titleStyle}>
                                 {l.title}
                             </ListItem.Title>
@@ -138,7 +145,6 @@ function Friends({navigate}) {
                 ))}
             </BottomSheet>
         </>
-
     );
 }
 
@@ -146,7 +152,7 @@ const styles = {
     container: {
         flexDirection: 'row',
         justifyContent: 'space-between',
-        marginVertical: 5
+        marginVertical: 5,
     },
     row: {
         flexDirection: 'row',
@@ -154,7 +160,7 @@ const styles = {
     name: {
         fontWeight: 'bold',
         fontSize: 17,
-        padding: 10
+        padding: 10,
     },
     inputSearchContainer: {
         backgroundColor: 'white',
@@ -168,8 +174,8 @@ const styles = {
     },
     titleStyle: {
         fontWeight: '700',
-        marginHorizontal: 10
+        marginHorizontal: 10,
     },
-}
+};
 
 export default Friends;

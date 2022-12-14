@@ -66,12 +66,12 @@ function Post(props) {
                     <ListItem.Content>
                         <ListItem.Title>
                             <Text style={styles.username}>{`${getUserName(
-                                author
+                                author,
                             )}`}</Text>
                         </ListItem.Title>
                         <ListItem.Subtitle>
                             <Text>{`${dayjs(
-                                createdAt
+                                createdAt,
                             ).fmHHmmDDMMYYYY()}`}</Text>
                         </ListItem.Subtitle>
                     </ListItem.Content>
