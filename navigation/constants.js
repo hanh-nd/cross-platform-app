@@ -5,6 +5,7 @@ export const PageName = {
     LOGIN: 'Login',
     LOGOUT: 'Logout',
     REGISTER: 'Register',
+    ACTIVATE_ACCOUNT_PAGE: 'ActivateAccountPage',
     HOME: 'Home',
     CHAT: 'Chat',
     CHAT_DETAIL: 'ChatDetail',

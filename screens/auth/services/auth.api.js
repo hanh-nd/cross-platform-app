@@ -20,3 +20,10 @@ export const getSelfProfile = async () => {
 export const editSelfProfile = async (editBody) => {
     return await client.post(`${env.BASE_URL}/users/edit`, editBody);
 };
+
+export const activateAccount = async (activateAccountBody) => {
+    return await client.post(
+        `${env.BASE_URL}/users/activate-account`,
+        activateAccountBody,
+    );
+};

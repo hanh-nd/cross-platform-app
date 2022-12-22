@@ -1,8 +1,6 @@
-import { useFocusEffect } from '@react-navigation/native';
-import { Button, Image, Input, Text } from '@rneui/themed';
+import { Button, Image, Input } from '@rneui/themed';
 import { Formik } from 'formik';
-import React, { useCallback } from 'react';
-import { BackHandler, View } from 'react-native';
+import { View } from 'react-native';
 import { useDispatch, useSelector } from 'react-redux';
 import { DismissKeyboardView } from '../../../components';
 import { colors } from '../../../constants';
@@ -12,37 +10,33 @@ import {
     showErrorMessage,
     showSuccessMessage,
 } from '../../../utilities/Notification';
-import { loginSchema } from '../schema';
 import {
-    handleLogin,
+    handleActivateAccount,
     selectIsLoading,
     setIsLoggedIn,
 } from '../reducers/auth.reducer';
 
-function Login(props) {
-    // redux
-    const dispatch = useDispatch();
-    const isLoading = useSelector(selectIsLoading);
+function ActivateAccount(props) {
     //navigation
     const { navigation, route } = props;
     //functions of navigate to/back
     const { navigate, goBack } = navigation;
 
+    const { phonenumber } = route.params;
+
+    const dispatch = useDispatch();
+    const isLoading = useSelector(selectIsLoading);
+
     const initialValues = {
-        phonenumber: '',
-        password: '',
+        phonenumber,
+        token: '',
     };
 
-    const login = async ({ phonenumber, password }) => {
-        const response = await dispatch(
-            handleLogin({
-                phonenumber,
-                password,
-            }),
-        ).unwrap();
+    const activateAccount = async (body) => {
+        const response = await dispatch(handleActivateAccount(body)).unwrap();
 
         if (response?.success) {
-            showSuccessMessage('Đăng nhập thành công');
+            showSuccessMessage('Xác minh thành công');
             setIsLoggedIn(true);
             setAccessToken(response.token);
             navigate({
@@ -51,40 +45,13 @@ function Login(props) {
             return;
         }
 
-        if (response?.isNotVerified) {
-            showErrorMessage(response?.message);
-            navigate({
-                name: PageName.ACTIVATE_ACCOUNT_PAGE,
-                params: {
-                    phonenumber,
-                },
-            });
-            return;
-        }
-
-        showErrorMessage('Đăng nhập thất bại', response?.message);
-    };
-
-    useFocusEffect(
-        useCallback(() => {
-            BackHandler.addEventListener('hardwareBackPress', backAction);
-            return () => {
-                BackHandler.removeEventListener(
-                    'hardwareBackPress',
-                    backAction,
-                );
-            };
-        }, []),
-    );
-
-    const backAction = async () => {
-        BackHandler.exitApp();
+        showErrorMessage('Xác minh thất bại', response?.message);
     };
 
     return (
         <>
             <DismissKeyboardView style={styles.layout}>
-                <View style={styles.loginForm}>
+                <View style={styles.registerForm}>
                     <Image
                         source={require('../../../assets/logo.png')}
                         style={styles.logo}
@@ -92,60 +59,52 @@ function Login(props) {
                     />
                     <Formik
                         initialValues={initialValues}
-                        onSubmit={(values) => login(values)}
-                        validationSchema={loginSchema}
+                        onSubmit={(values) => activateAccount(values)}
                     >
                         {({
-                            handleChange,
                             handleSubmit,
+                            handleChange,
                             values,
-                            isValid,
                             errors,
+                            isValid,
                         }) => (
                             <>
                                 <Input
                                     name="phonenumber"
                                     label="Số điện thoại"
+                                    value={values.phonenumber}
                                     placeholder="Nhập số điện thoại"
                                     keyboardType="numeric"
+                                    onChangeText={handleChange('phonenumber')}
                                     placeholderTextColor={colors.gray}
                                     labelStyle={styles.label}
                                     inputStyle={styles.input}
-                                    onChangeText={handleChange('phonenumber')}
-                                    value={values.phonenumber}
                                     errorMessage={errors.phonenumber}
+                                    disabled={true}
                                 />
                                 <Input
-                                    name="password"
-                                    label="Mật khẩu"
-                                    placeholder="Nhập mật khẩu"
-                                    secureTextEntry={true}
-                                    onChangeText={handleChange('password')}
+                                    name="token"
+                                    label="Mã xác minh"
+                                    value={values.token}
+                                    placeholder="Nhập mã xác minh"
+                                    keyboardType="numeric"
+                                    onChangeText={handleChange('token')}
                                     placeholderTextColor={colors.gray}
                                     labelStyle={styles.label}
                                     inputStyle={styles.input}
-                                    value={values.password}
-                                    errorMessage={errors.password}
+                                    errorMessage={errors.token}
                                 />
                                 <Button
-                                    title="Đăng nhập"
+                                    title="Xác minh"
                                     type="solid"
-                                    onPress={handleSubmit}
                                     loading={isLoading}
+                                    onPress={handleSubmit}
                                     buttonStyle={styles.button}
                                     disabled={!isValid}
                                 ></Button>
                             </>
                         )}
                     </Formik>
-                </View>
-                <View>
-                    <Text
-                        style={styles.text}
-                        onPress={() => navigate({ name: PageName.REGISTER })}
-                    >
-                        Chưa có tài khoản? Đăng ký
-                    </Text>
                 </View>
             </DismissKeyboardView>
         </>
@@ -163,7 +122,7 @@ const styles = {
         height: '100%',
         backgroundColor: colors.facebook,
     },
-    loginForm: {
+    registerForm: {
         display: 'flex',
         justifyContent: 'center',
         width: '100%',
@@ -181,11 +140,6 @@ const styles = {
     button: {
         backgroundColor: colors.grayBlue,
     },
-    text: {
-        color: colors.white,
-        fontSize: 14,
-        fontWeight: 'bold',
-    },
     input: {
         color: colors.white,
     },
@@ -193,14 +147,6 @@ const styles = {
         fontSize: 18,
         color: colors.white,
     },
-    error: {
-        color: '#FFFF00',
-        fontWeight: '550',
-    },
-    errorLayout: {
-        alignItems: 'center',
-        flexDirection: 'row',
-    },
 };
 
-export default Login;
+export default ActivateAccount;

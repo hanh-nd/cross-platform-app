@@ -18,6 +18,7 @@ import { PageName } from './constants';
 import ChatDetail from '../screens/chat/pages/ChatDetail';
 import ChatPersonal from '../screens/chat/pages/ChatPersonal';
 import PostDetailPage from '../screens/post-detail/pages/PostDetailPage';
+import ActivateAccount from '../screens/auth/pages/ActivateAccount';
 
 export const routes = [
     {
@@ -43,6 +44,11 @@ export const routes = [
     {
         name: PageName.REGISTER,
         component: Register,
+        headerShown: false,
+    },
+    {
+        name: PageName.ACTIVATE_ACCOUNT_PAGE,
+        component: ActivateAccount,
         headerShown: false,
     },
     {
