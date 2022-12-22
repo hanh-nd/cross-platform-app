@@ -13,12 +13,12 @@ import {
 import { useSelector } from 'react-redux';
 import { colors } from '../../../constants';
 import { PageName } from '../../../navigation/constants';
+import socket from '../../../plugins/socket';
 import { selectLoginUser } from '../../auth/reducers/auth.reducer';
 import ConversationHeader from '../components/ConversationHeader';
 import Message from '../components/Message';
 
 function ChatDetail(props) {
-    const { params } = props;
     const navigation = useNavigation();
     const route = useRoute();
     const item = route.params.item;
@@ -50,127 +50,13 @@ function ChatDetail(props) {
             id: Math.random(),
             text: 'Xin chào',
             time: '07:50',
-            userId: '6391ee3b20e93c474ca05718',
+            userId: loginUser._id,
         },
         {
             id: Math.random(),
             text: 'Xin chào, cậu khỏe không?',
             time: '08:50',
             userId: '6391ee3b20e93c474ca05719',
-        },
-        {
-            id: Math.random(),
-            text: 'Xin chào',
-            time: '07:50',
-            userId: '6391ee3b20e93c474ca05718',
-        },
-        {
-            id: Math.random(),
-            text: 'Xin chào, cậu khỏe không?',
-            time: '08:50',
-            userId: '6391ee3b20e93c474ca05719',
-        },
-        {
-            id: Math.random(),
-            text: 'Xin chào',
-            time: '07:50',
-            userId: '6391ee3b20e93c474ca05718',
-        },
-        {
-            id: Math.random(),
-            text: 'Xin chào, cậu khỏe không?',
-            time: '08:50',
-            userId: '6391ee3b20e93c474ca05719',
-        },
-        {
-            id: Math.random(),
-            text: 'Xin chào',
-            time: '07:50',
-            userId: '6391ee3b20e93c474ca05718',
-        },
-        {
-            id: Math.random(),
-            text: 'Xin chào, cậu khỏe không?',
-            time: '08:50',
-            userId: '6391ee3b20e93c474ca05719',
-        },
-        {
-            id: Math.random(),
-            text: 'Xin chào',
-            time: '07:50',
-            userId: '6391ee3b20e93c474ca05718',
-        },
-        {
-            id: Math.random(),
-            text: 'Xin chào, cậu khỏe không?',
-            time: '08:50',
-            userId: '6391ee3b20e93c474ca05719',
-        },
-        {
-            id: Math.random(),
-            text: 'Xin chào',
-            time: '07:50',
-            userId: '6391ee3b20e93c474ca05718',
-        },
-        {
-            id: Math.random(),
-            text: 'Xin chào, cậu khỏe không?',
-            time: '08:50',
-            userId: '6391ee3b20e93c474ca05719',
-        },
-        {
-            id: Math.random(),
-            text: 'Xin chào',
-            time: '07:50',
-            userId: '6391ee3b20e93c474ca05718',
-        },
-        {
-            id: Math.random(),
-            text: 'Xin chào, cậu khỏe không?',
-            time: '08:50',
-            userId: '6391ee3b20e93c474ca05719',
-        },
-        {
-            id: Math.random(),
-            text: 'Xin chào',
-            time: '07:50',
-            userId: '6391ee3b20e93c474ca05718',
-        },
-        {
-            id: Math.random(),
-            text: 'Xin chào, cậu khỏe không?',
-            time: '08:50',
-            userId: '6391ee3b20e93c474ca05719',
-        },
-        {
-            id: Math.random(),
-            text: 'Xin chào',
-            time: '07:50',
-            userId: '6391ee3b20e93c474ca05718',
-        },
-        {
-            id: Math.random(),
-            text: 'Xin chào, cậu khỏe không?',
-            time: '08:50',
-            userId: '6391ee3b20e93c474ca05719',
-        },
-        {
-            id: Math.random(),
-            text: 'Xin chào',
-            time: '07:50',
-            userId: '6391ee3b20e93c474ca05718',
-        },
-        {
-            id: Math.random(),
-            text: 'Xin chào, cậu khỏe không?',
-            time: '08:50',
-            userId: '6391ee3b20e93c474ca05719',
-        },
-        {
-            id: Math.random(),
-            text: 'Xin chào',
-            time: '07:50',
-            userId: '6391ee3b20e93c474ca05718',
         },
     ]);
     const [message, setMessage] = useState('');
@@ -186,6 +72,13 @@ function ChatDetail(props) {
                 ? `0${new Date().getMinutes()}`
                 : `${new Date().getMinutes()}`;
     };
+
+    useEffect(() => {
+        socket.on("createRoom", ())
+        socket.emit('createRoom', Math.random());
+        console.log('🚀 ~ file: ChatDetail.js:81 ~ useEffect ~ socket', socket);
+    }, []);
+
     return (
         <View style={styles.messagingScreen}>
             <View

@@ -50,7 +50,7 @@ const styles = StyleSheet.create({
         marginBottom: 15,
     },
     message: {
-        maxWidth: '50%',
+        maxWidth: '70%',
         backgroundColor: '#d3d3d3',
         padding: 15,
         borderRadius: 10,
