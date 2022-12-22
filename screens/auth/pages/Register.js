@@ -1,21 +1,17 @@
-import { Button, Icon, Image, Input, Text } from '@rneui/themed';
+import { Button, Image, Input, Text } from '@rneui/themed';
+import { Formik } from 'formik';
 import React from 'react';
 import { View } from 'react-native';
+import { ScrollView } from 'react-native-gesture-handler';
 import { useDispatch, useSelector } from 'react-redux';
 import { DismissKeyboardView } from '../../../components';
 import { colors } from '../../../constants';
 import { PageName } from '../../../navigation/constants';
-import { setAccessToken } from '../../../plugins/axios/axios';
 import {
     showErrorMessage,
     showSuccessMessage,
 } from '../../../utilities/Notification';
-import {
-    handleRegister,
-    selectIsLoading,
-    setIsLoggedIn,
-} from '../reducers/auth.reducer';
-import { Formik } from 'formik';
+import { handleRegister, selectIsLoading } from '../reducers/auth.reducer';
 import { registerSchema } from '../schema';
 
 function Register(props) {
@@ -31,23 +27,21 @@ function Register(props) {
         phonenumber: '',
         username: '',
         password: '',
+        confirmationEmail: '',
+        firstName: '',
+        lastName: '',
     };
 
-    const register = async ({ phonenumber, username, password }) => {
-        const response = await dispatch(
-            handleRegister({
-                phonenumber,
-                username,
-                password,
-            }),
-        ).unwrap();
+    const register = async (body) => {
+        const response = await dispatch(handleRegister(body)).unwrap();
 
         if (response?.success) {
             showSuccessMessage('Đăng ký thành công');
-            setIsLoggedIn(true);
-            setAccessToken(response.token);
             navigate({
-                name: PageName.TAB_NAVIGATOR,
+                name: PageName.ACTIVATE_ACCOUNT_PAGE,
+                params: {
+                    phonenumber: body.phonenumber,
+                },
             });
             return;
         }
@@ -76,7 +70,7 @@ function Register(props) {
                             errors,
                             isValid,
                         }) => (
-                            <>
+                            <ScrollView style={{ marginBottom: 50 }}>
                                 <Input
                                     name="phonenumber"
                                     label="Số điện thoại"
@@ -101,6 +95,19 @@ function Register(props) {
                                     errorMessage={errors.username}
                                 ></Input>
                                 <Input
+                                    name="confirmationEmail"
+                                    label="Email xác minh"
+                                    value={values.confirmationEmail}
+                                    placeholder="Nhập địa chỉ email xác minh"
+                                    onChangeText={handleChange(
+                                        'confirmationEmail',
+                                    )}
+                                    placeholderTextColor={colors.gray}
+                                    labelStyle={styles.label}
+                                    inputStyle={styles.input}
+                                    errorMessage={errors.confirmationEmail}
+                                ></Input>
+                                <Input
                                     name="password"
                                     label="Mật khẩu"
                                     value={values.password}
@@ -112,6 +119,28 @@ function Register(props) {
                                     inputStyle={styles.input}
                                     errorMessage={errors.password}
                                 ></Input>
+                                <Input
+                                    name="firstName"
+                                    label="Họ"
+                                    value={values.firstName}
+                                    placeholder="Nhập họ của bạn"
+                                    onChangeText={handleChange('firstName')}
+                                    placeholderTextColor={colors.gray}
+                                    labelStyle={styles.label}
+                                    inputStyle={styles.input}
+                                    errorMessage={errors.firstName}
+                                ></Input>
+                                <Input
+                                    name="lastName"
+                                    label="Tên"
+                                    value={values.lastName}
+                                    placeholder="Nhập tên của bạn"
+                                    onChangeText={handleChange('lastName')}
+                                    placeholderTextColor={colors.gray}
+                                    labelStyle={styles.label}
+                                    inputStyle={styles.input}
+                                    errorMessage={errors.lastName}
+                                ></Input>
                                 <Button
                                     title="Đăng ký"
                                     type="solid"
@@ -120,7 +149,7 @@ function Register(props) {
                                     buttonStyle={styles.button}
                                     disabled={!isValid}
                                 ></Button>
-                            </>
+                            </ScrollView>
                         )}
                     </Formik>
                 </View>
