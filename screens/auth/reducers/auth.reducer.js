@@ -5,6 +5,7 @@ import {
     logout,
     getSelfProfile,
     editSelfProfile,
+    activateAccount,
 } from '../services/auth.api';
 
 const initialState = {
@@ -21,6 +22,13 @@ export const handleRegister = createAsyncThunk(
     'auth/register',
     async (body) => {
         return await register(body);
+    },
+);
+
+export const handleActivateAccount = createAsyncThunk(
+    'auth/activateAccount',
+    async (body) => {
+        return await activateAccount(body);
     },
 );
 
@@ -63,6 +71,12 @@ export const authSlice = createSlice({
             state.isLoading = true;
         });
         builder.addCase(handleRegister.fulfilled, (state, action) => {
+            state.isLoading = false;
+        });
+        builder.addCase(handleActivateAccount.pending, (state, action) => {
+            state.isLoading = true;
+        });
+        builder.addCase(handleActivateAccount.fulfilled, (state, action) => {
             state.isLoading = false;
         });
         builder.addCase(handleLogout.fulfilled, (state, action) => {
