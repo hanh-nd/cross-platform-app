@@ -12,6 +12,8 @@ import { ScrollView, StyleSheet, View, TextInput } from 'react-native';
 import { DismissKeyboardView } from '../../../components';
 import ConversationItem from '../components/ConversationItem';
 import { colors } from '../../../constants';
+import { getAccessToken } from '../../../plugins/axios/axios';
+import Socket from '../../../plugins/socket';
 
 function Chat(props) {
     const [isVisible, setIsVisible] = useState(false);
