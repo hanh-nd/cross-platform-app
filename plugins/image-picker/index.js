@@ -8,7 +8,7 @@ export const getBase64MediaList = async (options) => {
         mediaTypes: ImagePicker.MediaTypeOptions.All,
         allowsMultipleSelection: true,
         selectionLimit: 4,
-        videoMaxDuration: 15,
+        videoMaxDuration: 10,
         aspect: [4, 3],
         base64: true,
         quality: 1,

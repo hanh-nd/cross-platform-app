@@ -1,4 +1,5 @@
 import { createDrawerNavigator } from '@react-navigation/drawer';
+import Exit from '../screens/auth/pages/Exit';
 import Logout from '../screens/auth/pages/Logout';
 import { PageName } from './constants';
 import ScreenStack from './ScreenStack';
@@ -18,6 +19,7 @@ function Drawer(props) {
                 component={ScreenStack}
             />
             <DrawerNavigator.Screen name={PageName.LOGOUT} component={Logout} />
+            <DrawerNavigator.Screen name={PageName.EXIT} component={Exit} />
         </DrawerNavigator.Navigator>
     );
 }
