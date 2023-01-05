@@ -18,6 +18,7 @@ import {
     selectIsLoading,
     setIsLoggedIn,
 } from '../reducers/auth.reducer';
+import SocketProvider from '../../../plugins/socket';
 
 function Login(props) {
     // redux
@@ -45,6 +46,7 @@ function Login(props) {
             showSuccessMessage('Đăng nhập thành công');
             setIsLoggedIn(true);
             setAccessToken(response.token);
+            SocketProvider.initialize(response.token);
             navigate({
                 name: PageName.TAB_NAVIGATOR,
             });
