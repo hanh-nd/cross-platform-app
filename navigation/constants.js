@@ -4,6 +4,7 @@ export const PageName = {
     TAB_NAVIGATOR: 'TabNavigator',
     LOGIN: 'Login',
     LOGOUT: 'Logout',
+    EXIT: 'Exit',
     REGISTER: 'Register',
     ACTIVATE_ACCOUNT_PAGE: 'ActivateAccountPage',
     HOME: 'Home',
