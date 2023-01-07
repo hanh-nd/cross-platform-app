@@ -1,4 +1,4 @@
-import { createSlice } from '@reduxjs/toolkit';
+import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 
 const initialState = {
     currentFriendId: null,
@@ -7,6 +7,7 @@ const initialState = {
     socket,
     currentBlockers: [],
 };
+
 
 export const chatSlice = createSlice({
     name: 'chat',
