@@ -36,6 +36,7 @@ function UIImage(props) {
 
 const styles = {
     imageContainerStyle: {
+        flex: 1,
         flexDirection: 'column',
         margin: 1,
     },
