@@ -1,9 +1,7 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
-import {
-    createComment,
-    getCommentList,
-    getDetail,
-} from '../services/post-detail.api';
+
+import { getPost } from '../../../services/post.api';
+import { getCommentList, createComment } from '../../../services/comment.api';
 
 const initialState = {
     post: {},
@@ -14,7 +12,7 @@ const initialState = {
 export const getPostDetail = createAsyncThunk(
     'postDetail/getPostDetail',
     async (postId) => {
-        return await getDetail(postId);
+        return await getPost(postId);
     },
 );
 

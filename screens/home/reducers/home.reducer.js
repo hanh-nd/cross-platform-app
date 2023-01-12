@@ -1,5 +1,9 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
-import { getPosts, createPost, actionLikePost } from '../services/home.api';
+import {
+    getPosts,
+    createPost,
+    actionLikePost,
+} from '../../../services/post.api';
 
 const initialState = {
     postList: [],
