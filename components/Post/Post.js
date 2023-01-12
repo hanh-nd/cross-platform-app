@@ -15,6 +15,7 @@ import {
 } from '@rneui/themed';
 import { useState } from 'react';
 import { ActivityIndicator, View } from 'react-native';
+import { FlatList } from 'react-native-gesture-handler';
 import ReadMore from 'react-native-read-more-text';
 import { useDispatch, useSelector } from 'react-redux';
 import { selectLoginUser } from '../../screens/auth/reducers/auth.reducer';
@@ -71,11 +72,12 @@ function Post(props) {
     };
 
     const onReportPost = () => {
-        setIsShowReportDialog(!isShowReportDialog);
         setIsShowPostMenu(false);
+        setIsShowReportDialog(!isShowReportDialog);
     };
 
     const onEditPost = () => {
+        setIsShowPostMenu(false);
         navigate({
             name: PageName.EDIT_POST_PAGE,
             params: {
@@ -85,6 +87,7 @@ function Post(props) {
     };
 
     const onDeletePost = async () => {
+        setIsShowPostMenu(false);
         const response = await deletePost(_id);
         if (response?.success) {
             showSuccessMessage('Xóa bài viết thành công');
@@ -142,16 +145,19 @@ function Post(props) {
                 <View style={styles.contentText}>
                     <ReadMore numberOfLines={5}>{described}</ReadMore>
                 </View>
-                {images && images.length ? (
-                    <View style={styles.imageContainer}>
+                <FlatList
+                    data={images}
+                    renderItem={({ item }) => (
                         <UIImage
                             source={{
-                                uri: `${env.FILE_SERVICE_USER}/${images[0].fileName}`,
+                                uri: `${env.FILE_SERVICE_USER}/${item.fileName}`,
                             }}
                             PlaceholderContent={<ActivityIndicator />}
                         />
-                    </View>
-                ) : null}
+                    )}
+                    numColumns={2}
+                    keyExtractor={(item, index) => index.toString()}
+                />
             </View>
             <View style={styles.statisticGroup}>
                 <View style={styles.statisticItem}>

@@ -1,11 +1,12 @@
 import { env, screen } from '@/constants';
-import { Avatar, Button, Input, ListItem } from '@rneui/themed';
+import { Avatar, Button, Icon, Input, ListItem } from '@rneui/themed';
 import { Formik } from 'formik';
-import { useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { Text, View } from 'react-native';
 import { FlatList } from 'react-native-gesture-handler';
 import { useDispatch, useSelector } from 'react-redux';
 import { UIImage } from '../../../components';
+import { colors } from '../../../constants';
 import { getBase64MediaList } from '../../../plugins/image-picker';
 import {
     showErrorMessage,
@@ -24,11 +25,26 @@ function CreatePostPage(props) {
 
     const dispatch = useDispatch();
 
+    const formRef = useRef();
     const [images, setImages] = useState();
 
     const initialValues = {
         described: '',
     };
+
+    useEffect(() => {
+        navigation.setOptions({
+            headerRight: () => (
+                <Button
+                    onPress={formRef.current.handleSubmit}
+                    title="Đăng"
+                    disabled={!formRef.current.isValid}
+                    disabledStyle={{ backgroundColor: colors.gray }}
+                    radius={12}
+                />
+            ),
+        });
+    }, [formRef]);
 
     const createPost = async (body) => {
         if (images && images.length) {
@@ -80,8 +96,9 @@ function CreatePostPage(props) {
                 initialValues={initialValues}
                 onSubmit={(values) => createPost(values)}
                 validationSchema={createPostSchema}
+                innerRef={formRef}
             >
-                {({ handleChange, handleSubmit, values, isValid, errors }) => (
+                {({ handleChange, values, errors }) => (
                     <View style={styles.content}>
                         <Input
                             name="described"
@@ -92,27 +109,33 @@ function CreatePostPage(props) {
                             containerStyle={styles.textareaContainer}
                             inputStyle={styles.textarea}
                             multiline={true}
-                            numberOfLines={10}
+                            numberOfLines={images ? 3 : 10}
                         />
-                        <Button
-                            onPress={handleSubmit}
-                            disabled={!isValid}
-                        >{`[Temp] Save`}</Button>
                     </View>
                 )}
             </Formik>
-            <Button onPress={pickImages}>Pick Image</Button>
             <FlatList
                 data={images}
-                ItemSeparatorComponent={() => <View style={{ height: 16 }} />}
                 renderItem={({ item }) => <UIImage source={{ uri: item }} />}
+                numColumns={2}
+                keyExtractor={(item, index) => index.toString()}
             />
+
+            <View style={styles.pickImage}>
+                <Button
+                    onPress={pickImages}
+                    buttonStyle={styles.pickImageButton}
+                >
+                    <Icon name="image" color="black" size={28} />
+                </Button>
+            </View>
         </View>
     );
 }
 
 const styles = {
     container: {
+        flex: 1,
         width: screen.width,
         backgroundColor: '#E5E5E5',
     },
@@ -144,6 +167,18 @@ const styles = {
         textAlignVertical: 'top',
         padding: 8,
         borderRadius: 8,
+    },
+    pickImage: {
+        display: 'flex',
+        flexDirection: 'row',
+        justifyContent: 'flex-end',
+        position: 'absolute',
+        bottom: 0,
+        width: '100%',
+    },
+    pickImageButton: {
+        margin: 8,
+        backgroundColor: colors.gray,
     },
 };
 export default CreatePostPage;
