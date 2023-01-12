@@ -3,21 +3,42 @@ import { env, screen } from '@/constants';
 import { PageName } from '@/navigation/constants';
 import dayjs from '@/plugins/dayjs';
 import { getUserName } from '@/utilities/User';
-import { useNavigation } from '@react-navigation/native';
-import { Avatar, Button, Divider, Icon, ListItem, Text } from '@rneui/themed';
-import { ActivityIndicator, View } from 'react-native';
-import { useDispatch } from 'react-redux';
+import { useNavigation, useRoute } from '@react-navigation/native';
 import {
-    likePost,
-    fetchPostList,
-} from '../../screens/home/reducers/home.reducer';
+    Avatar,
+    BottomSheet,
+    Button,
+    Divider,
+    Icon,
+    ListItem,
+    Text,
+} from '@rneui/themed';
+import { useState } from 'react';
+import { ActivityIndicator, View } from 'react-native';
 import ReadMore from 'react-native-read-more-text';
+import { useDispatch, useSelector } from 'react-redux';
+import { selectLoginUser } from '../../screens/auth/reducers/auth.reducer';
+import {
+    fetchPostList,
+    likePost,
+} from '../../screens/home/reducers/home.reducer';
+import { deletePost } from '../../services/post.api';
+import {
+    showErrorMessage,
+    showSuccessMessage,
+} from '../../utilities/Notification';
+import { isAuthor } from '../../utilities/User';
+import ReportDialog from './ReportDialog';
 
 function Post(props) {
     const { post, onLike } = props;
     const navigation = useNavigation();
+    const route = useRoute();
+    const [isShowPostMenu, setIsShowPostMenu] = useState(false);
+    const [isShowReportDialog, setIsShowReportDialog] = useState(false);
 
     const dispatch = useDispatch();
+    const loginUser = useSelector(selectLoginUser);
 
     const {
         _id,
@@ -30,7 +51,7 @@ function Post(props) {
         countComments,
     } = post;
 
-    const { navigate } = navigation;
+    const { navigate, goBack } = navigation;
 
     const actionLike = async () => {
         await dispatch(likePost(_id)).unwrap();
@@ -48,33 +69,73 @@ function Post(props) {
             },
         });
     };
+
+    const onReportPost = () => {
+        setIsShowReportDialog(!isShowReportDialog);
+        setIsShowPostMenu(false);
+    };
+
+    const onEditPost = () => {
+        navigate({
+            name: PageName.EDIT_POST_PAGE,
+            params: {
+                id: _id,
+            },
+        });
+    };
+
+    const onDeletePost = async () => {
+        const response = await deletePost(_id);
+        if (response?.success) {
+            showSuccessMessage('Xóa bài viết thành công');
+            dispatch(fetchPostList());
+            if (route.name === PageName.POST_DETAIL_PAGE) {
+                goBack();
+            }
+        } else {
+            showErrorMessage(
+                'Có lỗi xảy ra khi xóa bài viết',
+                response?.message,
+            );
+        }
+    };
+
     return (
         <View style={styles.container}>
             <View style={styles.header}>
-                <Avatar
-                    rounded
-                    size={60}
-                    source={
-                        author?.avatar
-                            ? {
-                                  uri: `${env.FILE_SERVICE_USER}/${author?.avatar.fileName}`,
-                              }
-                            : require('assets/default_avt.jpg')
-                    }
-                />
-                <View style={styles.detail}>
-                    <ListItem.Content>
-                        <ListItem.Title>
-                            <Text style={styles.username}>{`${getUserName(
-                                author,
-                            )}`}</Text>
-                        </ListItem.Title>
-                        <ListItem.Subtitle>
-                            <Text>{`${dayjs(
-                                createdAt,
-                            ).fmHHmmDDMMYYYY()}`}</Text>
-                        </ListItem.Subtitle>
-                    </ListItem.Content>
+                <View style={styles.headerItem}>
+                    <Avatar
+                        rounded
+                        size={60}
+                        source={
+                            author?.avatar
+                                ? {
+                                      uri: `${env.FILE_SERVICE_USER}/${author?.avatar.fileName}`,
+                                  }
+                                : require('assets/default_avt.jpg')
+                        }
+                    />
+                    <View style={styles.detail}>
+                        <ListItem.Content>
+                            <ListItem.Title>
+                                <Text style={styles.username}>{`${getUserName(
+                                    author,
+                                )}`}</Text>
+                            </ListItem.Title>
+                            <ListItem.Subtitle>
+                                <Text>{`${dayjs(
+                                    createdAt,
+                                ).fmHHmmDDMMYYYY()}`}</Text>
+                            </ListItem.Subtitle>
+                        </ListItem.Content>
+                    </View>
+                </View>
+                <View style={styles.headerItem}>
+                    <Button
+                        title="..."
+                        type="clear"
+                        onPress={() => setIsShowPostMenu(true)}
+                    ></Button>
                 </View>
             </View>
             <View style={styles.content}>
@@ -130,6 +191,24 @@ function Post(props) {
                     onPress={actionComment}
                 />
             </View>
+            <BottomSheet
+                isVisible={isShowPostMenu}
+                onBackdropPress={() => setIsShowPostMenu(false)}
+            >
+                <Button title="Báo cáo" onPress={onReportPost}></Button>
+                {isAuthor(post.author, loginUser) && (
+                    <>
+                        <Button title="Chỉnh sửa" onPress={onEditPost}></Button>
+                        <Button title="Xóa" onPress={onDeletePost}></Button>
+                    </>
+                )}
+            </BottomSheet>
+            <ReportDialog
+                postId={_id}
+                isVisible={isShowReportDialog}
+                onBackdropPress={onReportPost}
+                onSubmit={() => setIsShowReportDialog(false)}
+            />
         </View>
     );
 }
@@ -141,8 +220,13 @@ const styles = {
     header: {
         display: 'flex',
         flexDirection: 'row',
+        justifyContent: 'space-between',
         marginBottom: 8,
         padding: 8,
+    },
+    headerItem: {
+        display: 'flex',
+        flexDirection: 'row',
     },
     username: {
         fontWeight: 'bold',

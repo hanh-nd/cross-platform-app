@@ -9,7 +9,7 @@ import {
     listFriend,
     removeFriend,
     sendFriendRequest,
-} from '../services/friend.api';
+} from '@/services/friend.api';
 import { status } from '@constants';
 
 const initialState = {

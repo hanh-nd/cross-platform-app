@@ -6,7 +6,7 @@ import {
     getSelfProfile,
     editSelfProfile,
     activateAccount,
-} from '../services/auth.api';
+} from '@/services/auth.api';
 
 const initialState = {
     isLoggedIn: false,

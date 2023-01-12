@@ -12,3 +12,7 @@ export const getGender = (g) => {
     if (find?.label) return find?.label;
     return g;
 };
+
+export const isAuthor = (author, loginUser) => {
+    return author._id === loginUser._id;
+};
