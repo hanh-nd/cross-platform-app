@@ -1,4 +1,5 @@
 import { createMaterialTopTabNavigator } from '@react-navigation/material-top-tabs';
+import { Icon, Text } from '@rneui/themed';
 import { useEffect } from 'react';
 import { View } from 'react-native';
 import 'react-native-gesture-handler';
@@ -25,12 +26,36 @@ const screenOptions = ({ route }) => ({
 function TabNavigator(props) {
     const dispatch = useDispatch();
 
+    const { navigation } = props;
+    const { navigate } = navigation;
     useEffect(() => {
         dispatch(fetchSelfDetail());
     }, []);
 
+    const navigateToSearchScreen = () => {
+        navigate({
+            name: PageName.SEARCH_PAGE,
+        });
+    };
+
     return (
         <SafeAreaView style={{ flex: 1, backgroundColor: '#fff' }}>
+            <View
+                style={{
+                    display: 'flex',
+                    flexDirection: 'row',
+                    justifyContent: 'space-between',
+                    alignItems: 'center',
+                    padding: 8,
+                }}
+            >
+                <Text style={{ fontSize: 20, fontWeight: 'bold' }}>MyApp</Text>
+                <Icon
+                    name="search"
+                    onPress={navigateToSearchScreen}
+                    style={{ padding: 8 }}
+                />
+            </View>
             <Tab.Navigator
                 screenOptions={screenOptions}
                 initialRouteName={PageName.HOME}

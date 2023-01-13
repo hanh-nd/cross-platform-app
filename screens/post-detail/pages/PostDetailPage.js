@@ -71,7 +71,9 @@ function PostDetailPage(props) {
                 <RefreshControl refreshing={isLoading} onRefresh={onRefresh} />
             }
         >
-            <Post post={post} style={{ height: '100%' }} onLike={onLike} />
+            <ScrollView horizontal={true}>
+                <Post post={post} style={{ height: '100%' }} onLike={onLike} />
+            </ScrollView>
             <Divider />
             <Formik
                 initialValues={initialValues}

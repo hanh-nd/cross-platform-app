@@ -14,5 +14,5 @@ export const getGender = (g) => {
 };
 
 export const isAuthor = (author, loginUser) => {
-    return author._id === loginUser._id;
+    return author?._id === loginUser?._id;
 };

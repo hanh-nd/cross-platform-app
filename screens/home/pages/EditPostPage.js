@@ -137,7 +137,9 @@ function EditPostPage(props) {
                 renderItem={({ item }) => (
                     <UIImage
                         source={{
-                            uri: images ? item : `${env.FILE_SERVICE_USER}/${item.fileName}`,
+                            uri: images
+                                ? item
+                                : `${env.FILE_SERVICE_USER}/${item.fileName}`,
                         }}
                         PlaceholderContent={<ActivityIndicator />}
                     />
