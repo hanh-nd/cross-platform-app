@@ -20,6 +20,7 @@ import ChatPersonal from '../screens/chat/pages/ChatPersonal';
 import PostDetailPage from '../screens/post-detail/pages/PostDetailPage';
 import ActivateAccount from '../screens/auth/pages/ActivateAccount';
 import EditPostPage from '../screens/home/pages/EditPostPage';
+import SearchPage from '../screens/search/pages/SearchPage';
 
 export const routes = [
     {
@@ -110,6 +111,11 @@ export const routes = [
     {
         name: PageName.EDIT_POST_PAGE,
         component: EditPostPage,
+        headerShown: true,
+    },
+    {
+        name: PageName.SEARCH_PAGE,
+        component: SearchPage,
         headerShown: true,
     },
 ];

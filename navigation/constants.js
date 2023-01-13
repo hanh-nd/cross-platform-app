@@ -19,4 +19,5 @@ export const PageName = {
     POST_DETAIL_PAGE: 'Chi tiết bài viết',
     FRIEND_PROFILE: 'Trang cá nhân bạn bè',
     EDIT_POST_PAGE: 'Chỉnh sửa bài viết',
+    SEARCH_PAGE: 'Tìm kiếm',
 };
