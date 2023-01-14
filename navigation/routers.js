@@ -1,26 +1,27 @@
 import { Icon } from '@rneui/themed';
 import {
     Chat,
-    Home,
-    Loading,
-    Logout,
-    Login,
-    Register,
-    Profile,
-    ListFriends,
+    CreatePostPage,
     EditProfile,
     EditUser,
-    CreatePostPage,
     FriendProfile,
+    Home,
+    ListFriends,
+    Loading,
+    Login,
+    Logout,
+    Profile,
+    Register,
 } from '../screens';
-import TabNavigator from './TabNavigator';
-import { PageName } from './constants';
+import ActivateAccount from '../screens/auth/pages/ActivateAccount';
 import ChatDetail from '../screens/chat/pages/ChatDetail';
 import ChatPersonal from '../screens/chat/pages/ChatPersonal';
-import PostDetailPage from '../screens/post-detail/pages/PostDetailPage';
-import ActivateAccount from '../screens/auth/pages/ActivateAccount';
 import EditPostPage from '../screens/home/pages/EditPostPage';
+import NotificationPage from '../screens/notification/pages/NotificationPage';
+import PostDetailPage from '../screens/post-detail/pages/PostDetailPage';
 import SearchPage from '../screens/search/pages/SearchPage';
+import { PageName } from './constants';
+import TabNavigator from './TabNavigator';
 
 export const routes = [
     {
@@ -118,6 +119,11 @@ export const routes = [
         component: SearchPage,
         headerShown: true,
     },
+    {
+        name: PageName.NOTIFICATION_PAGE,
+        component: NotificationPage,
+        headerShown: false,
+    },
 ];
 
 export const tabNavigatorRoutes = [
@@ -140,6 +146,13 @@ export const tabNavigatorRoutes = [
         component: Profile,
         icon: ({ color, size }) => (
             <Icon name="person" color={color} size={size} />
+        ),
+    },
+    {
+        name: PageName.NOTIFICATION_PAGE,
+        component: NotificationPage,
+        icon: ({ color, size }) => (
+            <Icon name="public" color={color} size={size} />
         ),
     },
 ];

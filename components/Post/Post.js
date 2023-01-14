@@ -18,6 +18,7 @@ import { ActivityIndicator, View } from 'react-native';
 import { FlatList } from 'react-native-gesture-handler';
 import ReadMore from 'react-native-read-more-text';
 import { useDispatch, useSelector } from 'react-redux';
+import { SocketProvider } from '../../plugins/socket';
 import { selectLoginUser } from '../../screens/auth/reducers/auth.reducer';
 import {
     fetchPostList,
@@ -55,6 +56,9 @@ function Post(props) {
     const { navigate, goBack } = navigation;
 
     const actionLike = async () => {
+        if (!isLike) {
+            SocketProvider.emitUserLike(_id, 'Posts');
+        }
         await dispatch(likePost(_id)).unwrap();
         dispatch(fetchPostList());
         if (onLike) {

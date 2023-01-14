@@ -5,6 +5,7 @@ import { Formik } from 'formik';
 import { useEffect } from 'react';
 import { RefreshControl, ScrollView } from 'react-native-gesture-handler';
 import { useDispatch, useSelector } from 'react-redux';
+import { SocketProvider } from '../../../plugins/socket';
 import { fetchPostList } from '../../home/reducers/home.reducer';
 import CommentList from '../components/CommentList';
 import {
@@ -53,6 +54,7 @@ function PostDetailPage(props) {
                 },
             }),
         ).unwrap();
+        SocketProvider.emitUserComment(postId, 'Posts');
         resetForm();
         _getDetail(postId);
         dispatch(fetchPostList());
@@ -96,7 +98,13 @@ function PostDetailPage(props) {
                         containerStyle={{ backgroundColor: 'white' }}
                         multiline={true}
                         placeholder="Nhập bình luận..."
-                        rightIcon={<Icon name="send" onPress={handleSubmit} />}
+                        rightIcon={
+                            <Icon
+                                name="send"
+                                onPress={handleSubmit}
+                                style={{ padding: 4 }}
+                            />
+                        }
                         onChangeText={handleChange('comment')}
                         errorMessage={errors.comment}
                     />

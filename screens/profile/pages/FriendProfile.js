@@ -1,11 +1,12 @@
 import { colors, env, screen, status } from '@constants';
 import { useFocusEffect } from '@react-navigation/native';
 import { Avatar, Button, Divider, Icon, Image, Text } from '@rneui/themed';
-import React, { useCallback } from 'react';
+import React, { useCallback, useEffect } from 'react';
 import { RefreshControl, ScrollView, View } from 'react-native';
 import { useDispatch, useSelector } from 'react-redux';
 import { showErrorMessage, showSuccessMessage } from 'utilities/Notification';
 import { getUserName } from 'utilities/User';
+import { SocketProvider } from '../../../plugins/socket';
 import {
     acceptRequestFriend,
     cancelRequestFriend,
@@ -26,16 +27,19 @@ function FriendProfile(props) {
     const friend = useSelector(selectFriendProfile);
     const refreshing = useSelector(selectIsLoading);
 
+    useEffect(() => {
+        dispatch(getUserProfile(friendId));
+        dispatch(getStatusFriend(friendId));
+    }, [friendId]);
+
     const onRefresh = React.useCallback(() => {
         dispatch(getUserProfile(friendId));
         dispatch(getStatusFriend(friendId));
     }, []);
 
-    useFocusEffect(
-        useCallback(() => {
-            dispatch(getStatusFriend(friendId));
-        }, []),
-    );
+    useEffect(() => {
+        dispatch(getStatusFriend(friendId));
+    }, [friend?.status]);
 
     const requestFriend = async () => {
         const response = await dispatch(
@@ -45,6 +49,7 @@ function FriendProfile(props) {
         ).unwrap();
 
         if (response?.success) {
+            SocketProvider.emitUserSendRequest(friendId, 'Friends');
             onRefresh();
             showSuccessMessage(response?.message);
             return;

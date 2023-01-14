@@ -18,7 +18,7 @@ import {
     selectIsLoading,
     setIsLoggedIn,
 } from '../reducers/auth.reducer';
-import SocketProvider from '../../../plugins/socket';
+import { SocketProvider } from '../../../plugins/socket';
 
 function Login(props) {
     // redux

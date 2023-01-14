@@ -20,4 +20,5 @@ export const PageName = {
     FRIEND_PROFILE: 'Trang cá nhân bạn bè',
     EDIT_POST_PAGE: 'Chỉnh sửa bài viết',
     SEARCH_PAGE: 'Tìm kiếm',
+    NOTIFICATION_PAGE: 'Thông báo',
 };
