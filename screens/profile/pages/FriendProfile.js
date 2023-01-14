@@ -1,12 +1,14 @@
+import { colors, env, screen, status } from '@constants';
+import { useFocusEffect } from '@react-navigation/native';
 import { Avatar, Button, Divider, Icon, Image, Text } from '@rneui/themed';
-import { colors, screen, status } from '@constants';
-import { PageName } from 'navigation/constants';
 import React, { useCallback } from 'react';
 import { RefreshControl, ScrollView, View } from 'react-native';
 import { useDispatch, useSelector } from 'react-redux';
+import { showErrorMessage, showSuccessMessage } from 'utilities/Notification';
 import { getUserName } from 'utilities/User';
-import { env } from '@constants';
 import {
+    acceptRequestFriend,
+    cancelRequestFriend,
     deleteFriend,
     getStatusFriend,
     getUserProfile,
@@ -14,8 +16,6 @@ import {
     selectIsLoading,
     sendRequest,
 } from '../reducers/friend.reducer';
-import { useFocusEffect } from '@react-navigation/native';
-import { showErrorMessage, showSuccessMessage } from 'utilities/Notification';
 
 function FriendProfile(props) {
     const { navigation, route } = props;
@@ -67,6 +67,103 @@ function FriendProfile(props) {
         showErrorMessage(response?.message);
     };
 
+    const cancelRequest = async () => {
+        const response = await dispatch(
+            cancelRequestFriend({
+                user_id: friendId,
+            }),
+        ).unwrap();
+
+        if (response?.success) {
+            onRefresh();
+            showSuccessMessage(response?.message);
+            return;
+        }
+        showErrorMessage(response?.message);
+    };
+
+    const acceptRequest = async () => {
+        const response = await dispatch(
+            acceptRequestFriend({
+                user_id: friendId,
+                is_accept: '1',
+            }),
+        );
+
+        if (response?.success) {
+            onRefresh();
+            showSuccessMessage(response?.message);
+            return;
+        }
+        showErrorMessage(response?.message);
+    };
+
+    const getStatusButton = (friendStatus) => {
+        let button;
+        switch (friendStatus) {
+            case status.FRIEND:
+                button = (
+                    <Button
+                        color={colors.grayBlue}
+                        buttonStyle={styles.button}
+                        onPress={removeFriend}
+                    >
+                        <Icon name="person-remove" color="white" />
+                        <Text style={[styles.textButton, { color: 'white' }]}>
+                            {' '}
+                            Xóa kết bạn
+                        </Text>
+                    </Button>
+                );
+                break;
+            case status.NOT_FRIEND:
+                button = (
+                    <Button
+                        color={colors.grayBlue}
+                        buttonStyle={styles.button}
+                        onPress={requestFriend}
+                    >
+                        <Icon name="person-add-alt-1" color="white" />
+                        <Text style={[styles.textButton, { color: 'white' }]}>
+                            Thêm bạn bè
+                        </Text>
+                    </Button>
+                );
+                break;
+
+            case status.SENT:
+                button = (
+                    <Button
+                        color={colors.grayBlue}
+                        buttonStyle={styles.button}
+                        onPress={cancelRequest}
+                    >
+                        <Icon name="person-add-alt-1" color="white" />
+                        <Text style={[styles.textButton, { color: 'white' }]}>
+                            Hủy lời mời
+                        </Text>
+                    </Button>
+                );
+                break;
+
+            case status.RECEIVED:
+                button = (
+                    <Button
+                        color={colors.grayBlue}
+                        buttonStyle={styles.button}
+                        onPress={acceptRequest}
+                    >
+                        <Icon name="person-add-alt-1" color="white" />
+                        <Text style={[styles.textButton, { color: 'white' }]}>
+                            Chấp nhận
+                        </Text>
+                    </Button>
+                );
+                break;
+        }
+        return button;
+    };
+
     return (
         <ScrollView
             showsVerticalScrollIndicator={false}
@@ -108,35 +205,7 @@ function FriendProfile(props) {
                         justifyContent: 'space-between',
                     }}
                 >
-                    {friend?.status === status.FRIEND ? (
-                        <Button
-                            color={colors.grayBlue}
-                            buttonStyle={styles.button}
-                            onPress={removeFriend}
-                        >
-                            <Icon name="person-remove" color="white" />
-                            <Text
-                                style={[styles.textButton, { color: 'white' }]}
-                            >
-                                {' '}
-                                Xóa kết bạn
-                            </Text>
-                        </Button>
-                    ) : (
-                        <Button
-                            color={colors.grayBlue}
-                            buttonStyle={styles.button}
-                            onPress={requestFriend}
-                        >
-                            <Icon name="person-add-alt-1" color="white" />
-                            <Text
-                                style={[styles.textButton, { color: 'white' }]}
-                            >
-                                {' '}
-                                Thêm bạn bè
-                            </Text>
-                        </Button>
-                    )}
+                    {getStatusButton(friend?.status)}
                     <Button color={colors.gray} buttonStyle={styles.button}>
                         <Icon name="message" color="black" />
                         <Text style={styles.textButton}> Nhắn tin</Text>
