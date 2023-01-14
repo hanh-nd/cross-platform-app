@@ -1,18 +1,36 @@
+import { useNavigation } from '@react-navigation/native';
 import { Avatar } from '@rneui/themed';
 import { Text, View } from 'react-native';
 import { TouchableOpacity } from 'react-native-gesture-handler';
+import { useDispatch } from 'react-redux';
 import { env } from '../../../constants';
+import { PageName } from '../../../navigation/constants';
+import { showErrorMessage } from '../../../utilities/Notification';
 import { getUserName } from '../../../utilities/User';
+import { getUserProfile } from '../../profile/reducers/friend.reducer';
 function UserSearchItem(props) {
     const { item, type } = props;
 
+    const dispatch = useDispatch();
+    const navigation = useNavigation();
+    const { navigate } = navigation;
 
-    const openUserProfile = () => {
-        // TODO
-    }
+    const gotoFriendProfile = async (friend) => {
+        const response = await dispatch(getUserProfile(friend?._id)).unwrap();
+
+        if (response?.success) {
+            navigate({
+                name: PageName.FRIEND_PROFILE,
+                params: friend,
+            });
+            return;
+        }
+
+        showErrorMessage(response?.message);
+    };
 
     return (
-        <TouchableOpacity onPress={openUserProfile}>
+        <TouchableOpacity onPress={() => gotoFriendProfile(item)}>
             <View style={styles.container}>
                 <Avatar
                     rounded
@@ -48,7 +66,7 @@ const styles = {
     name: {
         fontSize: 18,
         fontWeight: 'bold',
-        flex: 1
+        flex: 1,
     },
 };
 
