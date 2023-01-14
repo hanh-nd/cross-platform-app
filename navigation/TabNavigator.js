@@ -6,6 +6,8 @@ import 'react-native-gesture-handler';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useDispatch } from 'react-redux';
 import { colors, fontSizes } from '../constants';
+import { getAccessToken, getAccessTokenCb } from '../plugins/axios/axios';
+import { SocketProvider } from '../plugins/socket';
 import { fetchSelfDetail } from '../screens/auth/reducers/auth.reducer';
 import { PageName } from './constants';
 import { tabNavigatorRoutes } from './routers';
@@ -30,9 +32,14 @@ function TabNavigator(props) {
     const { navigate } = navigation;
     useEffect(() => {
         dispatch(fetchSelfDetail());
+        getAccessTokenCb((err, accessToken) => {
+            if (!err) {
+                SocketProvider.initialize(accessToken);
+            }
+        });
     }, []);
 
-    const navigateToSearchScreen = () => {
+    const navigateToSearchScreen = async () => {
         navigate({
             name: PageName.SEARCH_PAGE,
         });

@@ -94,6 +94,10 @@ export const getAccessToken = async () => {
     return await AsyncStorage.getItem('accessToken');
 };
 
+export const getAccessTokenCb = (cb) => {
+    return AsyncStorage.getItem('accessToken', cb);
+};
+
 export const setAccessToken = async (token) => {
     await AsyncStorage.setItem('accessToken', token);
 };
