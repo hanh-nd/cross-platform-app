@@ -79,6 +79,31 @@ export const SocketProvider = {
         });
     },
 
+    emitRequestFollowPost: async (postId) => {
+        const token = await AsyncStorage.getItem('accessToken');
+        _socket.emit('request_follow_post', {
+            token,
+            postId,
+        });
+    },
+
+    emitRequestUnfollowPost: async (postId) => {
+        const token = await AsyncStorage.getItem('accessToken');
+        _socket.emit('request_unfollow_post', {
+            token,
+            postId,
+        });
+    },
+
+
+    emitNotifyUpdatePost: async (postId) => {
+        const token = await AsyncStorage.getItem('accessToken');
+        _socket.emit('notify_update_post', {
+            token,
+            postId,
+        });
+    },
+
     onMessage: (callback) => {
         _socket.on('message', (msg) => {
             // console.log(`at onMessage:`, msg);
@@ -114,4 +139,12 @@ export const SocketProvider = {
             }
         });
     },
+
+    onUpdatePost: (callback) => {
+        _socket.on('update_post', (msg) => {
+            if (callback) {
+                callback(msg)
+            }
+        })
+    }
 };

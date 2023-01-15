@@ -32,6 +32,19 @@ function PostDetailPage(props) {
     const comments = useSelector(selectPostComments);
     const isLoading = useSelector(selectIsLoading);
 
+    useEffect(() => {
+        setTimeout(() => {
+            SocketProvider.emitRequestFollowPost(postId);
+
+            SocketProvider.onUpdatePost(({ postId }) => {
+                _getDetail(postId);
+            });
+        }, 100)
+        return () => {
+            SocketProvider.emitRequestUnfollowPost(postId);
+        };
+    }, []);
+
     const onRefresh = () => {
         _getDetail(postId);
     };
@@ -55,6 +68,7 @@ function PostDetailPage(props) {
             }),
         ).unwrap();
         SocketProvider.emitUserComment(postId, 'Posts');
+        SocketProvider.emitNotifyUpdatePost(postId);
         resetForm();
         _getDetail(postId);
         dispatch(fetchPostList());
@@ -70,7 +84,7 @@ function PostDetailPage(props) {
             style={styles.container}
             contentContainerStyle={styles.contentContainerStyle}
             refreshControl={
-                <RefreshControl refreshing={isLoading} onRefresh={onRefresh} />
+                <RefreshControl refreshing={false} onRefresh={onRefresh} />
             }
         >
             <ScrollView horizontal={true}>

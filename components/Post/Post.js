@@ -59,6 +59,7 @@ function Post(props) {
         if (!isLike) {
             SocketProvider.emitUserLike(_id, 'Posts');
         }
+        SocketProvider.emitNotifyUpdatePost(_id);
         await dispatch(likePost(_id)).unwrap();
         dispatch(fetchPostList());
         if (onLike) {
