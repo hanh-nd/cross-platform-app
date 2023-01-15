@@ -41,7 +41,7 @@ function NotificationPage(props) {
             SocketProvider.onNotification(({ sender, module, action }) => {
                 dispatch(fetchNotificationList());
             });
-        }, 1000);
+        }, 100);
     }, []);
 
     const onRefresh = useCallback(() => {

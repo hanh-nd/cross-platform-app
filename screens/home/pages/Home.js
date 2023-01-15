@@ -1,6 +1,6 @@
 import { screen } from '@constants';
 import { useFocusEffect } from '@react-navigation/native';
-import { useCallback, useEffect } from 'react';
+import { useCallback, useEffect, useRef } from 'react';
 import { BackHandler, View } from 'react-native';
 import { RefreshControl, ScrollView } from 'react-native-gesture-handler';
 import { useDispatch, useSelector } from 'react-redux';
@@ -11,10 +11,8 @@ import { fetchPostList, selectIsLoading } from '../reducers/home.reducer';
 function Home(props) {
     const dispatch = useDispatch();
     const { navigation, route } = props;
-    //functions of navigate to/back
-    const { navigate, goBack } = navigation;
-
     const isLoading = useSelector(selectIsLoading);
+    const scrollRef = useRef();
 
     useFocusEffect(
         useCallback(() => {
@@ -33,6 +31,10 @@ function Home(props) {
     };
     useEffect(() => {
         dispatch(fetchPostList());
+
+        navigation.addListener('tabPress', (e) => {
+            scrollRef.current.scrollTo({ animated: true, y: 0 });
+        });
     }, []);
 
     const onRefresh = () => {
@@ -42,6 +44,7 @@ function Home(props) {
     return (
         <DismissKeyboardView style={styles.container}>
             <ScrollView
+                ref={scrollRef}
                 horizontal={false}
                 refreshControl={
                     <RefreshControl
