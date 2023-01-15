@@ -10,6 +10,8 @@ import {
     acceptRequestFriend,
     getListFriends,
     getUserProfile,
+    selectFriendLength,
+    blockList,
 } from '../../reducers/friend.reducer';
 import { getUserName } from 'utilities/User';
 import { useFocusEffect } from '@react-navigation/native';
@@ -17,16 +19,22 @@ import { showErrorMessage, showSuccessMessage } from 'utilities/Notification';
 
 function Request({ navigate }) {
     const dispatch = useDispatch();
+    const userFriendLength = useSelector(selectFriendLength);
 
     const receivedList = useSelector(selectReceivedList);
 
     useFocusEffect(
         useCallback(() => {
             dispatch(listRequest());
+            dispatch(blockList());
         }, []),
     );
 
     const acceptRequest = async (user_id) => {
+        if (userFriendLength >= 500) {
+            showErrorMessage('Bạn đã có hơn 500 bạn bè');
+            return;
+        }
         const response = await dispatch(
             acceptRequestFriend({
                 user_id,

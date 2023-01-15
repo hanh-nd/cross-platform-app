@@ -39,3 +39,11 @@ export const getFriendStatus = async (params) => {
 export const getFriendProfile = async (params) => {
     return await client.get(`${env.BASE_URL}/users/show/${params}`);
 };
+
+export const blockUserDiary = async (body) => {
+    return await client.post(`${env.BASE_URL}/users/set-block-user`, body);
+};
+
+export const listBlockUser = async () => {
+    return await client.get(`${env.BASE_URL}/friends/block_list`);
+};

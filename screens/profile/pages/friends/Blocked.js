@@ -1,5 +1,5 @@
-import React from 'react';
-import { View } from 'react-native';
+import React, { useState } from 'react';
+import { FlatList, View } from 'react-native';
 import {
     Text,
     Button,
@@ -9,14 +9,26 @@ import {
     Icon,
 } from '@rneui/themed';
 import { colors, screen } from '@constants';
+import { useDispatch, useSelector } from 'react-redux';
+import {
+    blockList,
+    blockUserDiarySlice,
+    selectBlockedUser,
+} from '../../reducers/friend.reducer';
+import { getUserName } from 'utilities/User';
+import { showErrorMessage, showSuccessMessage } from 'utilities/Notification';
 
 function Blocked(props) {
     const [isVisible, setIsVisible] = React.useState(false);
+    const dispatch = useDispatch();
+    const blockedUser = useSelector(selectBlockedUser);
+    const [targetId, setTargetId] = useState();
 
     const list = [
         {
             title: 'Bỏ chặn',
             iconName: 'add-circle-outline',
+            onPress: () => unlockUser(targetId),
         },
         {
             title: 'Hủy',
@@ -25,31 +37,74 @@ function Blocked(props) {
         },
     ];
 
+    const unlockUser = async (user_id) => {
+        console.log('Unlock user', user_id);
+        const response = await dispatch(
+            blockUserDiarySlice({
+                user_id,
+                type: 'unblock',
+            }),
+        ).unwrap();
+        if (response?.success) {
+            dispatch(blockList());
+            showSuccessMessage(response?.message);
+            setIsVisible(false);
+            return;
+        }
+        showErrorMessage(response?.message);
+        setIsVisible(false);
+    };
+
+    const openBottomSheet = (id) => {
+        setTargetId(id);
+        setIsVisible(true);
+    };
+
     return (
         <>
             <Text style={styles.label}>Người bị chặn</Text>
             <Text style={styles.text}>
                 Khi bạn chặn ai đó, họ sẽ không xem được nội dung bạn đăng trên
-                dòng thời gian của mình, mời bạn tham gia sự kiện hoặc nhóm, bắt
-                đầu cuộc trò chuyện với bạn hay thêm bạn làm bạn bè.
+                dòng thời gian của mình, bắt đầu cuộc trò chuyện với bạn hay
+                thêm bạn làm bạn bè.
             </Text>
-            <View style={styles.container}>
-                <View style={styles.row}>
-                    <Avatar
-                        size={75}
-                        rounded
-                        source={require('assets/default_avt.jpg')}
-                    />
-                    <Text style={styles.name}>Roronoa Zoro</Text>
-                </View>
-                <Button
-                    type="clear"
-                    titleStyle={{ color: '#646464' }}
-                    onPress={() => setIsVisible(true)}
-                >
-                    Bỏ chặn
-                </Button>
-            </View>
+            {blockedUser.length === 0 ? (
+                <Text>Bạn chưa chặn bất kỳ ai</Text>
+            ) : (
+                <FlatList
+                    data={blockedUser}
+                    showsVerticalScrollIndicator={false}
+                    renderItem={({ item }) => (
+                        <View style={styles.container}>
+                            <View style={styles.row}>
+                                <Avatar
+                                    size={75}
+                                    rounded
+                                    source={
+                                        item?.avatar
+                                            ? {
+                                                  uri: `${env.FILE_SERVICE_USER}/${item?.avatar.fileName}`,
+                                              }
+                                            : require('assets/default_avt.jpg')
+                                    }
+                                />
+                                <Text style={styles.name}>
+                                    {getUserName(item)}
+                                </Text>
+                            </View>
+                            <Button
+                                type="clear"
+                                titleStyle={{ color: '#646464' }}
+                                onPress={() => openBottomSheet(item._id)}
+                            >
+                                Bỏ chặn
+                            </Button>
+                        </View>
+                    )}
+                    keyExtractor={(item) => item._id}
+                />
+            )}
+
             <BottomSheet
                 isVisible={isVisible}
                 modalProps={{

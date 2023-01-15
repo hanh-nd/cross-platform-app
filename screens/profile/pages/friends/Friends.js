@@ -12,6 +12,7 @@ import { PageName } from 'navigation/constants';
 import { colors, screen, env } from '@constants';
 import { useDispatch, useSelector } from 'react-redux';
 import {
+    blockUserDiarySlice,
     deleteFriend,
     getListFriends,
     getUserProfile,
@@ -34,6 +35,7 @@ function Friends({ navigate }) {
         {
             title: 'Chặn',
             iconName: 'block',
+            onPress: () => blockUser(targetId),
         },
         {
             title: 'Hủy kết bạn',
@@ -75,6 +77,23 @@ function Friends({ navigate }) {
             return;
         }
         showErrorMessage(response?.message);
+    };
+
+    const blockUser = async (user_id) => {
+        const response = await dispatch(
+            blockUserDiarySlice({
+                user_id,
+                type: 'block',
+            }),
+        ).unwrap();
+        if (response?.success) {
+            dispatch(getListFriends());
+            showSuccessMessage(response?.message);
+            setIsVisible(false);
+            return;
+        }
+        showErrorMessage(response?.message);
+        setIsVisible(false);
     };
 
     return (

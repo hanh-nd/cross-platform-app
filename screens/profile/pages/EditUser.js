@@ -137,6 +137,7 @@ function EditUser(props) {
                             value={values.phonenumber}
                             onChangeText={handleChange('phonenumber')}
                             errorMessage={errors.phonenumber}
+                            disabled
                         />
                         <Button
                             type="solid"

@@ -8,10 +8,13 @@ import { showErrorMessage, showSuccessMessage } from 'utilities/Notification';
 import { getUserName } from 'utilities/User';
 import {
     acceptRequestFriend,
+    blockUserDiarySlice,
     cancelRequestFriend,
     deleteFriend,
+    getFriendLength,
     getStatusFriend,
     getUserProfile,
+    selectFriendLength,
     selectFriendProfile,
     selectIsLoading,
     sendRequest,
@@ -25,6 +28,7 @@ function FriendProfile(props) {
     const friendId = route?.params?._id;
     const friend = useSelector(selectFriendProfile);
     const refreshing = useSelector(selectIsLoading);
+    const userFriendLength = useSelector(selectFriendLength);
 
     const onRefresh = React.useCallback(() => {
         dispatch(getUserProfile(friendId));
@@ -38,6 +42,11 @@ function FriendProfile(props) {
     );
 
     const requestFriend = async () => {
+        if (userFriendLength >= 500) {
+            showErrorMessage('Bạn đã có hơn 500 bạn bè');
+            return;
+        }
+
         const response = await dispatch(
             sendRequest({
                 user_id: friendId,
@@ -88,7 +97,7 @@ function FriendProfile(props) {
                 user_id: friendId,
                 is_accept: '1',
             }),
-        );
+        ).unwrap();
 
         if (response?.success) {
             onRefresh();
@@ -164,6 +173,21 @@ function FriendProfile(props) {
         return button;
     };
 
+    const blockUser = async () => {
+        const response = await dispatch(
+            blockUserDiarySlice({
+                user_id: friendId,
+                type: 'block',
+            }),
+        ).unwrap();
+        if (response?.success) {
+            goBack();
+            showSuccessMessage(response?.message);
+            return;
+        }
+        showErrorMessage(response?.message);
+    };
+
     return (
         <ScrollView
             showsVerticalScrollIndicator={false}
@@ -210,7 +234,11 @@ function FriendProfile(props) {
                         <Icon name="message" color="black" />
                         <Text style={styles.textButton}> Nhắn tin</Text>
                     </Button>
-                    <Button color={colors.gray} buttonStyle={styles.button}>
+                    <Button
+                        color={colors.gray}
+                        buttonStyle={styles.button}
+                        onPress={blockUser}
+                    >
                         <Icon name="block" color="black" />
                         <Text style={styles.textButton}> Chặn</Text>
                     </Button>

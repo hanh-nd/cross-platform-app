@@ -123,11 +123,14 @@ function Profile(props) {
                             {listFriend.slice(0, 6).map((f) => {
                                 return (
                                     <View
-                                        style={{ flexDirection: 'column' }}
+                                        style={{
+                                            flexDirection: 'column',
+                                            alignItems: 'center',
+                                        }}
                                         key={f._id}
                                     >
                                         <Avatar
-                                            size={110}
+                                            size={screen.width / 3.9}
                                             source={
                                                 f?.avatar
                                                     ? {
@@ -148,25 +151,26 @@ function Profile(props) {
                                 );
                             })}
                         </View>
-                        <Button
-                            color={colors.gray}
-                            buttonStyle={styles.button}
-                            onPress={() =>
-                                navigate({ name: PageName.LIST_FRIENDS })
-                            }
-                        >
-                            <Text style={styles.textButton}>
-                                Xem tất cả bạn bè
-                            </Text>
-                        </Button>
                     </>
                 ) : (
                     <>
-                        <Text style={{ color: colors.placeholder }}>
+                        <Text
+                            style={{
+                                color: colors.placeholder,
+                                marginBottom: 10,
+                            }}
+                        >
                             Bạn không có người bạn nào
                         </Text>
                     </>
                 )}
+                <Button
+                    color={colors.gray}
+                    buttonStyle={styles.button}
+                    onPress={() => navigate({ name: PageName.LIST_FRIENDS })}
+                >
+                    <Text style={styles.textButton}>Xem tất cả bạn bè</Text>
+                </Button>
             </View>
             <Divider
                 width={10}
@@ -226,7 +230,7 @@ const styles = {
     },
     friendName: {
         fontWeight: '700',
-        maxWidth: 130,
+        maxWidth: screen.width / 3.9,
         marginBottom: 5,
     },
 };
