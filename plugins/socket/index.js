@@ -16,11 +16,13 @@ export const SocketProvider = {
         });
     },
 
-    emitChatMessage: async (receiverId, chatId) => {
+    emitChatMessage: async (receiverId, content, chatId) => {
         const token = await AsyncStorage.getItem('accessToken');
         _socket.emit('chatmessage', {
             token,
             receiverId,
+            content,
+            chatId
         });
     },
 

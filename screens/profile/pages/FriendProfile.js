@@ -6,6 +6,7 @@ import { RefreshControl, ScrollView, View } from 'react-native';
 import { useDispatch, useSelector } from 'react-redux';
 import { showErrorMessage, showSuccessMessage } from 'utilities/Notification';
 import { getUserName } from 'utilities/User';
+import { PageName } from '../../../navigation/constants';
 import { SocketProvider } from '../../../plugins/socket';
 import {
     acceptRequestFriend,
@@ -168,6 +169,15 @@ function FriendProfile(props) {
         }
         return button;
     };
+    
+    const openChatDetailScreen = () => {
+        navigate({
+            name: PageName.CHAT_DETAIL,
+            params: {
+                receiver: friend,
+            }
+        })
+    }
 
     return (
         <ScrollView
@@ -211,7 +221,7 @@ function FriendProfile(props) {
                     }}
                 >
                     {getStatusButton(friend?.status)}
-                    <Button color={colors.gray} buttonStyle={styles.button}>
+                    <Button color={colors.gray} buttonStyle={styles.button} onPress={openChatDetailScreen}>
                         <Icon name="message" color="black" />
                         <Text style={styles.textButton}> Nhắn tin</Text>
                     </Button>

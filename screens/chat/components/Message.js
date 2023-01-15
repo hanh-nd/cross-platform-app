@@ -1,44 +1,49 @@
-import { View, Text, StyleSheet } from 'react-native';
-import React from 'react';
 import { Avatar } from '@rneui/themed';
+import React, { useEffect, useMemo } from 'react';
+import { StyleSheet, Text, View } from 'react-native';
+import { useSelector } from 'react-redux';
+import { env } from '../../../constants';
+import { selectLoginUser } from '../../auth/reducers/auth.reducer';
+import dayjs from '../../../plugins/dayjs';
 
-function Message({ item, userId }) {
-    const status = item.userId !== userId;
+function Message(props) {
+    const { sender, content, time } = props;
+    const loginUser = useSelector(selectLoginUser);
+
+    const status = useMemo(() => sender._id == loginUser._id, [loginUser]);
 
     return (
-        <View>
-            <View
-                style={
-                    status
-                        ? styles.messageWrapper
-                        : [styles.messageWrapper, { alignItems: 'flex-end' }]
-                }
-            >
-                <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-                    <Avatar
-                        size={30}
-                        rounded
-                        source={{
-                            uri: 'https://randomuser.me/api/portraits/men/36.jpg',
-                        }}
-                    />
-                    <View
-                        style={
-                            status
-                                ? styles.message
-                                : [
-                                      styles.message,
-                                      { backgroundColor: '#4e69a2' },
-                                  ]
-                        }
-                    >
-                        <Text style={{ color: status ? '#000000' : '#ffffff' }}>
-                            {item.text}
-                        </Text>
-                    </View>
+        <View
+            style={{
+                ...styles.messageWrapper,
+                ...(status && { alignItems: 'flex-end' }),
+            }}
+        >
+            <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                <Avatar
+                    size={30}
+                    rounded
+                    source={
+                        sender?.avatar
+                            ? {
+                                  uri: `${env.FILE_SERVICE_USER}/${sender?.avatar.fileName}`,
+                              }
+                            : require('assets/default_avt.jpg')
+                    }
+                />
+                <View
+                    style={
+                        status
+                            ? styles.message
+                            : [styles.message, { backgroundColor: '#4e69a2' }]
+                    }
+                >
+                    <Text style={{ color: status ? '#000000' : '#ffffff' }}>
+                        {content}
+                    </Text>
                 </View>
-                <Text style={{ marginLeft: 40 }}>{item.time}</Text>
             </View>
+            <Text style={{ marginLeft: 40 }}>{dayjs(time).fmHHmmDDMMYYYY()}</Text>
         </View>
     );
 }

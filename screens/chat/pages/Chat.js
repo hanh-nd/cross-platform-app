@@ -1,46 +1,29 @@
-import {
-    Avatar,
-    BottomSheet,
-    Divider,
-    Icon,
-    Input,
-    ListItem,
-    Text,
-} from '@rneui/themed';
-import { useState } from 'react';
-import { ScrollView, StyleSheet, View, TextInput } from 'react-native';
-import { DismissKeyboardView } from '../../../components';
+import { env } from '@constants';
+import { Avatar, BottomSheet, Divider, Icon, ListItem } from '@rneui/themed';
+import { useEffect, useState } from 'react';
+import { ScrollView, StyleSheet, TextInput, View } from 'react-native';
+import { useDispatch, useSelector } from 'react-redux';
+import { SocketProvider } from '../../../plugins/socket';
+import { selectLoginUser } from '../../auth/reducers/auth.reducer';
 import ConversationItem from '../components/ConversationItem';
-import { colors } from '../../../constants';
+import { fetchChatList, fetchMessageListByFriend, selectChatList } from '../reducers/chat.reducer';
 
 function Chat(props) {
+    const dispatch = useDispatch();
     const [isVisible, setIsVisible] = useState(false);
-    const data = [
-        {
-            id: Math.random(),
-            imgLink: 'https://randomuser.me/api/portraits/men/36.jpg',
-            namePerson: 'Nguyễn Văn A',
-            lastMessage: 'Hôm nay ăn gì nhỉ?',
-        },
-        {
-            id: Math.random(),
-            imgLink: 'https://randomuser.me/api/portraits/men/37.jpg',
-            namePerson: 'Nguyễn Văn B',
-            lastMessage: 'Hôm nay ăn gì nhỉ?',
-        },
-        {
-            id: Math.random(),
-            imgLink: 'https://randomuser.me/api/portraits/men/38.jpg',
-            namePerson: 'Nguyễn Văn C',
-            lastMessage: 'Hôm nay ăn gì nhỉ?',
-        },
-        {
-            id: Math.random(),
-            imgLink: 'https://randomuser.me/api/portraits/men/39.jpg',
-            namePerson: 'Nguyễn Văn D',
-            lastMessage: 'Hôm nay ăn gì nhỉ?',
-        },
-    ];
+    const chatList = useSelector(selectChatList);
+    const loginUser = useSelector(selectLoginUser);
+
+    useEffect(() => {
+        dispatch(fetchChatList());
+        setTimeout(() => {
+            SocketProvider.onMessage(( { _id, chatId, content, receiverId, senderId, time }) => {
+                dispatch(fetchMessageListByFriend(senderId))
+                dispatch(fetchChatList());
+            });
+        }, 100);
+    }, []);
+
     const list = [
         {
             title: 'Xóa',
@@ -56,11 +39,15 @@ function Chat(props) {
             <View style={styles.inputHeader}>
                 <View style={{ flex: 0.2, paddingHorizontal: 10 }}>
                     <Avatar
-                        size={60}
                         rounded
-                        source={{
-                            uri: 'https://randomuser.me/api/portraits/men/36.jpg',
-                        }}
+                        size={60}
+                        source={
+                            loginUser?.avatar
+                                ? {
+                                      uri: `${env.FILE_SERVICE_USER}/${loginUser?.avatar.fileName}`,
+                                  }
+                                : require('assets/default_avt.jpg')
+                        }
                     />
                 </View>
                 <View style={{ flex: 1.1 }}>
@@ -72,12 +59,14 @@ function Chat(props) {
                 </View>
             </View>
             <Divider width={1} style={{ marginTop: 5, marginBottom: 20 }} />
-            {data
-                ? data.map((item) => {
+            {chatList
+                ? chatList.map((chat) => {
+                      const { friend, seen, lastMessage } = chat;
                       return (
                           <ConversationItem
                               key={Math.random()}
-                              item={item}
+                              receiver={friend}
+                              lastMessage={lastMessage.content}
                               setIsVisibleBlockSheet={setIsVisible}
                           />
                       );

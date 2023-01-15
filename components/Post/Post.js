@@ -15,11 +15,12 @@ import {
 } from '@rneui/themed';
 import { useState } from 'react';
 import { ActivityIndicator, View } from 'react-native';
-import { FlatList } from 'react-native-gesture-handler';
+import { FlatList, TouchableOpacity } from 'react-native-gesture-handler';
 import ReadMore from 'react-native-read-more-text';
 import { useDispatch, useSelector } from 'react-redux';
 import { SocketProvider } from '../../plugins/socket';
 import { selectLoginUser } from '../../screens/auth/reducers/auth.reducer';
+
 import {
     fetchPostList,
     likePost,
@@ -108,36 +109,52 @@ function Post(props) {
         }
     };
 
+    const gotoProfile = async (friend) => {
+        if(isAuthor(author, loginUser)) {
+            navigate({
+                name: PageName.PROFILE
+            })
+            return;
+        }
+
+        navigate({
+            name: PageName.FRIEND_PROFILE,
+            params: friend,
+        });
+    };
+
     return (
         <View style={styles.container}>
             <View style={styles.header}>
-                <View style={styles.headerItem}>
-                    <Avatar
-                        rounded
-                        size={60}
-                        source={
-                            author?.avatar
-                                ? {
-                                      uri: `${env.FILE_SERVICE_USER}/${author?.avatar.fileName}`,
-                                  }
-                                : require('assets/default_avt.jpg')
-                        }
-                    />
-                    <View style={styles.detail}>
-                        <ListItem.Content>
-                            <ListItem.Title>
-                                <Text style={styles.username}>{`${getUserName(
-                                    author,
-                                )}`}</Text>
-                            </ListItem.Title>
-                            <ListItem.Subtitle>
-                                <Text>{`${dayjs(
-                                    createdAt,
-                                ).fmHHmmDDMMYYYY()}`}</Text>
-                            </ListItem.Subtitle>
-                        </ListItem.Content>
+                <TouchableOpacity onPress={() => gotoProfile(author)}>
+                    <View style={styles.headerItem}>
+                        <Avatar
+                            rounded
+                            size={60}
+                            source={
+                                author?.avatar
+                                    ? {
+                                          uri: `${env.FILE_SERVICE_USER}/${author?.avatar.fileName}`,
+                                      }
+                                    : require('assets/default_avt.jpg')
+                            }
+                        />
+                        <View style={styles.detail}>
+                            <ListItem.Content>
+                                <ListItem.Title>
+                                    <Text
+                                        style={styles.username}
+                                    >{`${getUserName(author)}`}</Text>
+                                </ListItem.Title>
+                                <ListItem.Subtitle>
+                                    <Text>{`${dayjs(
+                                        createdAt,
+                                    ).fmHHmmDDMMYYYY()}`}</Text>
+                                </ListItem.Subtitle>
+                            </ListItem.Content>
+                        </View>
                     </View>
-                </View>
+                </TouchableOpacity>
                 <View style={styles.headerItem}>
                     <Button
                         title="..."
@@ -238,6 +255,7 @@ const styles = {
     headerItem: {
         display: 'flex',
         flexDirection: 'row',
+        width: screen.width
     },
     username: {
         fontWeight: 'bold',

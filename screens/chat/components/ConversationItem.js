@@ -1,17 +1,13 @@
 import { useNavigation } from '@react-navigation/native';
 import { Avatar, Divider, Icon } from '@rneui/themed';
 import React from 'react';
-import {
-    StyleSheet,
-    Text,
-    TouchableHighlight,
-    TouchableOpacity,
-    View,
-} from 'react-native';
+import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { env } from '../../../constants';
 import { PageName } from '../../../navigation/constants';
+import { getUserName } from '../../../utilities/User';
 
 function ConversationItem(props) {
-    const { item, setIsVisibleBlockSheet } = props;
+    const { receiver, lastMessage, setIsVisibleBlockSheet } = props;
     const { navigate } = useNavigation();
 
     return (
@@ -20,23 +16,35 @@ function ConversationItem(props) {
                 navigate({
                     name: PageName.CHAT_DETAIL,
                     params: {
-                        item: item,
+                        receiver,
                     },
                 });
             }}
         >
             <View style={styles.conversationItem}>
                 <View style={{ flex: 0.15, paddingHorizontal: 10 }}>
-                    <Avatar size={45} rounded source={{ uri: item.imgLink }} />
+                    <Avatar
+                        rounded
+                        size={45}
+                        source={
+                            receiver?.avatar
+                                ? {
+                                      uri: `${env.FILE_SERVICE_USER}/${receiver?.avatar.fileName}`,
+                                  }
+                                : require('assets/default_avt.jpg')
+                        }
+                    />
                 </View>
                 <View style={{ flex: 0.9 }}>
-                    <Text style={styles.namePerson}>{item.namePerson}</Text>
+                    <Text style={styles.namePerson}>
+                        {getUserName(receiver)}
+                    </Text>
                     <Text
                         ellipsizeMode="clip"
                         numberOfLines={1}
                         style={styles.lastMessage}
                     >
-                        {item.lastMessage}
+                        {lastMessage}
                     </Text>
                     <Divider width={1} />
                 </View>

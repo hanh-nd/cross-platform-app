@@ -1,20 +1,29 @@
-import { useNavigation } from '@react-navigation/native';
-import { Avatar, Icon } from '@rneui/themed';
+import { Avatar } from '@rneui/themed';
 import React from 'react';
 import { StyleSheet, Text, View } from 'react-native';
-import { colors } from '../../../constants';
-import { PageName } from '../../../navigation/constants';
+import { env } from '../../../constants';
+import { getUserName } from '../../../utilities/User';
 
 const ConversationHeader = (props) => {
-    const { item } = props;
+    const { user } = props;
 
     return (
         <View style={styles.conversationItem}>
             <View style={{ flex: 0.5 }}>
-                <Avatar size={40} rounded source={{ uri: item.imgLink }} />
+                <Avatar
+                    rounded
+                    size={40}
+                    source={
+                        user?.avatar
+                            ? {
+                                  uri: `${env.FILE_SERVICE_USER}/${user?.avatar.fileName}`,
+                              }
+                            : require('assets/default_avt.jpg')
+                    }
+                />
             </View>
             <View style={{ flex: 3 }}>
-                <Text style={styles.namePerson}>{item.namePerson}</Text>
+                <Text style={styles.namePerson}>{getUserName(user)}</Text>
             </View>
         </View>
     );
