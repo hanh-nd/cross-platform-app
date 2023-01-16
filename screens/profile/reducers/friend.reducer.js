@@ -9,6 +9,8 @@ import {
     listFriend,
     removeFriend,
     sendFriendRequest,
+    blockUserDiary,
+    listBlockUser,
 } from '@/services/friend.api';
 import { status } from '@constants';
 
@@ -76,6 +78,17 @@ export const getUserProfile = createAsyncThunk(
     },
 );
 
+export const blockUserDiarySlice = createAsyncThunk(
+    'friend/block',
+    async (body) => {
+        return await blockUserDiary(body);
+    },
+);
+
+export const blockList = createAsyncThunk('friend/block_user', async () => {
+    return await listBlockUser();
+});
+
 export const friendSlice = createSlice({
     name: 'friend',
     initialState,
@@ -103,6 +116,9 @@ export const friendSlice = createSlice({
             state.sentList = action.payload?.data?.sentList || [];
             state.receivedList = action.payload?.data?.receivedList || [];
         });
+        builder.addCase(blockList.fulfilled, (state, action) => {
+            state.blockList = action.payload?.data?.blocked_user || [];
+        });
     },
 });
 
@@ -111,5 +127,7 @@ export const selectSentList = (state) => state.friend.sentList;
 export const selectReceivedList = (state) => state.friend.receivedList;
 export const selectFriendProfile = (state) => state.friend.targetUser;
 export const selectIsLoading = (state) => state.friend.isLoading;
+export const selectFriendLength = (state) => state.friend.friendList.length;
+export const selectBlockedUser = (state) => state.friend.blockList;
 
 export default friendSlice.reducer;

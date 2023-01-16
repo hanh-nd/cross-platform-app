@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { FlatList, View } from 'react-native';
 import {
     Text,
@@ -12,6 +12,7 @@ import { PageName } from 'navigation/constants';
 import { colors, screen, env } from '@constants';
 import { useDispatch, useSelector } from 'react-redux';
 import {
+    blockUserDiarySlice,
     deleteFriend,
     getListFriends,
     getUserProfile,
@@ -19,12 +20,23 @@ import {
 } from '../../reducers/friend.reducer';
 import { showErrorMessage, showSuccessMessage } from 'utilities/Notification';
 import { getUserName } from 'utilities/User';
+import { debounce } from 'lodash';
 
 function Friends({ navigate }) {
     const listFriend = useSelector(selectFriendList);
     const dispatch = useDispatch();
     const [targetId, setTargetId] = React.useState();
     const [isVisible, setIsVisible] = React.useState(false);
+    const [keySearch, setKeySearch] = React.useState('');
+    const [filteredList, setFilteredList] = React.useState(listFriend);
+
+    useEffect(() => {
+        setFilteredList(
+            listFriend.filter((e) =>
+                getUserName(e).toLowerCase().includes(keySearch.toLowerCase()),
+            ),
+        );
+    }, [keySearch]);
 
     const list = [
         {
@@ -34,6 +46,7 @@ function Friends({ navigate }) {
         {
             title: 'Chặn',
             iconName: 'block',
+            onPress: () => blockUser(targetId),
         },
         {
             title: 'Hủy kết bạn',
@@ -77,6 +90,25 @@ function Friends({ navigate }) {
         showErrorMessage(response?.message);
     };
 
+    const blockUser = async (user_id) => {
+        const response = await dispatch(
+            blockUserDiarySlice({
+                user_id,
+                type: 'block',
+            }),
+        ).unwrap();
+        if (response?.success) {
+            dispatch(getListFriends());
+            showSuccessMessage(response?.message);
+            setIsVisible(false);
+            return;
+        }
+        showErrorMessage(response?.message);
+        setIsVisible(false);
+    };
+
+    const searchDebounce = debounce((text) => setKeySearch(text), 500);
+
     return (
         <>
             <Input
@@ -86,12 +118,13 @@ function Friends({ navigate }) {
                 inputStyle={{ fontSize: 17 }}
                 containerStyle={{ height: 55 }}
                 inputContainerStyle={styles.inputSearchContainer}
+                onChangeText={searchDebounce}
             />
             <Text style={[styles.name, { fontSize: 20, paddingBottom: 10 }]}>
-                {listFriend.length} người bạn
+                {filteredList.length} người bạn
             </Text>
             <FlatList
-                data={listFriend}
+                data={filteredList}
                 showsVerticalScrollIndicator={false}
                 renderItem={({ item }) => (
                     <View style={styles.container}>
