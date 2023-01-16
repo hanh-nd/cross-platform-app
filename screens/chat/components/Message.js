@@ -1,10 +1,10 @@
 import { Avatar } from '@rneui/themed';
-import React, { useEffect, useMemo } from 'react';
+import React, { useMemo } from 'react';
 import { StyleSheet, Text, View } from 'react-native';
 import { useSelector } from 'react-redux';
 import { env } from '../../../constants';
-import { selectLoginUser } from '../../auth/reducers/auth.reducer';
 import dayjs from '../../../plugins/dayjs';
+import { selectLoginUser } from '../../auth/reducers/auth.reducer';
 
 function Message(props) {
     const { sender, content, time } = props;
@@ -34,16 +34,18 @@ function Message(props) {
                 <View
                     style={
                         status
-                            ? styles.message
-                            : [styles.message, { backgroundColor: '#4e69a2' }]
+                            ? [styles.message, { backgroundColor: '#4e69a2' }]
+                            : styles.message
                     }
                 >
-                    <Text style={{ color: status ? '#000000' : '#ffffff' }}>
+                    <Text style={{ color: status ? '#ffffff' : '#000000' }}>
                         {content}
                     </Text>
                 </View>
             </View>
-            <Text style={{ marginLeft: 40 }}>{dayjs(time).fmHHmmDDMMYYYY()}</Text>
+            <Text style={{ marginLeft: 40 }}>
+                {dayjs(time).fmHHmmDDMMYYYY()}
+            </Text>
         </View>
     );
 }

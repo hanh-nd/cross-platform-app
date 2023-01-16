@@ -1,22 +1,22 @@
+import { env } from '@constants';
+import {
+    Avatar,
+    BottomSheet,
+    Button,
+    Icon,
+    ListItem,
+    Text,
+} from '@rneui/themed';
 import React, { useState } from 'react';
 import { FlatList, View } from 'react-native';
-import {
-    Text,
-    Button,
-    Avatar,
-    ListItem,
-    BottomSheet,
-    Icon,
-} from '@rneui/themed';
-import { colors, screen } from '@constants';
 import { useDispatch, useSelector } from 'react-redux';
+import { showErrorMessage, showSuccessMessage } from 'utilities/Notification';
+import { getUserName } from 'utilities/User';
 import {
     blockList,
     blockUserDiarySlice,
     selectBlockedUser,
 } from '../../reducers/friend.reducer';
-import { getUserName } from 'utilities/User';
-import { showErrorMessage, showSuccessMessage } from 'utilities/Notification';
 
 function Blocked(props) {
     const [isVisible, setIsVisible] = React.useState(false);

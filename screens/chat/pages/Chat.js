@@ -6,7 +6,11 @@ import { useDispatch, useSelector } from 'react-redux';
 import { SocketProvider } from '../../../plugins/socket';
 import { selectLoginUser } from '../../auth/reducers/auth.reducer';
 import ConversationItem from '../components/ConversationItem';
-import { fetchChatList, fetchMessageListByFriend, selectChatList } from '../reducers/chat.reducer';
+import {
+    fetchChatList,
+    fetchMessageListByFriend,
+    selectChatList,
+} from '../reducers/chat.reducer';
 
 function Chat(props) {
     const dispatch = useDispatch();
@@ -17,8 +21,17 @@ function Chat(props) {
     useEffect(() => {
         dispatch(fetchChatList());
         setTimeout(() => {
-            SocketProvider.onMessage(( { _id, chatId, content, receiverId, senderId, time }) => {
-                dispatch(fetchMessageListByFriend(senderId))
+            SocketProvider.onMessage(
+                ({ _id, chatId, content, receiverId, senderId, time }) => {
+                    dispatch(fetchMessageListByFriend(senderId));
+                    dispatch(fetchChatList());
+                },
+            );
+
+            SocketProvider.onRecallMessage((msg) => {
+                const { _id, chatId, content, receiverId, senderId, time } =
+                    msg.data;
+                dispatch(fetchMessageListByFriend(senderId));
                 dispatch(fetchChatList());
             });
         }, 100);

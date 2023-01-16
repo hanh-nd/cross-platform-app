@@ -178,15 +178,15 @@ function FriendProfile(props) {
         }
         return button;
     };
-    
+
     const openChatDetailScreen = () => {
         navigate({
             name: PageName.CHAT_DETAIL,
             params: {
                 receiver: friend,
-            }
-        })
-    }
+            },
+        });
+    };
 
     const blockUser = async () => {
         const response = await dispatch(
@@ -245,7 +245,11 @@ function FriendProfile(props) {
                     }}
                 >
                     {getStatusButton(friend?.status)}
-                    <Button color={colors.gray} buttonStyle={styles.button} onPress={openChatDetailScreen}>
+                    <Button
+                        color={colors.gray}
+                        buttonStyle={styles.button}
+                        onPress={openChatDetailScreen}
+                    >
                         <Icon name="message" color="black" />
                         <Text style={styles.textButton}> Nhắn tin</Text>
                     </Button>

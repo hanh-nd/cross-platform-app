@@ -110,10 +110,10 @@ function Post(props) {
     };
 
     const gotoProfile = async (friend) => {
-        if(isAuthor(author, loginUser)) {
+        if (isAuthor(author, loginUser)) {
             navigate({
-                name: PageName.PROFILE
-            })
+                name: PageName.PROFILE,
+            });
             return;
         }
 
@@ -255,7 +255,7 @@ const styles = {
     headerItem: {
         display: 'flex',
         flexDirection: 'row',
-        width: screen.width
+        width: screen.width,
     },
     username: {
         fontWeight: 'bold',

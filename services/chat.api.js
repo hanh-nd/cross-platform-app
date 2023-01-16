@@ -10,9 +10,13 @@ export const getMessages = async (chatId) => {
 };
 
 export const getMessagesByFriend = async (friendId) => {
-    return await client.get(`${env.BASE_URL}/chats/getMessagesbyfriendId/${friendId}`);
+    return await client.get(
+        `${env.BASE_URL}/chats/getMessagesbyfriendId/${friendId}`,
+    );
 };
 
 export const deleteChat = async (chatId) => {
-    return await client.deleteChat(`${env.BASE_URL}/chats/deleteChat/${chatId}`);
+    return await client.deleteChat(
+        `${env.BASE_URL}/chats/deleteChat/${chatId}`,
+    );
 };

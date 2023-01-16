@@ -1,12 +1,13 @@
 import { useNavigation, useRoute } from '@react-navigation/native';
-import { Icon, Input } from '@rneui/themed';
+import { BottomSheet, Button, Icon, Input } from '@rneui/themed';
 import { Formik } from 'formik';
-import React, { useEffect, useRef } from 'react';
-import { FlatList, View } from 'react-native';
+import React, { useEffect, useRef, useState } from 'react';
+import { FlatList, Pressable, View } from 'react-native';
 import { useDispatch, useSelector } from 'react-redux';
 import { colors } from '../../../constants';
 import { PageName } from '../../../navigation/constants';
 import { SocketProvider } from '../../../plugins/socket';
+import { isAuthor } from '../../../utilities/User';
 import { selectLoginUser } from '../../auth/reducers/auth.reducer';
 import ConversationHeader from '../components/ConversationHeader';
 import Message from '../components/Message';
@@ -27,10 +28,11 @@ function ChatDetail(props) {
         blockers = [],
     } = route.params;
     const messageList = useSelector(selectMessageList);
+    const loginUser = useSelector(selectLoginUser);
     const dispatch = useDispatch();
-
+    const [selectedMessageIndex, setSelectedMessageIndex] = useState();
+    const [isShowMessageMenu, setIsShowMessageMenu] = useState(false);
     const messageListRef = useRef();
-
     const initialValues = {
         content: '',
     };
@@ -42,8 +44,10 @@ function ChatDetail(props) {
     }, []);
 
     useEffect(() => {
-        messageListRef.current.scrollToEnd();
-    }, [messageList])
+        setTimeout(() => {
+            messageListRef.current.scrollToEnd();
+        }, 100);
+    }, [messageList]);
 
     useEffect(() => {
         navigation.setOptions({
@@ -55,9 +59,9 @@ function ChatDetail(props) {
                     color={colors.grayBlue}
                     onPress={() => {
                         navigation.navigate({
-                            name: PageName.CHAT_PERSONAL, // TODo: FIx
+                            name: PageName.CHAT_PERSONAL,
                             params: {
-                                item: item,
+                                receiver,
                             },
                         });
                     }}
@@ -67,10 +71,24 @@ function ChatDetail(props) {
     }, []);
 
     const sendMessage = ({ content }, { resetForm }) => {
-        SocketProvider.emitChatMessage(receiver._id, content, chatId)
+        SocketProvider.emitChatMessage(receiver._id, content, chatId);
         dispatch(fetchMessageListByFriend(receiver._id));
         resetForm();
     };
+
+    const openMessageMenu = (id) => {
+        setSelectedMessageIndex(id);
+        setIsShowMessageMenu(true);
+    };
+
+    const recallMessage = () => {
+        if (selectedMessageIndex)
+            SocketProvider.emitRecallMessage(
+                receiver._id,
+                selectedMessageIndex,
+            );
+    };
+
     return (
         <View style={styles.messagingScreen}>
             <View style={styles.messageList}>
@@ -78,12 +96,20 @@ function ChatDetail(props) {
                     ref={messageListRef}
                     data={messageList}
                     showsVerticalScrollIndicator={false}
-                    renderItem={({ item }) => (
-                        <Message
-                            sender={item.senderId}
-                            content={item.content}
-                            time={item.time}
-                        />
+                    disableScrollViewPanResponder={true}
+                    renderItem={({ item, index }) => (
+                        <Pressable
+                            onLongPress={() => {
+                                if (isAuthor(item.senderId, loginUser))
+                                    openMessageMenu(index);
+                            }}
+                        >
+                            <Message
+                                sender={item.senderId}
+                                content={item.content}
+                                time={item.time}
+                            />
+                        </Pressable>
                     )}
                 />
             </View>
@@ -116,6 +142,12 @@ function ChatDetail(props) {
                     />
                 )}
             </Formik>
+            <BottomSheet
+                isVisible={isShowMessageMenu}
+                onBackdropPress={() => setIsShowMessageMenu(false)}
+            >
+                <Button title="Thu hồi" onPress={recallMessage}></Button>
+            </BottomSheet>
         </View>
     );
 }

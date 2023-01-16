@@ -2,12 +2,15 @@ import { useNavigation, useRoute } from '@react-navigation/native';
 import { Avatar, Icon, ListItem } from '@rneui/themed';
 import React, { useEffect } from 'react';
 import { StyleSheet, Text, TouchableHighlight, View } from 'react-native';
-import { colors } from '../../../constants';
+import { colors, env } from '../../../constants';
+import { PageName } from '../../../navigation/constants';
+import { getUserName } from '../../../utilities/User';
 
 const ChatPersonal = (props) => {
     const navigation = useNavigation();
     const route = useRoute();
-    const item = route.params.item;
+    const { receiver } = route.params;
+    const { navigate } = navigation;
     useEffect(() => {
         navigation.setOptions({
             title: '',
@@ -19,19 +22,42 @@ const ChatPersonal = (props) => {
             title: 'Trang cá nhân',
             iconName: 'account-circle',
             color: colors.grayBlue,
+            onPress: goToReceiverProfile,
         },
         {
             title: 'Chặn/ Bỏ chặn',
             iconName: 'block',
             color: colors.red,
+            onPress: goToReceiverProfile,
         },
     ];
+
+    const goToReceiverProfile = () => {
+        console.log('in here');
+        navigate({
+            name: PageName.FRIEND_PROFILE,
+            params: {
+                _id: receiver._id,
+            },
+        });
+    };
+
     return (
         <View style={{ flex: 1 }}>
             <View style={styles.container}>
-                <Avatar size={150} rounded source={{ uri: item.imgLink }} />
+                <Avatar
+                    rounded
+                    size={150}
+                    source={
+                        receiver?.avatar
+                            ? {
+                                  uri: `${env.FILE_SERVICE_USER}/${receiver?.avatar.fileName}`,
+                              }
+                            : require('assets/default_avt.jpg')
+                    }
+                />
                 <Text style={{ fontWeight: 'bold', fontSize: 30 }}>
-                    {item.namePerson}
+                    {getUserName(receiver)}
                 </Text>
             </View>
             <View style={{ flex: 1 }}>
@@ -40,7 +66,7 @@ const ChatPersonal = (props) => {
                         <TouchableHighlight
                             key={index}
                             underlayColor="#DDDDDD"
-                            onPress={() => {}}
+                            onPress={element.onPress}
                         >
                             <ListItem
                                 key={index}
