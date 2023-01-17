@@ -37,7 +37,7 @@ function Friends({ navigate }) {
                 getUserName(e).toLowerCase().includes(keySearch.toLowerCase()),
             ),
         );
-    }, [keySearch]);
+    }, [keySearch, listFriend]);
 
     const sendMessage = async () => {
         const response = await getFriendProfile(targetId);
