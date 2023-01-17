@@ -32,7 +32,7 @@ function Home(props) {
     const backAction = async () => {
         BackHandler.exitApp();
     };
-    
+
     useEffect(() => {
         navigation.addListener('tabPress', (e) => {
             scrollRef.current.scrollTo({ animated: true, y: 0 });
@@ -49,10 +49,7 @@ function Home(props) {
                 ref={scrollRef}
                 horizontal={false}
                 refreshControl={
-                    <RefreshControl
-                        refreshing={false}
-                        onRefresh={onRefresh}
-                    />
+                    <RefreshControl refreshing={false} onRefresh={onRefresh} />
                 }
             >
                 <View style={styles.createPost}>

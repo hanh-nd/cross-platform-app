@@ -1,6 +1,11 @@
 import { env } from '@constants';
 import {
-    Avatar, BottomSheet, Icon, Input, ListItem, Text
+    Avatar,
+    BottomSheet,
+    Icon,
+    Input,
+    ListItem,
+    Text,
 } from '@rneui/themed';
 import { debounce } from 'lodash';
 import { PageName } from 'navigation/constants';
@@ -15,7 +20,7 @@ import {
     deleteFriend,
     getListFriends,
     getUserProfile,
-    selectFriendList
+    selectFriendList,
 } from '../../reducers/friend.reducer';
 
 function Friends({ navigate }) {
@@ -44,7 +49,6 @@ function Friends({ navigate }) {
                 },
             });
         }
-        
     };
 
     const removeFriend = async () => {

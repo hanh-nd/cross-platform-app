@@ -8,6 +8,10 @@ import {
 import { useDispatch, useSelector } from 'react-redux';
 import { screen } from '../../../constants';
 import { SocketProvider } from '../../../plugins/socket';
+import {
+    generateNotificationDetail,
+    schedulePushNotification,
+} from '../../../utilities/Notification';
 import NotificationItem from '../components/NotificationItem';
 import {
     fetchNotificationList,
@@ -15,6 +19,7 @@ import {
     selectNotificationList,
     selectUnreadNotificationCount,
 } from '../reducers/notification.reducer';
+import dayjs from '../../../plugins/dayjs';
 
 function NotificationPage(props) {
     const { navigation } = props;
@@ -38,7 +43,13 @@ function NotificationPage(props) {
     useEffect(() => {
         dispatch(fetchNotificationList());
         setTimeout(() => {
-            SocketProvider.onNotification(({ sender, module, action }) => {
+            SocketProvider.onNotification((notification) => {
+                const { sender, action, module, updatedAt } = notification;
+                schedulePushNotification(
+                    generateNotificationDetail(sender, action, module),
+                    dayjs(updatedAt).fmHHmmDDMMYYYY(),
+                    notification,
+                );
                 dispatch(fetchNotificationList());
             });
         }, 100);
