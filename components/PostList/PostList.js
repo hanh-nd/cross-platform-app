@@ -1,30 +1,17 @@
 import { Post } from '@/components';
 import { screen } from '@/constants';
-import { useEffect, useState } from 'react';
 import { FlatList, Image, View } from 'react-native';
 import { useSelector } from 'react-redux';
-import LocalCache from '../../plugins/local-cache';
-import {
-    selectIsLoading,
-    selectPostList,
-} from '../../screens/home/reducers/home.reducer';
+import { selectPostList } from '../../screens/home/reducers/home.reducer';
 
 function PostList(props) {
     const postList = useSelector(selectPostList);
-    const isLoading = useSelector(selectIsLoading);
-    const [posts, setPosts] = useState([]);
-
-    useEffect(() => {
-        LocalCache.getPostList((l) => {
-            setPosts(l);
-        });
-    }, []);
 
     return (
         <View style={styles.container}>
             {postList.length ? (
                 <FlatList
-                    data={isLoading ? posts : postList}
+                    data={postList}
                     ItemSeparatorComponent={() => (
                         <View style={{ height: 16 }} />
                     )}
