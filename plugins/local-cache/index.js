@@ -13,7 +13,6 @@ const LocalCache = {
     },
 
     setPostList: (postList) => {
-        console.log('in here', postList);
         AsyncStorage.setItem('postList', JSON.stringify(postList));
     },
 };

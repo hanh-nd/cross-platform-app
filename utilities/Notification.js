@@ -1,3 +1,4 @@
+import * as Notifications from 'expo-notifications';
 import Toast from 'react-native-toast-message';
 import { getUserName } from './User';
 
@@ -65,4 +66,16 @@ export const generateContent = (module, target) => {
     }
 
     return content;
+};
+
+export const schedulePushNotification = async (title, body, notification) => {
+    await Notifications.scheduleNotificationAsync({
+        content: {
+            title,
+            body,
+            data: { notification },
+            sound: 'noti.wav',
+        },
+        trigger: { seconds: 2 },
+    });
 };

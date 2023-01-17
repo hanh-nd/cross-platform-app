@@ -4,7 +4,10 @@ import { useEffect, useState } from 'react';
 import { FlatList, Image, View } from 'react-native';
 import { useSelector } from 'react-redux';
 import LocalCache from '../../plugins/local-cache';
-import { selectIsLoading, selectPostList } from '../../screens/home/reducers/home.reducer';
+import {
+    selectIsLoading,
+    selectPostList,
+} from '../../screens/home/reducers/home.reducer';
 
 function PostList(props) {
     const postList = useSelector(selectPostList);
@@ -12,9 +15,10 @@ function PostList(props) {
     const [posts, setPosts] = useState([]);
 
     useEffect(() => {
-        LocalCache.getPostList((l) => {setPosts(l)});
+        LocalCache.getPostList((l) => {
+            setPosts(l);
+        });
     }, []);
-
 
     return (
         <View style={styles.container}>
