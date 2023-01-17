@@ -2,7 +2,7 @@ import React, { useCallback } from 'react';
 import { FlatList, View } from 'react-native';
 import { Text, Icon, Button, Avatar } from '@rneui/themed';
 import { PageName } from 'navigation/constants';
-import { colors, screen } from '@constants';
+import { env, colors, screen } from '@constants';
 import { useDispatch, useSelector } from 'react-redux';
 import {
     listRequest,

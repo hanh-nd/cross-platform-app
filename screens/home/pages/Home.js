@@ -50,7 +50,7 @@ function Home(props) {
                 horizontal={false}
                 refreshControl={
                     <RefreshControl
-                        refreshing={isLoading}
+                        refreshing={false}
                         onRefresh={onRefresh}
                     />
                 }
