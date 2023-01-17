@@ -1,20 +1,27 @@
 import { env } from '@constants';
 import { Avatar, BottomSheet, Divider, Icon, ListItem } from '@rneui/themed';
+import { debounce } from 'lodash';
 import { useEffect, useState } from 'react';
 import { ScrollView, StyleSheet, TextInput, View } from 'react-native';
+import { RefreshControl } from 'react-native-gesture-handler';
 import { useDispatch, useSelector } from 'react-redux';
 import { SocketProvider } from '../../../plugins/socket';
+import { deleteChat } from '../../../services/chat.api';
+import { showErrorMessage } from '../../../utilities/Notification';
 import { selectLoginUser } from '../../auth/reducers/auth.reducer';
 import ConversationItem from '../components/ConversationItem';
 import {
     fetchChatList,
     fetchMessageListByFriend,
     selectChatList,
+    setFilter,
 } from '../reducers/chat.reducer';
 
 function Chat(props) {
     const dispatch = useDispatch();
     const [isVisible, setIsVisible] = useState(false);
+    const [selectedChat, setSelectedChat] = useState();
+    const [selectedReceiver, setSelectedReceiver] = useState();
     const chatList = useSelector(selectChatList);
     const loginUser = useSelector(selectLoginUser);
 
@@ -23,7 +30,8 @@ function Chat(props) {
         setTimeout(() => {
             SocketProvider.onMessage(
                 ({ _id, chatId, content, receiverId, senderId, time }) => {
-                    dispatch(fetchMessageListByFriend(senderId));
+                    const chat = chatList.find((c) => c.chatId === chatId);
+                    dispatch(fetchMessageListByFriend(chat.friend._id));
                     dispatch(fetchChatList());
                 },
             );
@@ -31,24 +39,79 @@ function Chat(props) {
             SocketProvider.onRecallMessage((msg) => {
                 const { _id, chatId, content, receiverId, senderId, time } =
                     msg.data;
-                dispatch(fetchMessageListByFriend(senderId));
+                const chat = chatList.find((c) => c.chatId === chatId);
+                dispatch(fetchMessageListByFriend(chat.friend._id));
+                dispatch(fetchChatList());
+            });
+
+            SocketProvider.onBlockers((msg) => {
                 dispatch(fetchChatList());
             });
         }, 100);
     }, []);
 
+    const onDeleteChat = async () => {
+        if (selectedChat !== undefined) {
+            const response = await deleteChat(selectedChat.chatId);
+            if (response?.success) {
+                dispatch(fetchChatList());
+                setIsVisible(false);
+                return;
+            }
+
+            showErrorMessage('Có lỗi xảy ra khi xóa đoạn chat!');
+        }
+        setIsVisible(false);
+    };
+
+    const onBlockChat = async () => {
+        if (selectedChat !== undefined) {
+            SocketProvider.emitBlockers(
+                loginUser._id,
+                selectedChat && selectedChat.blockers.includes(loginUser._id)
+                    ? 'unblock'
+                    : 'block',
+                selectedChat.chatId,
+            );
+        }
+        setIsVisible(false);
+    };
+
+    const onRefresh = () => {
+        dispatch(fetchChatList());
+    };
+
+    const onChangeSearchText = (text) => {
+        dispatch(setFilter(text ?? ''));
+    };
+
+    const onChangeSearchTextDebounce = debounce(
+        (text) => onChangeSearchText(text),
+        300,
+    );
+
     const list = [
         {
             title: 'Xóa',
             iconName: 'delete',
+            onPress: onDeleteChat,
         },
         {
-            title: 'Chặn',
+            title:
+                selectedChat && selectedChat.blockers.includes(loginUser._id)
+                    ? 'Bỏ Chặn'
+                    : 'Chặn',
             iconName: 'block',
+            onPress: onBlockChat,
         },
     ];
+
     return (
-        <ScrollView>
+        <ScrollView
+            refreshControl={
+                <RefreshControl refreshing={false} onRefresh={onRefresh} />
+            }
+        >
             <View style={styles.inputHeader}>
                 <View style={{ flex: 0.2, paddingHorizontal: 10 }}>
                     <Avatar
@@ -68,19 +131,19 @@ function Chat(props) {
                         keyboardType="default"
                         placeholder="Tìm kiếm"
                         style={styles.inputSearch}
+                        onChangeText={onChangeSearchTextDebounce}
                     />
                 </View>
             </View>
             <Divider width={1} style={{ marginTop: 5, marginBottom: 20 }} />
             {chatList
                 ? chatList.map((chat) => {
-                      const { friend, seen, lastMessage } = chat;
                       return (
                           <ConversationItem
                               key={Math.random()}
-                              receiver={friend}
-                              lastMessage={lastMessage.content}
+                              chat={chat}
                               setIsVisibleBlockSheet={setIsVisible}
+                              setSelectedChat={setSelectedChat}
                           />
                       );
                   })

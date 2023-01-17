@@ -1,29 +1,50 @@
+import { useNavigation } from '@react-navigation/native';
 import { Avatar } from '@rneui/themed';
 import React from 'react';
-import { StyleSheet, Text, View } from 'react-native';
+import { Pressable, StyleSheet, Text, View } from 'react-native';
+import { useDispatch } from 'react-redux';
 import { env } from '../../../constants';
+import { PageName } from '../../../navigation/constants';
 import { getUserName } from '../../../utilities/User';
+import { getUserProfile } from '../../profile/reducers/friend.reducer';
 
 const ConversationHeader = (props) => {
     const { user } = props;
+    const navigation = useNavigation();
+    const dispatch = useDispatch();
 
+    const goToFriendProfile = async () => {
+        const response = await dispatch(getUserProfile(user?._id)).unwrap();
+
+        if (response?.success) {
+            navigation.navigate({
+                name: PageName.FRIEND_PROFILE,
+                params: user,
+            });
+            return;
+        }
+    };
     return (
         <View style={styles.conversationItem}>
             <View style={{ flex: 0.5 }}>
-                <Avatar
-                    rounded
-                    size={40}
-                    source={
-                        user?.avatar
-                            ? {
-                                  uri: `${env.FILE_SERVICE_USER}/${user?.avatar.fileName}`,
-                              }
-                            : require('assets/default_avt.jpg')
-                    }
-                />
+                <Pressable onPress={() => goToFriendProfile()}>
+                    <Avatar
+                        rounded
+                        size={40}
+                        source={
+                            user?.avatar
+                                ? {
+                                      uri: `${env.FILE_SERVICE_USER}/${user?.avatar.fileName}`,
+                                  }
+                                : require('assets/default_avt.jpg')
+                        }
+                    />
+                </Pressable>
             </View>
             <View style={{ flex: 3 }}>
-                <Text style={styles.namePerson}>{getUserName(user)}</Text>
+                <Pressable onPress={() => goToFriendProfile()}>
+                    <Text style={styles.namePerson}>{getUserName(user)}</Text>
+                </Pressable>
             </View>
         </View>
     );

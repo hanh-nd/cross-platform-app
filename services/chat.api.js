@@ -16,7 +16,7 @@ export const getMessagesByFriend = async (friendId) => {
 };
 
 export const deleteChat = async (chatId) => {
-    return await client.deleteChat(
+    return await client.delete(
         `${env.BASE_URL}/chats/deleteChat/${chatId}`,
     );
 };

@@ -1,7 +1,6 @@
 import { colors, env, screen, status } from '@constants';
-import { useFocusEffect } from '@react-navigation/native';
 import { Avatar, Button, Divider, Icon, Image, Text } from '@rneui/themed';
-import React, { useCallback, useEffect } from 'react';
+import React, { useEffect } from 'react';
 import { RefreshControl, ScrollView, View } from 'react-native';
 import { useDispatch, useSelector } from 'react-redux';
 import { showErrorMessage, showSuccessMessage } from 'utilities/Notification';
@@ -9,11 +8,14 @@ import { getUserName } from 'utilities/User';
 import { PageName } from '../../../navigation/constants';
 import { SocketProvider } from '../../../plugins/socket';
 import {
+    selectChatList,
+    setSelectedChatDetail,
+} from '../../chat/reducers/chat.reducer';
+import {
     acceptRequestFriend,
     blockUserDiarySlice,
     cancelRequestFriend,
     deleteFriend,
-    getFriendLength,
     getStatusFriend,
     getUserProfile,
     selectFriendLength,
@@ -31,6 +33,7 @@ function FriendProfile(props) {
     const friend = useSelector(selectFriendProfile);
     const refreshing = useSelector(selectIsLoading);
     const userFriendLength = useSelector(selectFriendLength);
+    const chatList = useSelector(selectChatList);
 
     useEffect(() => {
         dispatch(getUserProfile(friendId));
@@ -180,6 +183,8 @@ function FriendProfile(props) {
     };
 
     const openChatDetailScreen = () => {
+        const chat = chatList.find((c) => c.friend._id === friend._id);
+        dispatch(setSelectedChatDetail(chat));
         navigate({
             name: PageName.CHAT_DETAIL,
             params: {

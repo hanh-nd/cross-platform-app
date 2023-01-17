@@ -2,22 +2,31 @@ import { useNavigation } from '@react-navigation/native';
 import { Avatar, Divider, Icon } from '@rneui/themed';
 import React from 'react';
 import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { useDispatch } from 'react-redux';
 import { env } from '../../../constants';
 import { PageName } from '../../../navigation/constants';
 import { getUserName } from '../../../utilities/User';
+import { setSelectedChatDetail } from '../reducers/chat.reducer';
 
 function ConversationItem(props) {
-    const { receiver, lastMessage, setIsVisibleBlockSheet } = props;
+    const {
+        chat,
+        setIsVisibleBlockSheet,
+        setSelectedChat,
+    } = props;
+    const { chatId, friend: receiver, lastMessage } = chat;
     const { navigate } = useNavigation();
+    const dispatch = useDispatch();
 
     return (
         <TouchableOpacity
             onPress={() => {
+                dispatch(setSelectedChatDetail(chat))
                 navigate({
                     name: PageName.CHAT_DETAIL,
                     params: {
                         receiver,
-                    },
+                    }
                 });
             }}
         >
@@ -44,7 +53,7 @@ function ConversationItem(props) {
                         numberOfLines={1}
                         style={styles.lastMessage}
                     >
-                        {lastMessage}
+                        {lastMessage.content}
                     </Text>
                     <Divider width={1} />
                 </View>
@@ -54,6 +63,7 @@ function ConversationItem(props) {
                         name="ellipsis-h"
                         onPress={() => {
                             setIsVisibleBlockSheet(true);
+                            setSelectedChat(chat);
                         }}
                         style={{ padding: 5, borderRadius: 50 }}
                     />

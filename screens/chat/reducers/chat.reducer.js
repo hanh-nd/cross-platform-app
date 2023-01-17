@@ -1,14 +1,18 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
+import { isEmpty } from 'lodash';
 import {
     getChats,
     getMessages,
     getMessagesByFriend,
 } from '../../../services/chat.api';
+import { getUserName } from '../../../utilities/User';
 
 const initialState = {
     chatList: [],
     messageList: [],
     isLoading: false,
+    filter: '',
+    selectedChatDetail: {},
 };
 
 export const fetchChatList = createAsyncThunk(
@@ -35,7 +39,14 @@ export const fetchMessageListByFriend = createAsyncThunk(
 export const chatSlice = createSlice({
     name: 'chat',
     initialState,
-    reducers: {},
+    reducers: {
+        setFilter: (state, action) => {
+            state.filter = action.payload;
+        },
+        setSelectedChatDetail: (state, action) => {
+            state.selectedChatDetail = action.payload;
+        }
+    },
     extraReducers: (builder) => {
         builder.addCase(fetchChatList.pending, (state, action) => {
             state.isLoading = true;
@@ -61,8 +72,17 @@ export const chatSlice = createSlice({
     },
 });
 
-export const selectChatList = (state) => state.chat.chatList;
+export const { setFilter, setSelectedChatDetail } = chatSlice.actions;
+
+export const selectChatList = (state) =>
+    isEmpty(state.chat.filter)
+        ? state.chat.chatList
+        : state.chat.chatList.filter((chat) => {
+              const regex = new RegExp(state.chat.filter, 'i');
+              return regex.test(getUserName(chat.friend));
+          });
 export const selectMessageList = (state) => state.chat.messageList;
 export const selectIsLoading = (state) => state.chat.isLoading;
+export const selectSelectedChatDetail = (state) => state.chat.selectedChatDetail;
 
 export default chatSlice.reducer;
