@@ -1,4 +1,5 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
+import LocalCache from '../../../plugins/local-cache';
 import {
     getPosts,
     createPost,
@@ -39,6 +40,7 @@ export const homeSlice = createSlice({
         builder.addCase(fetchPostList.fulfilled, (state, action) => {
             state.isLoading = false;
             state.postList = action.payload?.data || [];
+            LocalCache.setPostList(action.payload?.data || [])
         });
     },
 });
