@@ -12,8 +12,8 @@ const initialState = {
 
 export const fetchPostList = createAsyncThunk(
     'home/fetchPostList',
-    async () => {
-        return await getPosts();
+    async (userId) => {
+        return await getPosts(userId);
     },
 );
 

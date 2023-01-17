@@ -1,24 +1,25 @@
+import { PostList } from '@/components';
+import { colors, env, screen } from '@constants';
+import { useFocusEffect } from '@react-navigation/native';
 import { Avatar, Button, Divider, Icon, Image, Text } from '@rneui/themed';
-import { colors, screen } from '@constants';
 import { PageName } from 'navigation/constants';
-import React, { useCallback } from 'react';
+import React, { useCallback, useEffect } from 'react';
 import { RefreshControl, ScrollView, View } from 'react-native';
 import { useDispatch, useSelector } from 'react-redux';
+import { fetchSelfDetail } from 'screens/auth/reducers/auth.reducer';
+import CreatePost from 'screens/home/components/CreatePost';
+import { showErrorMessage } from 'utilities/Notification';
 import { getUserName } from 'utilities/User';
 import {
     selectIsLoading,
     selectLoginUser,
 } from '../../auth/reducers/auth.reducer';
-import { fetchSelfDetail } from 'screens/auth/reducers/auth.reducer';
-import { env } from '@constants';
+import { fetchPostList } from '../../home/reducers/home.reducer';
 import {
     getListFriends,
     getUserProfile,
     selectFriendList,
 } from '../reducers/friend.reducer';
-import CreatePost from 'screens/home/components/CreatePost';
-import { useFocusEffect } from '@react-navigation/native';
-import { showErrorMessage } from 'utilities/Notification';
 
 function Profile(props) {
     const loginUser = useSelector(selectLoginUser);
@@ -33,6 +34,10 @@ function Profile(props) {
         dispatch(fetchSelfDetail());
         dispatch(getListFriends());
     }, []);
+
+    useEffect(() => {
+        dispatch(fetchPostList(loginUser?._id));
+    }, [loginUser]);
 
     useFocusEffect(
         useCallback(() => {
@@ -183,6 +188,9 @@ function Profile(props) {
                 </Text>
                 <CreatePost />
             </View>
+            <ScrollView horizontal={true}>
+                <PostList />
+            </ScrollView>
         </ScrollView>
     );
 }

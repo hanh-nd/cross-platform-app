@@ -1,3 +1,4 @@
+import { PostList } from '@/components';
 import { colors, env, screen, status } from '@constants';
 import { Avatar, Button, Divider, Icon, Image, Text } from '@rneui/themed';
 import React, { useEffect } from 'react';
@@ -11,6 +12,7 @@ import {
     selectChatList,
     setSelectedChatDetail,
 } from '../../chat/reducers/chat.reducer';
+import { fetchPostList } from '../../home/reducers/home.reducer';
 import {
     acceptRequestFriend,
     blockUserDiarySlice,
@@ -38,6 +40,7 @@ function FriendProfile(props) {
     useEffect(() => {
         dispatch(getUserProfile(friendId));
         dispatch(getStatusFriend(friendId));
+        dispatch(fetchPostList(friendId));
     }, [friendId]);
 
     const onRefresh = React.useCallback(() => {
@@ -273,6 +276,9 @@ function FriendProfile(props) {
                 color={colors.gray}
                 style={{ marginVertical: 14 }}
             />
+            <ScrollView horizontal={true}>
+                <PostList />
+            </ScrollView>
         </ScrollView>
     );
 }
