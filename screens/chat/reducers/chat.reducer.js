@@ -45,7 +45,7 @@ export const chatSlice = createSlice({
         },
         setSelectedChatDetail: (state, action) => {
             state.selectedChatDetail = action.payload;
-        }
+        },
     },
     extraReducers: (builder) => {
         builder.addCase(fetchChatList.pending, (state, action) => {
@@ -83,6 +83,7 @@ export const selectChatList = (state) =>
           });
 export const selectMessageList = (state) => state.chat.messageList;
 export const selectIsLoading = (state) => state.chat.isLoading;
-export const selectSelectedChatDetail = (state) => state.chat.selectedChatDetail;
+export const selectSelectedChatDetail = (state) =>
+    state.chat.selectedChatDetail;
 
 export default chatSlice.reducer;

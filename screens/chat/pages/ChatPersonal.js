@@ -8,7 +8,12 @@ import { PageName } from '../../../navigation/constants';
 import { SocketProvider } from '../../../plugins/socket';
 import { getUserName } from '../../../utilities/User';
 import { selectLoginUser } from '../../auth/reducers/auth.reducer';
-import { fetchChatList, selectChatList, selectSelectedChatDetail, setSelectedChatDetail } from '../reducers/chat.reducer';
+import {
+    fetchChatList,
+    selectChatList,
+    selectSelectedChatDetail,
+    setSelectedChatDetail,
+} from '../reducers/chat.reducer';
 
 const ChatPersonal = (props) => {
     const navigation = useNavigation();
@@ -52,11 +57,11 @@ const ChatPersonal = (props) => {
     };
 
     useEffect(() => {
-        const chat = chatList.find(c => c.chatId === chatId)
+        const chat = chatList.find((c) => c.chatId === chatId);
         if (chat) {
-            dispatch(setSelectedChatDetail(chat))
+            dispatch(setSelectedChatDetail(chat));
         }
-    }, [chatList])
+    }, [chatList]);
 
     const list = [
         {

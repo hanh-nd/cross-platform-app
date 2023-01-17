@@ -9,11 +9,7 @@ import { getUserName } from '../../../utilities/User';
 import { setSelectedChatDetail } from '../reducers/chat.reducer';
 
 function ConversationItem(props) {
-    const {
-        chat,
-        setIsVisibleBlockSheet,
-        setSelectedChat,
-    } = props;
+    const { chat, setIsVisibleBlockSheet, setSelectedChat } = props;
     const { chatId, friend: receiver, lastMessage } = chat;
     const { navigate } = useNavigation();
     const dispatch = useDispatch();
@@ -21,12 +17,12 @@ function ConversationItem(props) {
     return (
         <TouchableOpacity
             onPress={() => {
-                dispatch(setSelectedChatDetail(chat))
+                dispatch(setSelectedChatDetail(chat));
                 navigate({
                     name: PageName.CHAT_DETAIL,
                     params: {
                         receiver,
-                    }
+                    },
                 });
             }}
         >
