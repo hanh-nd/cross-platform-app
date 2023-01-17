@@ -39,7 +39,7 @@ function PostDetailPage(props) {
             SocketProvider.onUpdatePost(({ postId }) => {
                 _getDetail(postId);
             });
-        }, 100)
+        }, 100);
         return () => {
             SocketProvider.emitRequestUnfollowPost(postId);
         };

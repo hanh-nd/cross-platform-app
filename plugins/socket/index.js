@@ -16,11 +16,13 @@ export const SocketProvider = {
         });
     },
 
-    emitChatMessage: async (receiverId, chatId) => {
+    emitChatMessage: async (receiverId, content, chatId) => {
         const token = await AsyncStorage.getItem('accessToken');
         _socket.emit('chatmessage', {
             token,
             receiverId,
+            content,
+            chatId,
         });
     },
 
@@ -34,7 +36,7 @@ export const SocketProvider = {
         });
     },
 
-    emitRecallMessage: async (receiverId, chatId, index) => {
+    emitRecallMessage: async (receiverId, index, chatId) => {
         const token = await AsyncStorage.getItem('accessToken');
         _socket.emit('recallmessage', {
             token,
@@ -95,7 +97,6 @@ export const SocketProvider = {
         });
     },
 
-
     emitNotifyUpdatePost: async (postId) => {
         const token = await AsyncStorage.getItem('accessToken');
         _socket.emit('notify_update_post', {
@@ -143,8 +144,8 @@ export const SocketProvider = {
     onUpdatePost: (callback) => {
         _socket.on('update_post', (msg) => {
             if (callback) {
-                callback(msg)
+                callback(msg);
             }
-        })
-    }
+        });
+    },
 };

@@ -1,261 +1,196 @@
 import { useNavigation, useRoute } from '@react-navigation/native';
-import { Avatar, BottomSheet, Icon, ListItem } from '@rneui/themed';
-import React, { useEffect, useState } from 'react';
-import { TextInput } from 'react-native';
-import {
-    Button,
-    Pressable,
-    Text,
-    View,
-    StyleSheet,
-    FlatList,
-} from 'react-native';
-import { useSelector } from 'react-redux';
+import { BottomSheet, Button, Icon, Input } from '@rneui/themed';
+import { Formik } from 'formik';
+import { isEmpty } from 'lodash';
+import React, { useEffect, useRef, useState } from 'react';
+import { FlatList, Pressable, Text, View } from 'react-native';
+import { useDispatch, useSelector } from 'react-redux';
 import { colors } from '../../../constants';
 import { PageName } from '../../../navigation/constants';
+import { SocketProvider } from '../../../plugins/socket';
+import { isAuthor } from '../../../utilities/User';
 import { selectLoginUser } from '../../auth/reducers/auth.reducer';
 import ConversationHeader from '../components/ConversationHeader';
 import Message from '../components/Message';
+import {
+    fetchMessageListByFriend,
+    selectMessageList,
+    selectSelectedChatDetail,
+} from '../reducers/chat.reducer';
 
 function ChatDetail(props) {
-    const { params } = props;
     const navigation = useNavigation();
     const route = useRoute();
-    const item = route.params.item;
+    const { receiver } = route.params;
+    const selectedChatDetail = useSelector(selectSelectedChatDetail);
+    const messageList = useSelector(selectMessageList);
+    const loginUser = useSelector(selectLoginUser);
+    const dispatch = useDispatch();
+    const [selectedMessageIndex, setSelectedMessageIndex] = useState();
+    const [isShowMessageMenu, setIsShowMessageMenu] = useState(false);
+    const messageListRef = useRef();
+    const initialValues = {
+        content: '',
+    };
 
     useEffect(() => {
-        navigation.setOptions({
-            headerTitle: () => <ConversationHeader item={item} />,
-            headerRight: () => (
-                <Icon
-                    type="font-awesome"
-                    name="info-circle"
-                    color={colors.grayBlue}
-                    onPress={() => {
-                        navigation.navigate({
-                            name: PageName.CHAT_PERSONAL,
-                            params: {
-                                item: item,
-                            },
-                        });
-                    }}
-                />
-            ),
-        });
-    }, []);
+        if (!isEmpty(receiver)) {
+            dispatch(fetchMessageListByFriend(receiver._id));
+        }
+    }, [receiver]);
 
-    const loginUser = useSelector(selectLoginUser);
-    const [chatMessages, setChatMessages] = useState([
-        {
-            id: Math.random(),
-            text: 'Xin chào',
-            time: '07:50',
-            userId: '6391ee3b20e93c474ca05718',
-        },
-        {
-            id: Math.random(),
-            text: 'Xin chào, cậu khỏe không?',
-            time: '08:50',
-            userId: '6391ee3b20e93c474ca05719',
-        },
-        {
-            id: Math.random(),
-            text: 'Xin chào',
-            time: '07:50',
-            userId: '6391ee3b20e93c474ca05718',
-        },
-        {
-            id: Math.random(),
-            text: 'Xin chào, cậu khỏe không?',
-            time: '08:50',
-            userId: '6391ee3b20e93c474ca05719',
-        },
-        {
-            id: Math.random(),
-            text: 'Xin chào',
-            time: '07:50',
-            userId: '6391ee3b20e93c474ca05718',
-        },
-        {
-            id: Math.random(),
-            text: 'Xin chào, cậu khỏe không?',
-            time: '08:50',
-            userId: '6391ee3b20e93c474ca05719',
-        },
-        {
-            id: Math.random(),
-            text: 'Xin chào',
-            time: '07:50',
-            userId: '6391ee3b20e93c474ca05718',
-        },
-        {
-            id: Math.random(),
-            text: 'Xin chào, cậu khỏe không?',
-            time: '08:50',
-            userId: '6391ee3b20e93c474ca05719',
-        },
-        {
-            id: Math.random(),
-            text: 'Xin chào',
-            time: '07:50',
-            userId: '6391ee3b20e93c474ca05718',
-        },
-        {
-            id: Math.random(),
-            text: 'Xin chào, cậu khỏe không?',
-            time: '08:50',
-            userId: '6391ee3b20e93c474ca05719',
-        },
-        {
-            id: Math.random(),
-            text: 'Xin chào',
-            time: '07:50',
-            userId: '6391ee3b20e93c474ca05718',
-        },
-        {
-            id: Math.random(),
-            text: 'Xin chào, cậu khỏe không?',
-            time: '08:50',
-            userId: '6391ee3b20e93c474ca05719',
-        },
-        {
-            id: Math.random(),
-            text: 'Xin chào',
-            time: '07:50',
-            userId: '6391ee3b20e93c474ca05718',
-        },
-        {
-            id: Math.random(),
-            text: 'Xin chào, cậu khỏe không?',
-            time: '08:50',
-            userId: '6391ee3b20e93c474ca05719',
-        },
-        {
-            id: Math.random(),
-            text: 'Xin chào',
-            time: '07:50',
-            userId: '6391ee3b20e93c474ca05718',
-        },
-        {
-            id: Math.random(),
-            text: 'Xin chào, cậu khỏe không?',
-            time: '08:50',
-            userId: '6391ee3b20e93c474ca05719',
-        },
-        {
-            id: Math.random(),
-            text: 'Xin chào',
-            time: '07:50',
-            userId: '6391ee3b20e93c474ca05718',
-        },
-        {
-            id: Math.random(),
-            text: 'Xin chào, cậu khỏe không?',
-            time: '08:50',
-            userId: '6391ee3b20e93c474ca05719',
-        },
-        {
-            id: Math.random(),
-            text: 'Xin chào',
-            time: '07:50',
-            userId: '6391ee3b20e93c474ca05718',
-        },
-        {
-            id: Math.random(),
-            text: 'Xin chào, cậu khỏe không?',
-            time: '08:50',
-            userId: '6391ee3b20e93c474ca05719',
-        },
-        {
-            id: Math.random(),
-            text: 'Xin chào',
-            time: '07:50',
-            userId: '6391ee3b20e93c474ca05718',
-        },
-    ]);
-    const [message, setMessage] = useState('');
-    const [user, setUser] = useState('');
-    const handleNewMessage = () => {
-        const hour =
-            new Date().getHours() < 10
-                ? `0${new Date().getHours()}`
-                : `${new Date().getHours()}`;
+    useEffect(() => {
+        setTimeout(() => {
+            messageListRef.current.scrollToEnd();
+        }, 100);
+    }, [messageList]);
 
-        const mins =
-            new Date().getMinutes() < 10
-                ? `0${new Date().getMinutes()}`
-                : `${new Date().getMinutes()}`;
+    useEffect(() => {
+        if (!isEmpty(receiver)) {
+            navigation.setOptions({
+                headerTitle: () => <ConversationHeader user={receiver} />,
+                headerRight: () => (
+                    <Icon
+                        type="font-awesome"
+                        name="info-circle"
+                        color={colors.grayBlue}
+                        onPress={() => {
+                            navigation.navigate({
+                                name: PageName.CHAT_PERSONAL,
+                            });
+                        }}
+                    />
+                ),
+            });
+        }
+    }, [receiver]);
+
+    const sendMessage = ({ content }, { resetForm }) => {
+        SocketProvider.emitChatMessage(
+            receiver?._id,
+            content,
+            selectedChatDetail?.chatId,
+        );
+        dispatch(fetchMessageListByFriend(receiver?._id));
+        resetForm();
     };
+
+    const openMessageMenu = (id) => {
+        if (
+            !(selectedChatDetail?.blockers || []).includes(loginUser._id) &&
+            !(selectedChatDetail?.blockers || []).includes(receiver?._id)
+        ) {
+            setSelectedMessageIndex(id);
+            setIsShowMessageMenu(true);
+        }
+    };
+
+    const recallMessage = () => {
+        if (selectedMessageIndex !== undefined)
+            SocketProvider.emitRecallMessage(
+                receiver?._id,
+                selectedMessageIndex,
+            );
+    };
+
     return (
         <View style={styles.messagingScreen}>
-            <View
-                style={[
-                    styles.messagingScreen,
-                    { paddingVertical: 15, paddingHorizontal: 10 },
-                ]}
+            <View style={styles.messageList}>
+                <FlatList
+                    ref={messageListRef}
+                    data={messageList}
+                    showsVerticalScrollIndicator={false}
+                    disableScrollViewPanResponder={true}
+                    renderItem={({ item, index }) => (
+                        <Pressable
+                            onLongPress={() => {
+                                if (isAuthor(item.senderId, loginUser))
+                                    openMessageMenu(index);
+                            }}
+                        >
+                            <Message
+                                sender={item.senderId}
+                                content={item.content}
+                                time={item.time}
+                            />
+                        </Pressable>
+                    )}
+                />
+            </View>
+            {(selectedChatDetail?.blockers || []).includes(loginUser._id) ? (
+                <Text style={styles.blockNotification}>
+                    Bạn đã chặn người này
+                </Text>
+            ) : (selectedChatDetail?.blockers || []).includes(receiver?._id) ? (
+                <Text style={styles.blockNotification}>
+                    Bạn không thể trả lời cuộc trò chuyện do đã bị chặn
+                </Text>
+            ) : (
+                <Formik
+                    initialValues={initialValues}
+                    onSubmit={(values, { resetForm }) => {
+                        sendMessage(values, { resetForm });
+                    }}
+                >
+                    {({ handleChange, handleSubmit, values, isValid }) => (
+                        <Input
+                            name="content"
+                            inputContainerStyle={styles.messagingInputContainer}
+                            inputStyle={styles.messagingInput}
+                            renderErrorMessage={false}
+                            placeholder="Nhập tin nhắn"
+                            multiline
+                            onChangeText={handleChange('content')}
+                            value={values.content}
+                            rightIcon={
+                                <Icon
+                                    style={{ padding: 8 }}
+                                    type="material"
+                                    name="send"
+                                    color={colors.grayBlue}
+                                    disabled={!isValid}
+                                    onPress={handleSubmit}
+                                />
+                            }
+                        />
+                    )}
+                </Formik>
+            )}
+
+            <BottomSheet
+                isVisible={isShowMessageMenu}
+                onBackdropPress={() => setIsShowMessageMenu(false)}
             >
-                {chatMessages[0] ? (
-                    <FlatList
-                        data={chatMessages}
-                        showsVerticalScrollIndicator={false}
-                        renderItem={({ item }) => (
-                            <Message item={item} userId={loginUser._id} />
-                        )}
-                        keyExtractor={(item) => item.id}
-                    />
-                ) : (
-                    ''
-                )}
-            </View>
-
-            <View style={styles.messagingInputContainer}>
-                <TextInput
-                    style={styles.messagingInput}
-                    multiline
-                    onChangeText={(value) => setMessage(value)}
-                />
-
-                <Icon
-                    type="material"
-                    name="send"
-                    color={colors.grayBlue}
-                    onPress={() => {}}
-                />
-            </View>
+                <Button title="Thu hồi" onPress={recallMessage}></Button>
+            </BottomSheet>
         </View>
     );
 }
 
-const styles = StyleSheet.create({
+const styles = {
     messagingScreen: {
+        flex: 1,
+        paddingHorizontal: 12,
+        paddingBottom: 6,
+    },
+    messageList: {
         flex: 1,
     },
     messagingInputContainer: {
-        width: '100%',
-        backgroundColor: 'white',
-        paddingVertical: 15,
-        paddingHorizontal: 15,
-        justifyContent: 'center',
-        flexDirection: 'row',
-        alignItems: 'center',
-    },
-    messagingInput: {
-        borderWidth: 1,
-        minHeight: 40,
-        maxHeight: 100,
-        padding: 5,
-        flex: 1,
-        marginRight: 10,
+        borderBottomWidth: 0,
         borderRadius: 20,
     },
-    messagingButtonContainer: {
-        width: '30%',
-        backgroundColor: 'green',
-        borderRadius: 3,
-        alignItems: 'center',
-        justifyContent: 'center',
-        borderRadius: 50,
+    messagingInput: {
+        padding: 8,
+        maxHeight: 100,
+        borderWidth: 1,
+        borderRadius: 16,
     },
-});
+    blockNotification: {
+        textAlign: 'center',
+        fontSize: 18,
+        fontWeight: 'bold',
+    },
+};
 
 export default ChatDetail;

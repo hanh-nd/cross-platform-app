@@ -44,7 +44,7 @@ function NotificationItem(props) {
             case 'Friends':
                 name = PageName.FRIEND_PROFILE;
                 params = {
-                    _id: target.receiver,
+                    _id: target.sender,
                 };
                 break;
         }
