@@ -1,3 +1,4 @@
+import { PostList } from '@/components';
 import { screen } from '@constants';
 import { useFocusEffect } from '@react-navigation/native';
 import { useCallback, useEffect, useRef } from 'react';
@@ -6,8 +7,8 @@ import { RefreshControl, ScrollView } from 'react-native-gesture-handler';
 import { useDispatch, useSelector } from 'react-redux';
 import { DismissKeyboardView } from '../../../components';
 import CreatePost from '../components/CreatePost';
-import PostList from '../components/PostList';
 import { fetchPostList, selectIsLoading } from '../reducers/home.reducer';
+
 function Home(props) {
     const dispatch = useDispatch();
     const { navigation, route } = props;
@@ -16,6 +17,8 @@ function Home(props) {
 
     useFocusEffect(
         useCallback(() => {
+            dispatch(fetchPostList());
+
             BackHandler.addEventListener('hardwareBackPress', backAction);
             return () => {
                 BackHandler.removeEventListener(
@@ -29,9 +32,8 @@ function Home(props) {
     const backAction = async () => {
         BackHandler.exitApp();
     };
+    
     useEffect(() => {
-        dispatch(fetchPostList());
-
         navigation.addListener('tabPress', (e) => {
             scrollRef.current.scrollTo({ animated: true, y: 0 });
         });

@@ -1,26 +1,22 @@
+import { env } from '@constants';
+import {
+    Avatar, BottomSheet, Icon, Input, ListItem, Text
+} from '@rneui/themed';
+import { debounce } from 'lodash';
+import { PageName } from 'navigation/constants';
 import React, { useEffect } from 'react';
 import { FlatList, View } from 'react-native';
-import {
-    Text,
-    Icon,
-    ListItem,
-    BottomSheet,
-    Input,
-    Avatar,
-} from '@rneui/themed';
-import { PageName } from 'navigation/constants';
-import { colors, screen, env } from '@constants';
 import { useDispatch, useSelector } from 'react-redux';
+import { showErrorMessage, showSuccessMessage } from 'utilities/Notification';
+import { getUserName } from 'utilities/User';
+import { getFriendProfile } from '../../../../services/friend.api';
 import {
     blockUserDiarySlice,
     deleteFriend,
     getListFriends,
     getUserProfile,
-    selectFriendList,
+    selectFriendList
 } from '../../reducers/friend.reducer';
-import { showErrorMessage, showSuccessMessage } from 'utilities/Notification';
-import { getUserName } from 'utilities/User';
-import { debounce } from 'lodash';
 
 function Friends({ navigate }) {
     const listFriend = useSelector(selectFriendList);
@@ -38,22 +34,18 @@ function Friends({ navigate }) {
         );
     }, [keySearch]);
 
-    const list = [
-        {
-            title: 'Nhắn tin',
-            iconName: 'message',
-        },
-        {
-            title: 'Chặn',
-            iconName: 'block',
-            onPress: () => blockUser(targetId),
-        },
-        {
-            title: 'Hủy kết bạn',
-            iconName: 'highlight-off',
-            onPress: () => removeFriend(),
-        },
-    ];
+    const sendMessage = async () => {
+        const response = await getFriendProfile(targetId);
+        if (response?.success) {
+            navigate({
+                name: PageName.CHAT_DETAIL,
+                params: {
+                    receiver: response?.data,
+                },
+            });
+        }
+        
+    };
 
     const removeFriend = async () => {
         const response = await dispatch(
@@ -106,6 +98,24 @@ function Friends({ navigate }) {
         showErrorMessage(response?.message);
         setIsVisible(false);
     };
+
+    const list = [
+        {
+            title: 'Nhắn tin',
+            iconName: 'message',
+            onPress: () => sendMessage(),
+        },
+        {
+            title: 'Chặn',
+            iconName: 'block',
+            onPress: () => blockUser(targetId),
+        },
+        {
+            title: 'Hủy kết bạn',
+            iconName: 'highlight-off',
+            onPress: () => removeFriend(),
+        },
+    ];
 
     const searchDebounce = debounce((text) => setKeySearch(text), 500);
 
