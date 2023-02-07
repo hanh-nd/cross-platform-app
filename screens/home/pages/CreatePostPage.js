@@ -5,8 +5,8 @@ import { useEffect, useRef, useState } from 'react';
 import { Text, View } from 'react-native';
 import { FlatList } from 'react-native-gesture-handler';
 import { useDispatch, useSelector } from 'react-redux';
-import { UIImage } from '../../../components';
-import { colors } from '../../../constants';
+import { UIImage, UIVideo } from '../../../components';
+import { colors, emoji } from '../../../constants';
 import { getBase64MediaList } from '../../../plugins/image-picker';
 import {
     showErrorMessage,
@@ -103,7 +103,21 @@ function CreatePostPage(props) {
                         <Input
                             name="described"
                             placeholder="Bạn đang nghĩ gì?"
-                            onChangeText={handleChange('described')}
+                            onChangeText={(e) => {
+                                handleChange('described')(e);
+                                const wordList = e.split(' ');
+                                for (let i = 0; i < wordList.length; i++) {
+                                    const e = emoji.find(
+                                        (e) => e.key === wordList[i],
+                                    );
+                                    if (e) {
+                                        wordList[i] = e.value;
+                                        handleChange('described')(
+                                            wordList.join(' '),
+                                        );
+                                    }
+                                }
+                            }}
                             value={values.described}
                             errorMessage={errors.described}
                             containerStyle={styles.textareaContainer}
@@ -116,7 +130,13 @@ function CreatePostPage(props) {
             </Formik>
             <FlatList
                 data={images}
-                renderItem={({ item }) => <UIImage source={{ uri: item }} />}
+                renderItem={({ item }) =>
+                    item.type === 'video' ? (
+                        <UIVideo source={{ uri: item.data }} />
+                    ) : (
+                        <UIImage source={{ uri: item.data }} />
+                    )
+                }
                 numColumns={2}
                 keyExtractor={(item, index) => index.toString()}
             />

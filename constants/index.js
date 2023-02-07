@@ -6,5 +6,6 @@ import env from './env';
 import screen from './screen';
 import gender from './gender';
 import status from './status';
+import emoji from './emoji';
 
-export { images, icons, colors, fontSizes, env, screen, gender, status };
+export { images, icons, colors, fontSizes, env, screen, gender, status, emoji };

@@ -31,7 +31,7 @@ function Chat(props) {
             SocketProvider.onMessage(
                 ({ _id, chatId, content, receiverId, senderId, time }) => {
                     const chat = chatList.find((c) => c.chatId === chatId);
-                    dispatch(fetchMessageListByFriend(chat.friend._id));
+                    dispatch(fetchMessageListByFriend(chat?.friend?._id));
                     dispatch(fetchChatList());
                 },
             );
@@ -40,7 +40,7 @@ function Chat(props) {
                 const { _id, chatId, content, receiverId, senderId, time } =
                     msg.data;
                 const chat = chatList.find((c) => c.chatId === chatId);
-                dispatch(fetchMessageListByFriend(chat.friend._id));
+                dispatch(fetchMessageListByFriend(chat?.friend?._id));
                 dispatch(fetchChatList());
             });
 

@@ -62,16 +62,17 @@ function NotificationPage(props) {
     return (
         <ScrollView
             showsVerticalScrollIndicator={false}
-            horizontal={true}
             refreshControl={
                 <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
             }
         >
-            <FlatList
-                data={notificationList}
-                renderItem={({ item }) => <NotificationItem item={item} />}
-                style={{ width: screen.width }}
-            />
+            <ScrollView horizontal={true}>
+                <FlatList
+                    data={notificationList}
+                    renderItem={({ item }) => <NotificationItem item={item} />}
+                    style={{ width: screen.width }}
+                />
+            </ScrollView>
         </ScrollView>
     );
 }

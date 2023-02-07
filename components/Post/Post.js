@@ -31,6 +31,7 @@ import {
     showSuccessMessage,
 } from '../../utilities/Notification';
 import { isAuthor } from '../../utilities/User';
+import UIVideo from '../UIVideo/UIVideo';
 import ReportDialog from './ReportDialog';
 
 function Post(props) {
@@ -48,6 +49,7 @@ function Post(props) {
         author,
         described,
         images,
+        videos,
         createdAt,
         isLike,
         like,
@@ -167,19 +169,36 @@ function Post(props) {
                 <View style={styles.contentText}>
                     <ReadMore numberOfLines={5}>{described}</ReadMore>
                 </View>
-                <FlatList
-                    data={images}
-                    renderItem={({ item }) => (
-                        <UIImage
-                            source={{
-                                uri: `${env.FILE_SERVICE_USER}/${item.fileName}`,
-                            }}
-                            PlaceholderContent={<ActivityIndicator />}
-                        />
-                    )}
-                    numColumns={2}
-                    keyExtractor={(item, index) => index.toString()}
-                />
+
+                {images.length ? (
+                    <FlatList
+                        data={images}
+                        renderItem={({ item }) => (
+                            <UIImage
+                                source={{
+                                    uri: `${env.FILE_SERVICE_USER}/${item.fileName}`,
+                                }}
+                                PlaceholderContent={<ActivityIndicator />}
+                            />
+                        )}
+                        numColumns={2}
+                        keyExtractor={(item, index) => index.toString()}
+                    />
+                ) : (
+                    <FlatList
+                        data={videos}
+                        renderItem={({ item }) => (
+                            <UIVideo
+                                source={{
+                                    uri: `${env.FILE_SERVICE_USER}/${item.fileName}`,
+                                }}
+                                PlaceholderContent={<ActivityIndicator />}
+                            />
+                        )}
+                        numColumns={2}
+                        keyExtractor={(item, index) => index.toString()}
+                    />
+                )}
             </View>
             <View style={styles.statisticGroup}>
                 <View style={styles.statisticItem}>
@@ -255,7 +274,7 @@ const styles = {
     headerItem: {
         display: 'flex',
         flexDirection: 'row',
-        width: screen.width,
+        width: screen.width - 50,
     },
     username: {
         fontWeight: 'bold',

@@ -5,7 +5,7 @@ import { isEmpty } from 'lodash';
 import React, { useEffect, useRef, useState } from 'react';
 import { FlatList, Pressable, Text, View } from 'react-native';
 import { useDispatch, useSelector } from 'react-redux';
-import { colors } from '../../../constants';
+import { colors, emoji } from '../../../constants';
 import { PageName } from '../../../navigation/constants';
 import { SocketProvider } from '../../../plugins/socket';
 import { isAuthor } from '../../../utilities/User';
@@ -140,7 +140,21 @@ function ChatDetail(props) {
                             renderErrorMessage={false}
                             placeholder="Nhập tin nhắn"
                             multiline
-                            onChangeText={handleChange('content')}
+                            onChangeText={(e) => {
+                                handleChange('content')(e);
+                                const wordList = e.split(' ');
+                                for (let i = 0; i < wordList.length; i++) {
+                                    const e = emoji.find(
+                                        (e) => e.key === wordList[i],
+                                    );
+                                    if (e) {
+                                        wordList[i] = e.value;
+                                        handleChange('content')(
+                                            wordList.join(' '),
+                                        );
+                                    }
+                                }
+                            }}
                             value={values.content}
                             rightIcon={
                                 <Icon

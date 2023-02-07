@@ -9,6 +9,7 @@ import DateTimePicker from '@react-native-community/datetimepicker';
 import moment from 'moment/moment';
 import { useDispatch, useSelector } from 'react-redux';
 import {
+    fetchSelfDetail,
     handleEditSelfProfile,
     selectIsLoading,
     selectLoginUser,
@@ -52,18 +53,26 @@ function EditUser(props) {
 
     const initialValues = {
         phonenumber: loginUser.phonenumber,
-        username: getUserName(loginUser),
+        firstName: loginUser.firstName,
+        lastName: loginUser.lastName,
         gender: loginUser.gender,
         birthday: loginUser.birthday
             ? new Date(loginUser.birthday)
             : new Date(),
     };
 
-    const editProfile = async ({ phonenumber, username, gender, birthday }) => {
+    const editProfile = async ({
+        phonenumber,
+        firstName,
+        lastName,
+        gender,
+        birthday,
+    }) => {
         const response = await dispatch(
             handleEditSelfProfile({
                 phonenumber,
-                username,
+                firstName,
+                lastName,
                 gender,
                 birthday,
             }),
@@ -71,6 +80,7 @@ function EditUser(props) {
 
         if (response?.success) {
             showSuccessMessage('Thay đổi thông tin thành công');
+            dispatch(fetchSelfDetail());
             goBack();
             return;
         }
@@ -95,11 +105,18 @@ function EditUser(props) {
                 }) => (
                     <>
                         <Input
-                            label="Họ và tên"
-                            placeholder="Nhập họ tên"
-                            value={values.username}
-                            onChangeText={handleChange('username')}
-                            errorMessage={errors.username}
+                            label="Họ"
+                            placeholder="Nhập họ"
+                            value={values.firstName}
+                            onChangeText={handleChange('firstName')}
+                            errorMessage={errors.firstName}
+                        />
+                        <Input
+                            label="Tên"
+                            placeholder="Nhập tên"
+                            value={values.lastName}
+                            onChangeText={handleChange('lastName')}
+                            errorMessage={errors.lastName}
                         />
                         <Input
                             label="Ngày sinh"

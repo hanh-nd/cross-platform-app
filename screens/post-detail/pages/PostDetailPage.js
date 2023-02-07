@@ -5,6 +5,7 @@ import { Formik } from 'formik';
 import { useEffect } from 'react';
 import { RefreshControl, ScrollView } from 'react-native-gesture-handler';
 import { useDispatch, useSelector } from 'react-redux';
+import { emoji } from '../../../constants';
 import { SocketProvider } from '../../../plugins/socket';
 import { fetchPostList } from '../../home/reducers/home.reducer';
 import CommentList from '../components/CommentList';
@@ -119,7 +120,19 @@ function PostDetailPage(props) {
                                 style={{ padding: 4 }}
                             />
                         }
-                        onChangeText={handleChange('comment')}
+                        onChangeText={(e) => {
+                            handleChange('comment')(e);
+                            const wordList = e.split(' ');
+                            for (let i = 0; i < wordList.length; i++) {
+                                const e = emoji.find(
+                                    (e) => e.key === wordList[i],
+                                );
+                                if (e) {
+                                    wordList[i] = e.value;
+                                    handleChange('comment')(wordList.join(' '));
+                                }
+                            }
+                        }}
                         errorMessage={errors.comment}
                     />
                 )}

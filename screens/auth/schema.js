@@ -18,6 +18,6 @@ export const registerSchema = yup.object().shape({
         .required()
         .not([yup.ref('phonenumber')]),
     confirmationEmail: yup.string().required(),
-    firstName: yup.string().optional(),
-    lastName: yup.string().optional(),
+    firstName: yup.string().required(),
+    lastName: yup.string().required(),
 });

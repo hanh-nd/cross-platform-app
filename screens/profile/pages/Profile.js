@@ -150,7 +150,7 @@ function Profile(props) {
                                             style={styles.friendName}
                                             onPress={() => gotoFriendProfile(f)}
                                         >
-                                            {f.username}
+                                            {getUserName(f)}
                                         </Text>
                                     </View>
                                 );

@@ -79,7 +79,7 @@ export const selectChatList = (state) =>
         ? state.chat.chatList
         : state.chat.chatList.filter((chat) => {
               const regex = new RegExp(state.chat.filter, 'i');
-              return regex.test(getUserName(chat.friend));
+              return regex.test(getUserName(chat?.friend));
           });
 export const selectMessageList = (state) => state.chat.messageList;
 export const selectIsLoading = (state) => state.chat.isLoading;
