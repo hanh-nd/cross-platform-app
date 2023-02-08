@@ -190,7 +190,7 @@ function Post(props) {
                         renderItem={({ item }) => (
                             <UIVideo
                                 source={{
-                                    uri: `${env.FILE_SERVICE_USER}/${item.fileName}`,
+                                    uri: item,
                                 }}
                                 PlaceholderContent={<ActivityIndicator />}
                             />

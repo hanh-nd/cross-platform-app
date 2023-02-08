@@ -1,7 +1,7 @@
 import { Overlay } from '@rneui/themed';
 import { useState } from 'react';
 import { View } from 'react-native';
-import Video from 'react-native-video';
+import { Video, AVPlaybackStatus } from 'expo-av';
 
 function UIVideo(props) {
     const { source, ...args } = props;
@@ -13,6 +13,9 @@ function UIVideo(props) {
                 <Video
                     style={styles.videoStyle}
                     source={source}
+                    useNativeControls
+                    resizeMode="contain"
+                    isLooping
                     {...args}
                     onPress={() => setModalVisibleStatus(!modalVisibleStatus)}
                 />
@@ -26,6 +29,9 @@ function UIVideo(props) {
             >
                 <Video
                     style={styles.fullVideoStyle}
+                    useNativeControls
+                    resizeMode="contain"
+                    isLooping
                     source={source}
                     {...args}
                 />
@@ -41,7 +47,6 @@ const styles = {
         margin: 1,
     },
     videoStyle: {
-        backgroundColor: 'red',
         width: '100%',
         aspectRatio: 1,
     },
@@ -50,7 +55,6 @@ const styles = {
         alignItems: 'center',
         width: '100%',
         aspectRatio: 1,
-        resizeMode: 'contain',
     },
     modelStyle: {
         justifyContent: 'center',

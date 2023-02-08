@@ -27,6 +27,7 @@ function CreatePostPage(props) {
 
     const formRef = useRef();
     const [images, setImages] = useState();
+    const [videos, setVideos] = useState();
 
     const initialValues = {
         described: '',
@@ -49,7 +50,13 @@ function CreatePostPage(props) {
     const createPost = async (body) => {
         if (images && images.length) {
             Object.assign(body, {
-                images,
+                images: images.map((i) => i.data),
+            });
+        }
+
+        if (videos && videos.length) {
+            Object.assign(body, {
+                videos: videos.map((v) => v.data),
             });
         }
         const response = await dispatch(createNewPost(body)).unwrap();
@@ -64,8 +71,11 @@ function CreatePostPage(props) {
     };
 
     const pickImages = async () => {
-        const images = await getBase64MediaList();
+        const result = await getBase64MediaList();
+        const images = result.filter((r) => r.type !== 'video');
+        const videos = result.filter((r) => r.type === 'video');
         setImages(images);
+        setVideos(videos);
     };
 
     return (
@@ -128,18 +138,25 @@ function CreatePostPage(props) {
                     </View>
                 )}
             </Formik>
-            <FlatList
-                data={images}
-                renderItem={({ item }) =>
-                    item.type === 'video' ? (
-                        <UIVideo source={{ uri: item.data }} />
-                    ) : (
+            {images && images.length ? (
+                <FlatList
+                    data={images}
+                    renderItem={({ item }) => (
                         <UIImage source={{ uri: item.data }} />
-                    )
-                }
-                numColumns={2}
-                keyExtractor={(item, index) => index.toString()}
-            />
+                    )}
+                    numColumns={2}
+                    keyExtractor={(item, index) => index.toString()}
+                />
+            ) : (
+                <FlatList
+                    data={videos}
+                    renderItem={({ item }) => (
+                        <UIVideo source={{ uri: item.data }} />
+                    )}
+                    numColumns={2}
+                    keyExtractor={(item, index) => index.toString()}
+                />
+            )}
 
             <View style={styles.pickImage}>
                 <Button
